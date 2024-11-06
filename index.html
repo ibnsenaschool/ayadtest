@@ -437,31 +437,33 @@
     </button>
 
     <script>
-        // تخزين الألعاب في Local Storage
+        // تهيئة المتغيرات
+        const adminButton = document.getElementById('adminButton');
+        const adminModal = document.getElementById('adminModal');
+        const gamesGrid = document.getElementById('gamesGrid');
         let games = JSON.parse(localStorage.getItem('games') || '[]');
 
-        // فتح نموذج إضافة لعبة
-        document.getElementById('adminButton').onclick = function() {
-            document.getElementById('adminModal').style.display = 'block';
-        };
+        // فتح نافذة إضافة لعبة
+        adminButton.addEventListener('click', function() {
+            adminModal.style.display = 'block';
+        });
 
-        // إغلاق النموذج
+        // إغلاق النافذة
         function closeAdminModal() {
-            document.getElementById('adminModal').style.display = 'none';
+            adminModal.style.display = 'none';
+            clearForm();
+        }
+
+        // تنظيف النموذج
+        function clearForm() {
+            document.getElementById('gameTitle').value = '';
+            document.getElementById('gameDescription').value = '';
+            document.getElementById('gameCode').value = '';
+            document.getElementById('gameCategory').value = 'math';
         }
 
         // حفظ لعبة جديدة
         function saveGame() {
             const title = document.getElementById('gameTitle').value;
             const description = document.getElementById('gameDescription').value;
-            const category = document.getElementById('gameCategory').value;
-            const code = document.getElementById('gameCode').value;
-
-            if (!title || !description || !code) {
-                alert('يرجى ملء جميع الحقول المطلوبة');
-                return;
-            }
-
-            const newGame = {
-                id: Date.now(),
-                title
+            const category =
