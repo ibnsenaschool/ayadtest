@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسة ابن سينا - عالم الألعاب التعليمية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --background: #f7f7f7;
+            --text: #2C3E50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            padding: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .hero {
+            background: url('/api/placeholder/1920/600') center/cover;
+            padding: 4rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,107,107,0.9), rgba(78,205,196,0.9));
+        }
+
+        .hero-content {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .category-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .category-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .play-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .play-btn:hover {
+            background: #ff8585;
+            transform: scale(1.05);
+        }
+
+        .featured {
+            background: linear-gradient(45deg, #4ECDC4, #2BAE9F);
+            padding: 4rem 2rem;
+            color: white;
+        }
+
+        .featured h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .game-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .game-description {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .footer {
+            background: var(--text);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .footer p {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="#" class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                مدرسة ابن سينا
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link">الرئيسية</a>
+                <a href="#games" class="nav-link">الألعاب</a>
+                <a href="#featured" class="nav-link">المميزات</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>تعلم والعب مع ابن سينا</h1>
+            <p>عالم من المرح والمعرفة في انتظارك!</p>
+            <a href="#games" class="play-btn">ابدأ المغامرة</a>
+        </div>
+    </section>
+
+    <section class="categories" id="games">
+        <div class="category-card">
+            <i class="fas fa-calculator category-icon"></i>
+            <h3>الرياضيات</h3>
+            <p>تعلم الحساب والمعادلات بطريقة ممتعة وسهلة</p>
+            <a href="#" class="play-btn">ابدأ اللعب</a>
+        </div>
+
+        <div class="category-card">
+            <i class="fas fa-book category-icon"></i>
+            <h3>اللغة العربية</h3>
+            <p>اكتشف جمال اللغة العربية من خلال الألعاب التفاعلية</p>
+            <a href="#" class="play-btn">ابدأ اللعب</a>
+        </div>
+
+        <div class="category-card">
+            <i class="fas fa-flask category-icon"></i>
+            <h3>العلوم</h3>
+            <p>خوض تجارب علمية مثيرة وممتعة</p>
+            <a href="#" class="play-btn">ابدأ اللعب</a>
+        </div>
+    </section>
+
+    <section class="featured" id="featured">
+        <h2>الألعاب المميزة</h2>
+        <div class="games-grid">
+            <div class="game-card">
+                <img src="/api/placeholder/400/200" alt="لعبة 1" class="game-image">
+                <div class="game-content">
+                    <h3 class="game-title">مغامرة الأرقام</h3>
+                    <p class="game-description">رحلة ممتعة في عالم الأرقام</p>
+                    <a href="#" class="play-btn">العب الآن</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="/api/placeholder/400/200" alt="لعبة 2" class="game-image">
+                <div class="game-content">
+                    <h3 class="game-title">حروف وكلمات</h3>
+                    <p class="game-description">تعلم الحروف والكلمات بطريقة مبتكرة</p>
+                    <a href="#" class="play-btn">العب الآن</a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="/api/placeholder/400/200" alt="لعبة 3" class="game-image">
+                <div class="game-content">
+                    <h3 class="game-title">عالم العلوم</h3>
+                    <p class="game-description">اكتشف أسرار العلوم</p>
+                    <a href="#" class="play-btn">العب الآن</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>جميع الحقوق محفوظة © 2024 مدرسة ابن سينا - منصة الألعاب التعليمية</p>
+    </footer>
+
+    <script>
+        // إضافة تأثير السلس للتمرير
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
