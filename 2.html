@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لعبة مضاعفات الرقم 2</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FAFAFA;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+        }
+        .game-area {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #607D8B;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #455A64;
+        }
+        .feedback {
+            font-size: 20px;
+            margin: 10px 0;
+            min-height: 30px;
+        }
+        .score {
+            font-size: 24px;
+            color: #607D8B;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        input {
+            padding: 10px;
+            font-size: 18px;
+            margin: 5px;
+            border: 2px solid #B0BEC5;
+            border-radius: 5px;
+            width: 200px;
+        }
+        .welcome {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .correct {
+            color: #4CAF50;
+        }
+        .incorrect {
+            color: #f44336;
+        }
+        .student-info {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+            background-color: #ECEFF1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #B0BEC5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="registration" class="welcome">
+            <h2>مرحباً بك في لعبة مضاعفات الرقم 2</h2>
+            <div>
+                <input type="text" id="studentName" placeholder="أدخل اسمك" required>
+                <input type="text" id="studentClass" placeholder="أدخل صفك" required>
+                <button onclick="startGame()">ابدأ اللعبة</button>
+            </div>
+        </div>
+        
+        <div id="gameContainer" style="display: none;">
+            <div class="student-info" id="studentInfo"></div>
+            <div class="score">النقاط: <span id="score">0</span></div>
+            <div class="game-area">
+                <div id="question"></div>
+                <div class="options" id="options"></div>
+            </div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let currentQuestion;
+        let studentName = '';
+        let studentClass = '';
+        const encouragingMessages = [
+            "أحسنت! استمر هكذا! 👏",
+            "ممتاز! أنت ذكي جداً! 🌟",
+            "رائع! أنت تتقدم بشكل جيد! 🎉",
+            "عمل رائع! واصل التقدم! ⭐"
+        ];
+
+        function startGame() {
+            studentName = document.getElementById('studentName').value;
+            studentClass = document.getElementById('studentClass').value;
+            
+            if (!studentName || !studentClass) {
+                alert('الرجاء إدخال اسمك وصفك');
+                return;
+            }
+
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'block';
+            document.getElementById('studentInfo').innerHTML = `
+                الطالب: <strong>${studentName}</strong> | 
+                الصف: <strong>${studentClass}</strong>
+            `;
+            generateQuestion();
+        }
+
+        function generateCloseAnswer(correctAnswer) {
+            // توليد رقم قريب من الإجابة الصحيحة بفارق 1 أو 2 فقط
+            const variations = [-2, -1, 1, 2];
+            const randomIndex = Math.floor(Math.random() * variations.length);
+            return correctAnswer + variations[randomIndex];
+        }
+
+        function generateQuestion() {
+            const multiplicand = 2;
+            const multiplier = Math.floor(Math.random() * 10) + 1; // 1 to 10 for results up to 20
+            const correctAnswer = multiplicand * multiplier;
+            
+            // Generate wrong answers that are very close to the correct answer
+            let wrongAnswers = new Set();
+            while (wrongAnswers.size < 3) {
+                const wrongAnswer = generateCloseAnswer(correctAnswer);
+                if (wrongAnswer > 0 && wrongAnswer !== correctAnswer) {
+                    wrongAnswers.add(wrongAnswer);
+                }
+            }
+            
+            // Combine and shuffle answers
+            const answers = [...wrongAnswers, correctAnswer];
+            for (let i = answers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [answers[i], answers[j]] = [answers[j], answers[i]];
+            }
+            
+            currentQuestion = {
+                question: `${multiplicand} × ${multiplier} = ؟`,
+                correctAnswer: correctAnswer,
+                options: answers
+            };
+            
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            document.getElementById('question').textContent = currentQuestion.question;
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+            
+            document.getElementById('feedback').textContent = '';
+        }
+
+        function checkAnswer(selectedAnswer) {
+            const feedbackElement = document.getElementById('feedback');
+            
+            if (selectedAnswer === currentQuestion.correctAnswer) {
+                score += 1;
+                const randomMessage = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
+                feedbackElement.innerHTML = `<span class="correct">${randomMessage}</span>`;
+            } else {
+                score = Math.max(0, score - 1);
+                feedbackElement.innerHTML = `<span class="incorrect">إجابة غير صحيحة. الإجابة الصحيحة هي ${currentQuestion.correctAnswer}</span>`;
+            }
+            
+            document.getElementById('score').textContent = score;
+            setTimeout(generateQuestion, 1500);
+        }
+
+        // Start with registration form
+        document.getElementById('gameContainer').style.display = 'none';
+    </script>
+</body>
+</html>
