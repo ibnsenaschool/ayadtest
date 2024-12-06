@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>مدرسة ابن سينا - جدول الضرب</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #34495e;
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+        
+        .buttons-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: linear-gradient(45deg, #45a049, #4CAF50);
+        }
+        
+        @media (max-width: 768px) {
+            .buttons-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .buttons-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>مدرسة ابن سينا</h1>
+    <h2>جدول الضرب</h2>
+    
+    <div class="buttons-container">
+        <a href="https://ibnsenaschool.github.io/ayadtest/2.html" class="button">جدول 2</a>
+        <a href="https://ibnsenaschool.github.io/ayadtest/3.html" class="button">جدول 3</a>
+        <a href="https://ibnsenaschool.github.io/ayadtest/4.html" class="button">جدول 4</a>
+        <a href="https://ibnsenaschool.github.io/ayadtest/5.html" class="button">جدول 5</a>
+        <a href="https://ibnsenaschool.github.io/ayadtest/6.html" class="button">جدول 6</a>
+        <a href="https://ibnsenaschool.github.io/ayadtest/7.html" class="button">جدول 7</a>
+        <a href="https://ibnsenaschool.github.io/ayadtest/8.html" class="button">جدول 8</a>
+        <a href="https://ibnsenaschool.github.io/ayadtest/9.html" class="button">جدول 9</a>
+    </div>
+</body>
+</html>
