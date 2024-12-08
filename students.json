@@ -1,0 +1,14 @@
+{
+  "students": [
+    { "id": 1, "name": "Ali", "loginCode": "1234", "password": "pass1" },
+    { "id": 2, "name": "Sara", "loginCode": "5678", "password": "pass2" },
+    { "id": 3, "name": "Ahmed", "loginCode": "9101", "password": "pass3" },
+    { "id": 4, "name": "Laila", "loginCode": "1121", "password": "pass4" },
+    { "id": 5, "name": "Omar", "loginCode": "3141", "password": "pass5" },
+    { "id": 6, "name": "Fatima", "loginCode": "5161", "password": "pass6" },
+    { "id": 7, "name": "Hassan", "loginCode": "7181", "password": "pass7" },
+    { "id": 8, "name": "Reem", "loginCode": "9202", "password": "pass8" },
+    { "id": 9, "name": "Khaled", "loginCode": "1122", "password": "pass9" },
+    { "id": 10, "name": "Mona", "loginCode": "3343", "password": "pass10" }
+  ]
+}
