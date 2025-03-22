@@ -856,7 +856,7 @@ html = `
 $(".maincell").eq(0).prepend(html);
 $("#mobileContent").eq(0).prepend(html);
 if (game_data.locale == "ar_AE") {
-    $("#sophieImg").attr("src", "https://media2.giphy.com/media/qYr8p3Dzbet5S/giphy.gif");
+    $("#sophieImg").attr("src", "https://ibnsenaschool.github.io/ayadtest/3laoe.jpg");
 }
 if (is_mobile == false) {
     $("#massScavengeSophie").css("position", "fixed");
