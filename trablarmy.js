@@ -1,4 +1,4 @@
-// سكريبت كامل مستقل لجرد جيوش القبيلة مع ملخص وتصدير Excel
+// سكريפט كامل مستقل لجرد جيوش القبيلة مع ملخص وتصدير Excel
 
 (function() {
     if (window.location.href.indexOf('&screen=ally&mode=members') < 0 || window.location.href.indexOf('&screen=ally&mode=members_troops') > -1) {
@@ -59,25 +59,23 @@
           scout: 0
         };
 
-        $.each(player, function (play) {
-            typeTotals[player[play].name] = { ...summaryTotals };
-        });
+        // التأكد من وجود بيانات أولاً
+        Object.keys(playerData).forEach(playerName => {
+            if (!typeTotals[playerName]) {
+                typeTotals[playerName] = { ...summaryTotals };
+            }
 
-        $.each(playerData, function (playerName) {
-            for (let villageCounter = 0; villageCounter < Object.keys(playerData[playerName]).length; villageCounter++) {
-                if (Object.keys(playerData[playerName])[villageCounter] !== "total") {
-                    let thisVillageOffPop = 0;
-                    let thisVillageDefPop = 0;
-                    let thisVillageTrain = 0;
-                    let thisVillageFang = 0;
-                    let thisVillageScout = 0;
+            const playerRecord = typeTotals[playerName];
 
-                    for (let unit of game_data.units) {
-                        let amount = parseInt(playerData[playerName][Object.keys(playerData[playerName])[villageCounter]][unit]) || 0;
+            for (let villageKey of Object.keys(playerData[playerName])) {
+                if (villageKey !== "total") {
+                    const village = playerData[playerName][villageKey];
+                    let thisVillageOffPop = 0, thisVillageDefPop = 0, thisVillageTrain = 0, thisVillageFang = 0, thisVillageScout = 0;
+
+                    for (let unit in village) {
+                        let amount = parseInt(village[unit]) || 0;
                         switch (unit) {
-                            case "spear":
-                            case "sword":
-                            case "archer":
+                            case "spear": case "sword": case "archer":
                                 thisVillageDefPop += amount;
                                 break;
                             case "axe":
@@ -110,19 +108,19 @@
                         }
                     }
 
-                    if (thisVillageOffPop > fullPop) typeTotals[playerName]["fullNuke"]++;
-                    else if (thisVillageOffPop >= almostPop) typeTotals[playerName]["almostNuke"]++;
-                    else if (thisVillageOffPop >= semiPop) typeTotals[playerName]["semiNuke"]++;
-                    else if (thisVillageOffPop >= quarterPop) typeTotals[playerName]["quarterNuke"]++;
+                    if (thisVillageOffPop > fullPop) playerRecord["fullNuke"]++;
+                    else if (thisVillageOffPop >= almostPop) playerRecord["almostNuke"]++;
+                    else if (thisVillageOffPop >= semiPop) playerRecord["semiNuke"]++;
+                    else if (thisVillageOffPop >= quarterPop) playerRecord["quarterNuke"]++;
 
-                    if (thisVillageDefPop > fullPop) typeTotals[playerName]["fullDV"]++;
-                    else if (thisVillageDefPop >= almostPop) typeTotals[playerName]["almostDV"]++;
-                    else if (thisVillageDefPop >= semiPop) typeTotals[playerName]["semiDV"]++;
-                    else if (thisVillageDefPop >= quarterPop) typeTotals[playerName]["quarterDV"]++;
+                    if (thisVillageDefPop > fullPop) playerRecord["fullDV"]++;
+                    else if (thisVillageDefPop >= almostPop) playerRecord["almostDV"]++;
+                    else if (thisVillageDefPop >= semiPop) playerRecord["semiDV"]++;
+                    else if (thisVillageDefPop >= quarterPop) playerRecord["quarterDV"]++;
 
-                    if (thisVillageTrain) typeTotals[playerName]["train"]++;
-                    if (thisVillageFang) typeTotals[playerName]["fang"]++;
-                    if (thisVillageScout) typeTotals[playerName]["scout"]++;
+                    if (thisVillageTrain) playerRecord["train"]++;
+                    if (thisVillageFang) playerRecord["fang"]++;
+                    if (thisVillageScout) playerRecord["scout"]++;
                 }
             }
         });
@@ -149,7 +147,6 @@
     }
 
     function simulateDataLoading() {
-        // هنا من المفترض جلب بيانات القرى ولكن سنقوم بمحاكاة لأغراض العرض
         playerData = {
             "لاعب 1": {
                 "village1": { spear: 1000, sword: 500, axe: 800, spy: 200, light: 300, marcher: 0, ram: 50, heavy: 400, catapult: 10, snob: 4 },
