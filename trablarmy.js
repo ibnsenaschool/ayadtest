@@ -27,10 +27,10 @@ if (localStorage.getItem("settingsTribeMembers") != null) {
 }
 else {
     tempArray = [
-        { name: "fullPop", value: "15000" },
-        { name: "almostPop", value: "12000" },
-        { name: "halfPop", value: "9000" },
-        { name: "quarterPop", value: "5000" },
+        { name: "fullPop", value: "10000" },
+        { name: "almostPop", value: "8000" },
+        { name: "halfPop", value: "7000" },
+        { name: "quarterPop", value: "1000" },
         { name: "fang", value: "200" },
         { name: "scout", value: "4000"}
     ]
