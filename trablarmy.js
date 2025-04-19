@@ -143,28 +143,17 @@
 
         html += `</tr></table></div>`;
 
-        // جدول تلخيص لكل لاعب في الأعلى
-        html += `<div class="sophHeader" style="width: 800px; margin-bottom:10px">
-        <h4 style="padding:10px;">تفصيل حسب كل لاعب</h4>
-        <table style="width:100%; text-align:right; border:1px solid #ccc; border-collapse:collapse;">
-        <thead><tr style="background:#eee;"><th style="padding:4px;">اللاعب</th><th>نوك كامل</th><th>3/4 نوك</th><th>نصف نوك</th><th>1/4 نوك</th></tr></thead>
-        <tbody>`;
-        Object.entries(typeTotals).forEach(([player, counts]) => {
-            html += `<tr><td style="padding:4px;">${player}</td><td>${counts.fullNuke}</td><td>${counts.almostNuke}</td><td>${counts.semiNuke}</td><td>${counts.quarterNuke}</td></tr>`;
-        });
-        html += `</tbody></table></div>`;
-
         $("#contentContainer").prepend(html);
     }
 
     function simulateDataLoading() {
         playerData = {
             "لاعب 1": {
-                "village1": { spear: 1000, sword: 500, axe: 3000, spy: 500, light: 2000, marcher: 0, ram: 300, heavy: 400, catapult: 300, snob: 4 },
+                "village1": { spear: 1000, sword: 500, axe: 6000, spy: 500, light: 2000, marcher: 500, ram: 300, heavy: 400, catapult: 300, snob: 4 },
                 total: {}
             },
             "لاعب 2": {
-                "village1": { spear: 2000, sword: 1000, axe: 2500, spy: 300, light: 1500, marcher: 0, ram: 200, heavy: 300, catapult: 150, snob: 3 },
+                "village1": { spear: 2000, sword: 1000, axe: 5000, spy: 300, light: 1500, marcher: 400, ram: 200, heavy: 300, catapult: 200, snob: 3 },
                 total: {}
             }
         };
