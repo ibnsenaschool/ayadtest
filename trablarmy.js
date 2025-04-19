@@ -1,4 +1,4 @@
-// سكريפט كامل مستقل لجرد جيوش القبيلة مع ملخص وتصدير Excel
+// سكريפט كامل مستقل لجرد جيوش القبيلة مع ملخص وتصدير Excel + قائمة تلخيصية لكل لاعب
 
 (function() {
     if (window.location.href.indexOf('&screen=ally&mode=members') < 0 || window.location.href.indexOf('&screen=ally&mode=members_troops') > -1) {
@@ -59,7 +59,6 @@
           scout: 0
         };
 
-        // التأكد من وجود بيانات أولاً
         Object.keys(playerData).forEach(playerName => {
             if (!typeTotals[playerName]) {
                 typeTotals[playerName] = { ...summaryTotals };
@@ -143,6 +142,18 @@
         });
 
         html += `</tr></table></div>`;
+
+        // جدول تلخيص لكل لاعب في الأعلى
+        html += `<div class="sophHeader" style="width: 800px; margin-bottom:10px">
+        <h4 style="padding:10px;">تفصيل حسب كل لاعب</h4>
+        <table style="width:100%; text-align:right; border:1px solid #ccc; border-collapse:collapse;">
+        <thead><tr style="background:#eee;"><th style="padding:4px;">اللاعب</th><th>نوك كامل</th><th>3/4 نوك</th><th>نصف نوك</th><th>1/4 نوك</th></tr></thead>
+        <tbody>`;
+        Object.entries(typeTotals).forEach(([player, counts]) => {
+            html += `<tr><td style="padding:4px;">${player}</td><td>${counts.fullNuke}</td><td>${counts.almostNuke}</td><td>${counts.semiNuke}</td><td>${counts.quarterNuke}</td></tr>`;
+        });
+        html += `</tbody></table></div>`;
+
         $("#contentContainer").prepend(html);
     }
 
