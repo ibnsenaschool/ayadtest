@@ -160,11 +160,11 @@
     function simulateDataLoading() {
         playerData = {
             "لاعب 1": {
-                "village1": { spear: 1000, sword: 500, axe: 800, spy: 200, light: 300, marcher: 0, ram: 50, heavy: 400, catapult: 10, snob: 4 },
+                "village1": { spear: 1000, sword: 500, axe: 3000, spy: 500, light: 2000, marcher: 0, ram: 300, heavy: 400, catapult: 300, snob: 4 },
                 total: {}
             },
             "لاعب 2": {
-                "village1": { spear: 3000, sword: 2000, axe: 1000, spy: 400, light: 500, marcher: 0, ram: 20, heavy: 600, catapult: 5, snob: 2 },
+                "village1": { spear: 2000, sword: 1000, axe: 2500, spy: 300, light: 1500, marcher: 0, ram: 200, heavy: 300, catapult: 150, snob: 3 },
                 total: {}
             }
         };
