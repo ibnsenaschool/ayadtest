@@ -381,25 +381,17 @@
                     </select>
                 </div>
 
-                  <div class="control-group">
-    <label for="sniper-extra-1">نص إضافي 1:</label>
-     <input size=8 type='text' value='${cel}' id='sniper-coord-target' placeholder='xxx|yyy' required aria-label="Target Coordinates" />
-</div>
-<div class="control-group">
-    <label for="sniper-extra-2">نص إضافي 2:</label>
-    <input size=10 type='text' value='${defaultDateStr}' id='sniper-arrival-date' placeholder='dd.mm.yyyy' required aria-label="Arrival Date" />
-</div>
-<div class="control-group">
-    <label for="sniper-extra-3">نص إضافي 3:</label>
-    <input size=8 type='text' value='${defaultTimeStr}' id='sniper-arrival-time' placeholder='hh:mm:ss' required aria-label="Arrival Time" />
-</div>
-<div class="control-group">
-    <label for="sniper-extra-4">نص إضافي 4:</label>
-    <input size=8 type='text' value='${defaultTimeStr}' id='sniper-arrival-time' placeholder='hh:mm:ss' required aria-label="Arrival Time" />
-</div>
-<div class="control-group">
-    <label for="sniper-extra-5">نص إضافي 5:</label>
-    <input size="15" type="text" id="sniper-extra-5" placeholder="مربع نص إضافي 5" />
+                 <div class="controls-container" style="margin-top: 5px; display: flex; gap: 5px; flex-wrap: wrap;">
+    <input size="8" type="text" id="sniper-extra-1" placeholder="" aria-label="مربع إضافي 1" style="text-align:center; font-weight:bold;" />
+    <input size="10" type="text" id="sniper-extra-2" placeholder="" aria-label="مربع إضافي 2" style="text-align:center; font-weight:bold;" />
+    <input size="8" type="text" id="sniper-extra-3" placeholder="" aria-label="مربع إضافي 3" style="text-align:center; font-weight:bold;" />
+    <select id="sniper-extra-select" aria-label="اختيار إضافي" style="text-align:center; font-weight:bold; height: 28px;">
+        <option value="">--</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
+    <input type="number" id="sniper-extra-4" min="0" step="0.1" value="0" aria-label="مربع إضافي 4" style="text-align:center; font-weight:bold;" />
 </div>
 
 
