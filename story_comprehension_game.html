@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة فهم القصة - الحديقة السحرية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .balloon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; color: #ff6b6b; }
+        .balloon:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; color: #4ecdc4; }
+        .balloon:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; color: #45b7d1; }
+        .balloon:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 0.5s; color: #f9ca24; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .main-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .story-panel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .game-panel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            min-height: 600px;
+        }
+
+        .story-title {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .story-text {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .story-line {
+            margin-bottom: 8px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            position: relative;
+            padding-right: 35px;
+        }
+
+        .line-number {
+            position: absolute;
+            right: 0;
+            top: 0;
+            background: #3498db;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .story-line.highlighted {
+            background: rgba(241, 196, 15, 0.3);
+            padding: 8px;
+            border-radius: 8px;
+            animation: highlight 2s ease-in-out;
+        }
+
+        @keyframes highlight {
+            0%, 100% { background: rgba(241, 196, 15, 0.3); }
+            50% { background: rgba(241, 196, 15, 0.6); }
+        }
+
+        .header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .title {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .name-input {
+            padding: 12px;
+            font-size: 1rem;
+            border: 3px solid #3498db;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 250px;
+            text-align: center;
+            margin-bottom: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            border-color: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: right;
+        }
+
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .option.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+
+        .option.wrong {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .feedback {
+            display: none;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .feedback.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .feedback.wrong {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .line-reference {
+            background: #3498db;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .completion {
+            display: none;
+            text-align: center;
+        }
+
+        .completion h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .completion p {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .score {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.4rem;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .emoji {
+            font-size: 1.5rem;
+            margin: 0 8px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+            60% { transform: translateY(-4px); }
+        }
+
+        .student-name {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .story-panel {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="balloon">📚</div>
+    <div class="balloon">🌟</div>
+    <div class="balloon">🎯</div>
+    <div class="balloon">💡</div>
+
+    <div class="main-container">
+        <!-- Story Panel -->
+        <div class="story-panel">
+            <h2 class="story-title">الحديقة السحرية <span class="emoji">🌺</span></h2>
+            <div class="story-text" id="storyText">
+                <div class="story-line" id="line1">كان ياما كان، في قديم الزمان، كان هناك فتاة صغيرة تُدعى نور.<span class="line-number">1</span></div>
+                <div class="story-line" id="line2">كانت نور تبلغ من العمر عشر سنوات وتحب الاستطلاع والمغامرة.<span class="line-number">2</span></div>
+                <div class="story-line" id="line3">في يوم من الأيام، بينما كانت تلعب في حديقة منزلها، اكتشفت باباً صغيراً مخفياً خلف الأشجار.<span class="line-number">3</span></div>
+                <div class="story-line" id="line4">كان الباب مصنوعاً من الخشب القديم ومزيناً بنقوش جميلة من الورود والفراشات.<span class="line-number">4</span></div>
+                <div class="story-line" id="line5">فتحت نور الباب بحذر، فوجدت نفسها في حديقة سحرية مليئة بالألوان الزاهية.<span class="line-number">5</span></div>
+                <div class="story-line" id="line6">كانت الأزهار في هذه الحديقة تتكلم وتغني أغاني جميلة.<span class="line-number">6</span></div>
+                <div class="story-line" id="line7">التقت نور بفراشة ذهبية تُدعى لؤلؤة، وأصبحتا صديقتين سريعاً.<span class="line-number">7</span></div>
+                <div class="story-line" id="line8">أخبرتها لؤلؤة أن الحديقة السحرية تحتاج إلى مساعدتها لحل مشكلة كبيرة.<span class="line-number">8</span></div>
+                <div class="story-line" id="line9">كانت المشكلة أن ساحرة شريرة قد سرقت ألوان الحديقة، مما جعل النباتات تذبل.<span class="line-number">9</span></div>
+                <div class="story-line" id="line10">قررت نور مساعدة أصدقائها الجدد في استعادة الألوان المسروقة.<span class="line-number">10</span></div>
+                <div class="story-line" id="line11">بدأت نور ولؤلؤة رحلتهما عبر الحديقة بحثاً عن قلعة الساحرة الشريرة.<span class="line-number">11</span></div>
+                <div class="story-line" id="line12">في طريقهما، التقيا بأرنب صغير يُدعى فادي يعرف الطريق إلى القلعة.<span class="line-number">12</span></div>
+                <div class="story-line" id="line13">وصلوا إلى القلعة المظلمة التي كانت محاطة بغيوم سوداء مخيفة.<span class="line-number">13</span></div>
+                <div class="story-line" id="line14">دخلت نور القلعة بشجاعة ووجدت الساحرة تحتفظ بالألوان في زجاجات سحرية.<span class="line-number">14</span></div>
+                <div class="story-line" id="line15">طلبت نور من الساحرة بأدب أن تعيد الألوان إلى الحديقة.<span class="line-number">15</span></div>
+                <div class="story-line" id="line16">اكتشفت نور أن الساحرة كانت وحيدة وحزينة، لذلك سرقت الألوان لتجعل قلعتها جميلة.<span class="line-number">16</span></div>
+                <div class="story-line" id="line17">اقترحت نور على الساحرة أن تزور الحديقة وتصبح صديقة للجميع.<span class="line-number">17</span></div>
+                <div class="story-line" id="line18">قبلت الساحرة الاقتراح بسعادة وأعادت جميع الألوان إلى الحديقة.<span class="line-number">18</span></div>
+                <div class="story-line" id="line19">عادت الحديقة إلى جمالها السابق، وأصبحت الساحرة صديقة للجميع.<span class="line-number">19</span></div>
+                <div class="story-line" id="line20">منذ ذلك اليوم، تزور نور الحديقة السحرية كل يوم وتلعب مع أصدقائها السحريين.<span class="line-number">20</span></div>
+            </div>
+        </div>
+
+        <!-- Game Panel -->
+        <div class="game-panel">
+            <div class="header">
+                <h1 class="title">أسئلة فهم القصة <span class="emoji">🤔</span></h1>
+                <p class="subtitle">اقرأ القصة وأجب على الأسئلة</p>
+            </div>
+
+            <div class="start-screen" id="startScreen">
+                <input type="text" class="name-input" placeholder="اكتب اسمك هنا..." id="studentName">
+                <br><br>
+                <button class="start-btn" onclick="startGame()">ابدأ الأسئلة <span class="emoji">🚀</span></button>
+            </div>
+
+            <div class="question-container" id="questionContainer">
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="question" id="question"></div>
+                <div class="options" id="options"></div>
+                <div class="feedback" id="feedback"></div>
+                <div class="line-reference" id="lineReference" style="display: none;"></div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">السؤال التالي <span class="emoji">➡️</span></button>
+            </div>
+
+            <div class="completion" id="completion">
+                <h2>أحسنت <span class="student-name" id="completionName"></span>! <span class="emoji">🏆</span></h2>
+                <div class="score" id="finalScore"></div>
+                <p>لقد أنهيت جميع الأسئلة بنجاح! أنت تتقن فهم النصوص بشكل رائع! <span class="emoji">📚</span><span class="emoji">⭐</span></p>
+                <br>
+                <button class="start-btn" onclick="restartGame()">ابدأ من جديد <span class="emoji">🔄</span></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "ما اسم الفتاة الصغيرة في القصة؟",
+                options: ["سارة", "نور", "فاطمة", "مريم"],
+                correct: 1,
+                line: 1,
+                explanation: "اسم الفتاة نور كما ذُكر في بداية القصة"
+            },
+            {
+                question: "كم كان عمر نور؟",
+                options: ["ثمان سنوات", "تسع سنوات", "عشر سنوات", "إحدى عشرة سنة"],
+                correct: 2,
+                line: 2,
+                explanation: "نور تبلغ من العمر عشر سنوات"
+            },
+            {
+                question: "أين اكتشفت نور الباب السحري؟",
+                options: ["في المدرسة", "في حديقة منزلها", "في الغابة", "عند النهر"],
+                correct: 1,
+                line: 3,
+                explanation: "اكتشفت الباب في حديقة منزلها خلف الأشجار"
+            },
+            {
+                question: "مما كان مصنوعاً الباب السحري؟",
+                options: ["من الحديد", "من الحجر", "من الخشب القديم", "من الذهب"],
+                correct: 2,
+                line: 4,
+                explanation: "الباب كان مصنوعاً من الخشب القديم"
+            },
+            {
+                question: "ما الذي كان مميزاً في أزهار الحديقة السحرية؟",
+                options: ["كانت كبيرة جداً", "كانت تتكلم وتغني", "كانت تضيء في الظلام", "كانت تطير"],
+                correct: 1,
+                line: 6,
+                explanation: "الأزهار كانت تتكلم وتغني أغاني جميلة"
+            },
+            {
+                question: "ما اسم الفراشة الذهبية؟",
+                options: ["جوهرة", "لؤلؤة", "ياقوتة", "زمردة"],
+                correct: 1,
+                line: 7,
+                explanation: "اسم الفراشة الذهبية لؤلؤة"
+            },
+            {
+                question: "ما المشكلة التي كانت تواجه الحديقة السحرية؟",
+                options: ["نقص الماء", "سرقة الألوان", "هجوم الحشرات", "الطقس السيء"],
+                correct: 1,
+                line: 9,
+                explanation: "المشكلة كانت سرقة ألوان الحديقة من قبل الساحرة الشريرة"
+            },
+            {
+                question: "من الذي سرق ألوان الحديقة؟",
+                options: ["تنين شرير", "ساحرة شريرة", "عملاق كبير", "ثعبان سام"],
+                correct: 1,
+                line: 9,
+                explanation: "الساحرة الشريرة هي التي سرقت الألوان"
+            },
+            {
+                question: "ما اسم الأرنب الذي التقيا به في الطريق؟",
+                options: ["سامي", "فادي", "نادي", "هادي"],
+                correct: 1,
+                line: 12,
+                explanation: "اسم الأرنب فادي"
+            },
+            {
+                question: "كيف كانت قلعة الساحرة؟",
+                options: ["مضيئة وجميلة", "صغيرة ومخفية", "مظلمة ومحاطة بغيوم سوداء", "عالية جداً"],
+                correct: 2,
+                line: 13,
+                explanation: "القلعة كانت مظلمة ومحاطة بغيوم سوداء مخيفة"
+            },
+            {
+                question: "أين احتفظت الساحرة بالألوان المسروقة؟",
+                options: ["في صناديق خشبية", "في أكياس قماشية", "في زجاجات سحرية", "في خزانة كبيرة"],
+                correct: 2,
+                line: 14,
+                explanation: "الساحرة احتفظت بالألوان في زجاجات سحرية"
+            },
+            {
+                question: "كيف تعاملت نور مع الساحرة؟",
+                options: ["قاتلتها بشجاعة", "هربت منها خائفة", "طلبت منها بأدب", "صرخت عليها"],
+                correct: 2,
+                line: 15,
+                explanation: "نور طلبت من الساحرة بأدب أن تعيد الألوان"
+            },
+            {
+                question: "لماذا سرقت الساحرة الألوان؟",
+                options: ["لأنها شريرة", "لأنها كانت وحيدة وحزينة", "لأنها تكره الجمال", "لأنها تحب المال"],
+                correct: 1,
+                line: 16,
+                explanation: "الساحرة سرقت الألوان لأنها كانت وحيدة وحزينة"
+            },
+            {
+                question: "ما الحل الذي اقترحته نور على الساحرة؟",
+                options: ["أن تذهب بعيداً", "أن تزور الحديقة وتصبح صديقة للجميع", "أن تعتذر فقط", "أن تعطي هدايا"],
+                correct: 1,
+                line: 17,
+                explanation: "نور اقترحت على الساحرة أن تزور الحديقة وتصبح صديقة للجميع"
+            },
+            {
+                question: "ماذا فعلت الساحرة بعد اقتراح نور؟",
+                options: ["رفضت بغضب", "قبلت بسعادة وأعادت الألوان", "فكرت طويلاً", "طلبت وقتاً للتفكير"],
+                correct: 1,
+                line: 18,
+                explanation: "قبلت الساحرة الاقتراح بسعادة وأعادت جميع الألوان"
+            },
+            {
+                question: "ما الذي حدث للحديقة بعد إعادة الألوان؟",
+                options: ["أصبحت أجمل من قبل", "عادت إلى جمالها السابق", "تغيرت تماماً", "اختفت إلى الأبد"],
+                correct: 1,
+                line: 19,
+                explanation: "عادت الحديقة إلى جمالها السابق"
+            },
+            {
+                question: "ماذا أصبحت الساحرة بعد ذلك؟",
+                options: ["اختفت إلى الأبد", "عادت شريرة", "أصبحت صديقة للجميع", "سافرت بعيداً"],
+                correct: 2,
+                line: 19,
+                explanation: "أصبحت الساحرة صديقة للجميع"
+            },
+            {
+                question: "كم مرة تزور نور الحديقة السحرية الآن؟",
+                options: ["مرة في الأسبوع", "كل يوم", "مرة في الشهر", "أحياناً فقط"],
+                correct: 1,
+                line: 20,
+                explanation: "نور تزور الحديقة السحرية كل يوم"
+            },
+            {
+                question: "ما الصفة الأساسية التي تميز شخصية نور؟",
+                options: ["الخوف", "الشجاعة والطيبة", "الأنانية", "العناد"],
+                correct: 1,
+                line: "multiple",
+                explanation: "نور تميزت بالشجاعة والطيبة في تعاملها مع المشكلة"
+            },
+            {
+                question: "ما الدرس المستفاد من هذه القصة؟",
+                options: ["الخوف من المجهول", "القوة تحل كل المشاكل", "الطيبة والصداقة تحل المشاكل", "تجنب المغامرات"],
+                correct: 2,
+                line: "multiple",
+                explanation: "القصة تعلمنا أن الطيبة والصداقة يمكنها حل أكبر المشاكل"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let studentName = '';
+        let score = 0;
+
+        function startGame() {
+            studentName = document.getElementById('studentName').value.trim();
+            if (!studentName) {
+                alert('الرجاء كتابة اسمك أولاً! 😊');
+                return;
+            }
+            
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question').innerHTML = `<span class="student-name">${studentName}</span>، ${question.question}`;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.onclick = () => selectOption(index);
+                optionsContainer.appendChild(button);
+            });
+
+            // Update progress bar
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Hide feedback and elements
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('lineReference').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            
+            // Remove previous highlights
+            document.querySelectorAll('.story-line').forEach(line => {
+                line.classList.remove('highlighted');
+            });
+        }
+
+        function selectOption(selectedIndex) {
+            const question = questions[currentQuestion];
+            const isCorrect = selectedIndex === question.correct;
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+            }
+
+            // Show feedback
+            const feedbackDiv = document.getElementById('feedback');
+            const lineReferenceDiv = document.getElementById('lineReference');
+            
+            if (isCorrect) {
+                feedbackDiv.textContent = "إجابة صحيحة! أحسنت! 🌟";
+                feedbackDiv.className = 'feedback correct';
+            } else {
+                feedbackDiv.textContent = "حاول مرة أخرى! الإجابة الصحيحة هي: " + question.options[question.correct] + " ❤️";
+                feedbackDiv.className = 'feedback wrong';
+            }
+            
+            feedbackDiv.style.display = 'block';
+            
+            // Show line reference
+            if (question.line !== "multiple") {
+                lineReferenceDiv.textContent = `📍 راجع السطر رقم ${question.line}`;
+                lineReferenceDiv.style.display = 'block';
+                
+                // Highlight the referenced line
+                const lineElement = document.getElementById(`line${question.line}`);
+                if (lineElement) {
+                    lineElement.classList.add('highlighted');
+                    lineElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else {
+                lineReferenceDiv.textContent = `📍 الإجابة مستنتجة من القصة كاملة`;
+                lineReferenceDiv.style.display = 'block';
+            }
+
+            // Color the options
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && !isCorrect) {
+                    option.classList.add('wrong');
+                }
+                option.onclick = null; // Disable further clicks
+            });
+
+            // Show next button
+            if (currentQuestion < questions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            } else {
+                setTimeout(showCompletion, 2000);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function showCompletion() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('completion').style.display = 'block';
+            document.getElementById('completionName').textContent = studentName;
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            const scoreText = `نتيجتك: ${score} من ${questions.length} (${percentage}%)`;
+            document.getElementById('finalScore').textContent = scoreText;
+        }
+
+        function restartGame() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('completion').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('studentName').value = '';
+            document.getElementById('progressBar').style.width = '0%';
+            
+            // Remove all highlights
+            document.querySelectorAll('.story-line').forEach(line => {
+                line.classList.remove('highlighted');
+            });
+        }
+    </script>
+</body>
+</html>
