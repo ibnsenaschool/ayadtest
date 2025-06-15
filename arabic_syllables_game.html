@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة مقاطع الحروف - الصف الأول</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .balloon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; color: #ff6b6b; }
+        .balloon:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; color: #4ecdc4; }
+        .balloon:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; color: #45b7d1; }
+        .balloon:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 0.5s; color: #f9ca24; }
+        .balloon:nth-child(5) { top: 50%; left: 5%; animation-delay: 1.5s; color: #6c5ce7; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .name-input {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 3px solid #3498db;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            border-color: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .syllable-display {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-family: 'Arial', sans-serif;
+            letter-spacing: 3px;
+        }
+
+        .word-display {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            letter-spacing: 2px;
+        }
+
+        .syllable-breakdown {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.8rem;
+        }
+
+        .syllable-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .syllable-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 2rem;
+            font-weight: bold;
+            min-width: 80px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 25px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .option.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+
+        .option.wrong {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .feedback {
+            display: none;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .feedback.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .feedback.wrong {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .completion {
+            display: none;
+            text-align: center;
+        }
+
+        .completion h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 25px;
+        }
+
+        .completion p {
+            color: #7f8c8d;
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        .score {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin: 0 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .student-name {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .explanation {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 1.1rem;
+            border-left: 4px solid #3498db;
+        }
+
+        .sound-btn {
+            background: linear-gradient(45deg, #e91e63, #c2185b);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .sound-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="balloon">🔤</div>
+    <div class="balloon">📚</div>
+    <div class="balloon">✏️</div>
+    <div class="balloon">⭐</div>
+    <div class="balloon">🎯</div>
+
+    <div class="game-container">
+        <div class="header">
+            <h1 class="title">مقاطع الحروف <span class="emoji">🔤</span></h1>
+            <p class="subtitle">تعلم القراءة والكتابة - الصف الأول</p>
+        </div>
+
+        <div class="start-screen">
+            <input type="text" class="name-input" placeholder="اكتب اسمك هنا..." id="studentName">
+            <br><br>
+            <div style="margin: 20px 0;">
+                <div style="font-size: 1.5rem; color: #2c3e50; margin-bottom: 15px;">أمثلة على المقاطع:</div>
+                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <div style="background: #ff6b6b; color: white; padding: 10px 15px; border-radius: 10px; font-size: 1.3rem; font-weight: bold;">بَ</div>
+                    <div style="background: #4ecdc4; color: white; padding: 10px 15px; border-radius: 10px; font-size: 1.3rem; font-weight: bold;">تِ</div>
+                    <div style="background: #f39c12; color: white; padding: 10px 15px; border-radius: 10px; font-size: 1.3rem; font-weight: bold;">كُ</div>
+                    <div style="background: #9b59b6; color: white; padding: 10px 15px; border-radius: 10px; font-size: 1.3rem; font-weight: bold;">مَا</div>
+                </div>
+            </div>
+            <button class="start-btn" onclick="startGame()">ابدأ اللعبة <span class="emoji">🌟</span></button>
+        </div>
+
+        <div class="question-container" id="questionContainer">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="question" id="question"></div>
+            <div id="displayArea"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="explanation" id="explanation" style="display: none;"></div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">السؤال التالي <span class="emoji">➡️</span></button>
+        </div>
+
+        <div class="completion" id="completion">
+            <h2>أحسنت <span class="student-name" id="completionName"></span>! <span class="emoji">🎉</span></h2>
+            <div class="score" id="finalScore"></div>
+            <p>لقد أتقنت مقاطع الحروف! أنت الآن تستطيع قراءة الكلمات بسهولة! <span class="emoji">💪</span><span class="emoji">📚</span></p>
+            <br>
+            <button class="start-btn" onclick="restartGame()">ابدأ من جديد <span class="emoji">🔄</span></button>
+        </div>
+    </div>
+
+    <script>
+        const exercises = [
+            {
+                type: "identify_syllable",
+                question: "ما هو هذا المقطع؟",
+                syllable: "بَ",
+                options: ["بَ", "بِ", "بُ", "با"],
+                correct: 0,
+                explanation: "بَ - حرف الباء مع الفتحة"
+            },
+            {
+                type: "complete_word",
+                question: "أكمل الكلمة:",
+                word_start: "كِ",
+                word_complete: "كِتاب",
+                options: ["تاب", "لاب", "ساب", "راب"],
+                correct: 0,
+                explanation: "كِ + تاب = كِتاب"
+            },
+            {
+                type: "syllable_count",
+                question: "كم مقطعاً في هذه الكلمة؟",
+                word: "بيت",
+                syllables: ["بَيْ", "ت"],
+                options: ["مقطع واحد", "مقطعان", "ثلاثة مقاطع", "أربعة مقاطع"],
+                correct: 1,
+                explanation: "بيت = بَيْ + ت = مقطعان"
+            },
+            {
+                type: "identify_syllable",
+                question: "ما هو هذا المقطع؟",
+                syllable: "مُ",
+                options: ["مَ", "مِ", "مُ", "ما"],
+                correct: 2,
+                explanation: "مُ - حرف الميم مع الضمة"
+            },
+            {
+                type: "break_word",
+                question: "قسم هذه الكلمة إلى مقاطع:",
+                word: "قلم",
+                options: ["ق + لم", "قل + م", "ق + ل + م", "قلم"],
+                correct: 0,
+                explanation: "قلم = ق + لم"
+            },
+            {
+                type: "identify_syllable",
+                question: "ما هو هذا المقطع؟",
+                syllable: "سِ",
+                options: ["سَ", "سِ", "سُ", "سا"],
+                correct: 1,
+                explanation: "سِ - حرف السين مع الكسرة"
+            },
+            {
+                type: "complete_word",
+                question: "أكمل الكلمة:",
+                word_start: "شَ",
+                word_complete: "شَمس",
+                options: ["مس", "رس", "كس", "لس"],
+                correct: 0,
+                explanation: "شَ + مس = شَمس"
+            },
+            {
+                type: "syllable_count",
+                question: "كم مقطعاً في هذه الكلمة؟",
+                word: "ولد",
+                syllables: ["وَ", "لَد"],
+                options: ["مقطع واحد", "مقطعان", "ثلاثة مقاطع", "أربعة مقاطع"],
+                correct: 1,
+                explanation: "ولد = وَ + لَد = مقطعان"
+            },
+            {
+                type: "identify_syllable",
+                question: "ما هو هذا المقطع؟",
+                syllable: "تَا",
+                options: ["تَ", "تِ", "تُ", "تَا"],
+                correct: 3,
+                explanation: "تَا - حرف التاء مع الفتحة والألف"
+            },
+            {
+                type: "break_word",
+                question: "قسم هذه الكلمة إلى مقاطع:",
+                word: "نور",
+                options: ["نو + ر", "ن + ور", "نور", "ن + و + ر"],
+                correct: 1,
+                explanation: "نور = ن + ور"
+            },
+            {
+                type: "complete_word",
+                question: "أكمل الكلمة:",
+                word_start: "جَ",
+                word_complete: "جَمل",
+                options: ["مل", "بل", "هل", "كل"],
+                correct: 0,
+                explanation: "جَ + مل = جَمل"
+            },
+            {
+                type: "syllable_count",
+                question: "كم مقطعاً في هذه الكلمة؟",
+                word: "باب",
+                syllables: ["باب"],
+                options: ["مقطع واحد", "مقطعان", "ثلاثة مقاطع", "أربعة مقاطع"],
+                correct: 0,
+                explanation: "باب = مقطع واحد طويل"
+            },
+            {
+                type: "identify_syllable",
+                question: "ما هو هذا المقطع؟",
+                syllable: "لُو",
+                options: ["لَ", "لِ", "لُ", "لُو"],
+                correct: 3,
+                explanation: "لُو - حرف اللام مع الضمة والواو"
+            },
+            {
+                type: "break_word",
+                question: "قسم هذه الكلمة إلى مقاطع:",
+                word: "زهر",
+                options: ["زه + ر", "ز + هر", "ز + ه + ر", "زهر"],
+                correct: 1,
+                explanation: "زهر = ز + هر"
+            },
+            {
+                type: "complete_word",
+                question: "أكمل الكلمة:",
+                word_start: "رَ",
+                word_complete: "رَأس",
+                options: ["أس", "يس", "وس", "اس"],
+                correct: 0,
+                explanation: "رَ + أس = رَأس"
+            }
+        ];
+
+        let currentExercise = 0;
+        let studentName = '';
+        let score = 0;
+
+        function startGame() {
+            studentName = document.getElementById('studentName').value.trim();
+            if (!studentName) {
+                alert('الرجاء كتابة اسمك أولاً! 😊');
+                return;
+            }
+            
+            document.querySelector('.start-screen').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            showExercise();
+        }
+
+        function showExercise() {
+            const exercise = exercises[currentExercise];
+            document.getElementById('question').innerHTML = `<span class="student-name">${studentName}</span>، ${exercise.question}`;
+            
+            // Create display based on exercise type
+            const displayArea = document.getElementById('displayArea');
+            displayArea.innerHTML = '';
+            
+            if (exercise.syllable) {
+                const syllableDiv = document.createElement('div');
+                syllableDiv.className = 'syllable-display';
+                syllableDiv.textContent = exercise.syllable;
+                displayArea.appendChild(syllableDiv);
+            }
+            
+            if (exercise.word) {
+                const wordDiv = document.createElement('div');
+                wordDiv.className = 'word-display';
+                wordDiv.textContent = exercise.word;
+                displayArea.appendChild(wordDiv);
+                
+                if (exercise.syllables) {
+                    const breakdownDiv = document.createElement('div');
+                    breakdownDiv.className = 'syllable-breakdown';
+                    breakdownDiv.innerHTML = `
+                        <div>تقسيم الكلمة:</div>
+                        <div class="syllable-boxes">
+                            ${exercise.syllables.map(syl => `<div class="syllable-box">${syl}</div>`).join('')}
+                        </div>
+                    `;
+                    displayArea.appendChild(breakdownDiv);
+                }
+            }
+            
+            if (exercise.word_start && exercise.word_complete) {
+                const completeDiv = document.createElement('div');
+                completeDiv.className = 'syllable-breakdown';
+                completeDiv.innerHTML = `
+                    <div style="font-size: 1.5rem; margin-bottom: 15px;">الكلمة الكاملة: ${exercise.word_complete}</div>
+                    <div class="syllable-boxes">
+                        <div class="syllable-box" style="background: #e74c3c;">${exercise.word_start}</div>
+                        <div class="syllable-box" style="background: rgba(255,255,255,0.3);">؟</div>
+                    </div>
+                `;
+                displayArea.appendChild(completeDiv);
+            }
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            exercise.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.onclick = () => selectOption(index);
+                optionsContainer.appendChild(button);
+            });
+
+            // Update progress bar
+            const progress = ((currentExercise + 1) / exercises.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Hide feedback and explanation
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('explanation').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function selectOption(selectedIndex) {
+            const exercise = exercises[currentExercise];
+            const isCorrect = selectedIndex === exercise.correct;
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+            }
+
+            // Show feedback
+            const feedbackDiv = document.getElementById('feedback');
+            const explanationDiv = document.getElementById('explanation');
+            
+            if (isCorrect) {
+                feedbackDiv.textContent = "ممتاز! إجابة صحيحة! 🌟";
+                feedbackDiv.className = 'feedback correct';
+            } else {
+                feedbackDiv.textContent = "حاول مرة أخرى! الإجابة الصحيحة هي: " + exercise.options[exercise.correct] + " ❤️";
+                feedbackDiv.className = 'feedback wrong';
+            }
+            
+            feedbackDiv.style.display = 'block';
+            explanationDiv.textContent = exercise.explanation;
+            explanationDiv.style.display = 'block';
+
+            // Color the options
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === exercise.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && !isCorrect) {
+                    option.classList.add('wrong');
+                }
+                option.onclick = null; // Disable further clicks
+            });
+
+            // Show next button
+            if (currentExercise < exercises.length - 1) {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            } else {
+                setTimeout(showCompletion, 2000);
+            }
+        }
+
+        function nextQuestion() {
+            currentExercise++;
+            showExercise();
+        }
+
+        function showCompletion() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('completion').style.display = 'block';
+            document.getElementById('completionName').textContent = studentName;
+            
+            const percentage = Math.round((score / exercises.length) * 100);
+            const scoreText = `نتيجتك: ${score} من ${exercises.length} (${percentage}%)`;
+            document.getElementById('finalScore').textContent = scoreText;
+        }
+
+        function restartGame() {
+            currentExercise = 0;
+            score = 0;
+            document.getElementById('completion').style.display = 'none';
+            document.querySelector('.start-screen').style.display = 'block';
+            document.getElementById('studentName').value = '';
+            document.getElementById('progressBar').style.width = '0%';
+        }
+    </script>
+</body>
+</html>
