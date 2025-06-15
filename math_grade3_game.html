@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة الحساب - الصف الثالث</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .balloon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; color: #ff6b6b; }
+        .balloon:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; color: #4ecdc4; }
+        .balloon:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; color: #45b7d1; }
+        .balloon:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 0.5s; color: #f9ca24; }
+        .balloon:nth-child(5) { top: 50%; left: 5%; animation-delay: 1.5s; color: #6c5ce7; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .name-input {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 3px solid #3498db;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            border-color: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .number-display {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-family: 'Courier New', monospace;
+        }
+
+        .place-value-display {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.5rem;
+        }
+
+        .place-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .place-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .option.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+
+        .option.wrong {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .feedback {
+            display: none;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .feedback.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .feedback.wrong {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .completion {
+            display: none;
+            text-align: center;
+        }
+
+        .completion h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 25px;
+        }
+
+        .completion p {
+            color: #7f8c8d;
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        .score {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin: 0 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .student-name {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .explanation {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 1.1rem;
+            border-left: 4px solid #3498db;
+        }
+
+        .comparison-display {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .number-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 120px;
+        }
+
+        .vs-text {
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="balloon">🔢</div>
+    <div class="balloon">➕</div>
+    <div class="balloon">📊</div>
+    <div class="balloon">⭐</div>
+    <div class="balloon">🎯</div>
+
+    <div class="game-container">
+        <div class="header">
+            <h1 class="title">لعبة الحساب <span class="emoji">🔢</span></h1>
+            <p class="subtitle">قيمة العدد • منزلة الأرقام • المقارنة</p>
+        </div>
+
+        <div class="start-screen">
+            <input type="text" class="name-input" placeholder="اكتب اسمك هنا..." id="studentName">
+            <br><br>
+            <button class="start-btn" onclick="startGame()">ابدأ اللعبة <span class="emoji">🌟</span></button>
+        </div>
+
+        <div class="question-container" id="questionContainer">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="question" id="question"></div>
+            <div id="displayArea"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="explanation" id="explanation" style="display: none;"></div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">السؤال التالي <span class="emoji">➡️</span></button>
+        </div>
+
+        <div class="completion" id="completion">
+            <h2>أحسنت <span class="student-name" id="completionName"></span>! <span class="emoji">🎉</span></h2>
+            <div class="score" id="finalScore"></div>
+            <p>لقد أتممت جميع تمارين الحساب! أنت تتقن الأرقام والمنازل بشكل رائع! <span class="emoji">💪</span><span class="emoji">🔢</span></p>
+            <br>
+            <button class="start-btn" onclick="restartGame()">ابدأ من جديد <span class="emoji">🔄</span></button>
+        </div>
+    </div>
+
+    <script>
+        const exercises = [
+            {
+                type: "place_value",
+                question: "ما قيمة الرقم 5 في العدد:",
+                number: 357,
+                options: ["5", "50", "500", "5000"],
+                correct: 1,
+                explanation: "الرقم 5 في منزلة العشرات، لذا قيمته 50"
+            },
+            {
+                type: "write_number",
+                question: "اكتب العدد بالأرقام:",
+                text: "ثلاثمائة وأربعة وعشرون",
+                options: ["324", "340", "304", "342"],
+                correct: 0,
+                explanation: "ثلاثمائة وأربعة وعشرون = 324"
+            },
+            {
+                type: "place_position",
+                question: "في أي منزلة يقع الرقم 7 في العدد:",
+                number: 472,
+                options: ["الآحاد", "العشرات", "المئات", "الألوف"],
+                correct: 1,
+                explanation: "الرقم 7 يقع في منزلة العشرات"
+            },
+            {
+                type: "comparison",
+                question: "أي من العددين أكبر؟",
+                num1: 345,
+                num2: 354,
+                options: ["345", "354", "متساويان", "لا يمكن المقارنة"],
+                correct: 1,
+                explanation: "354 أكبر من 345 لأن 5 > 4 في منزلة العشرات"
+            },
+            {
+                type: "place_value",
+                question: "ما قيمة الرقم 8 في العدد:",
+                number: 186,
+                options: ["8", "80", "800", "18"],
+                correct: 1,
+                explanation: "الرقم 8 في منزلة العشرات، لذا قيمته 80"
+            },
+            {
+                type: "smallest_largest",
+                question: "ما أصغر عدد يمكن تكوينه من الأرقام:",
+                digits: "5, 2, 8",
+                options: ["258", "285", "528", "825"],
+                correct: 0,
+                explanation: "أصغر عدد نكونه بترتيب الأرقام تصاعدياً: 258"
+            },
+            {
+                type: "write_number",
+                question: "اكتب العدد بالأرقام:",
+                text: "خمسمائة وستة وثلاثون",
+                options: ["536", "563", "635", "356"],
+                correct: 0,
+                explanation: "خمسمائة وستة وثلاثون = 536"
+            },
+            {
+                type: "comparison",
+                question: "أي من العددين أصغر؟",
+                num1: 167,
+                num2: 176,
+                options: ["167", "176", "متساويان", "لا يمكن المقارنة"],
+                correct: 0,
+                explanation: "167 أصغر من 176 لأن 6 < 7 في منزلة العشرات"
+            },
+            {
+                type: "place_value",
+                question: "ما قيمة الرقم 3 في العدد:",
+                number: 329,
+                options: ["3", "30", "300", "320"],
+                correct: 2,
+                explanation: "الرقم 3 في منزلة المئات، لذا قيمته 300"
+            },
+            {
+                type: "largest_from_digits",
+                question: "ما أكبر عدد يمكن تكوينه من الأرقام:",
+                digits: "4, 1, 7",
+                options: ["147", "174", "417", "741"],
+                correct: 3,
+                explanation: "أكبر عدد نكونه بترتيب الأرقام تنازلياً: 741"
+            },
+            {
+                type: "place_position",
+                question: "في أي منزلة يقع الرقم 9 في العدد:",
+                number: 591,
+                options: ["الآحاد", "العشرات", "المئات", "الألوف"],
+                correct: 1,
+                explanation: "الرقم 9 يقع في منزلة العشرات"
+            },
+            {
+                type: "write_number",
+                question: "اكتب العدد بالأرقام:",
+                text: "مائتان وثمانية وتسعون",
+                options: ["289", "298", "829", "892"],
+                correct: 1,
+                explanation: "مائتان وثمانية وتسعون = 298"
+            },
+            {
+                type: "comparison",
+                question: "رتب الأعداد من الأصغر للأكبر:",
+                numbers: "245, 254, 425",
+                options: ["245, 254, 425", "254, 245, 425", "425, 254, 245", "245, 425, 254"],
+                correct: 0,
+                explanation: "الترتيب الصحيح: 245 < 254 < 425"
+            },
+            {
+                type: "place_value",
+                question: "ما قيمة الرقم 6 في العدد:",
+                number: 463,
+                options: ["6", "60", "600", "63"],
+                correct: 1,
+                explanation: "الرقم 6 في منزلة العشرات، لذا قيمته 60"
+            },
+            {
+                type: "create_number",
+                question: "كوّن عدداً مكوناً من: 4 مئات، 7 عشرات، 2 آحاد",
+                options: ["472", "427", "724", "247"],
+                correct: 0,
+                explanation: "4 مئات + 7 عشرات + 2 آحاد = 400 + 70 + 2 = 472"
+            },
+            {
+                type: "comparison",
+                question: "أي من العددين أكبر؟",
+                num1: 389,
+                num2: 398,
+                options: ["389", "398", "متساويان", "لا يمكن المقارنة"],
+                correct: 1,
+                explanation: "398 أكبر من 389 لأن 9 > 8 في منزلة العشرات"
+            },
+            {
+                type: "place_position",
+                question: "في أي منزلة يقع الرقم 2 في العدد:",
+                number: 248,
+                options: ["الآحاد", "العشرات", "المئات", "الألوف"],
+                correct: 2,
+                explanation: "الرقم 2 يقع في منزلة المئات"
+            },
+            {
+                type: "write_number",
+                question: "اكتب العدد بالأرقام:",
+                text: "أربعمائة وإحدى عشرة",
+                options: ["411", "141", "114", "401"],
+                correct: 0,
+                explanation: "أربعمائة وإحدى عشرة = 411"
+            },
+            {
+                type: "smallest_from_digits",
+                question: "ما أصغر عدد يمكن تكوينه من الأرقام:",
+                digits: "9, 3, 1",
+                options: ["139", "193", "319", "391"],
+                correct: 0,
+                explanation: "أصغر عدد نكونه بترتيب الأرقام تصاعدياً: 139"
+            },
+            {
+                type: "place_value",
+                question: "ما قيمة الرقم 1 في العدد:",
+                number: 617,
+                options: ["1", "10", "100", "17"],
+                correct: 1,
+                explanation: "الرقم 1 في منزلة العشرات، لذا قيمته 10"
+            }
+        ];
+
+        let currentExercise = 0;
+        let studentName = '';
+        let score = 0;
+
+        function startGame() {
+            studentName = document.getElementById('studentName').value.trim();
+            if (!studentName) {
+                alert('الرجاء كتابة اسمك أولاً! 😊');
+                return;
+            }
+            
+            document.querySelector('.start-screen').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            showExercise();
+        }
+
+        function showExercise() {
+            const exercise = exercises[currentExercise];
+            document.getElementById('question').innerHTML = `<span class="student-name">${studentName}</span>، ${exercise.question}`;
+            
+            // Create display based on exercise type
+            const displayArea = document.getElementById('displayArea');
+            displayArea.innerHTML = '';
+            
+            if (exercise.number) {
+                const numberDiv = document.createElement('div');
+                numberDiv.className = 'number-display';
+                numberDiv.textContent = exercise.number;
+                displayArea.appendChild(numberDiv);
+                
+                if (exercise.type === 'place_value' || exercise.type === 'place_position') {
+                    const placeDiv = document.createElement('div');
+                    placeDiv.className = 'place-value-display';
+                    placeDiv.innerHTML = `
+                        <div class="place-grid">
+                            <div class="place-box">المئات</div>
+                            <div class="place-box">العشرات</div>
+                            <div class="place-box">الآحاد</div>
+                        </div>
+                        <div class="place-grid">
+                            ${getPlaceValueBreakdown(exercise.number)}
+                        </div>
+                    `;
+                    displayArea.appendChild(placeDiv);
+                }
+            }
+            
+            if (exercise.text) {
+                const textDiv = document.createElement('div');
+                textDiv.className = 'number-display';
+                textDiv.style.fontSize = '1.8rem';
+                textDiv.textContent = exercise.text;
+                displayArea.appendChild(textDiv);
+            }
+            
+            if (exercise.digits) {
+                const digitsDiv = document.createElement('div');
+                digitsDiv.className = 'number-display';
+                digitsDiv.style.fontSize = '1.8rem';
+                digitsDiv.textContent = exercise.digits;
+                displayArea.appendChild(digitsDiv);
+            }
+            
+            if (exercise.num1 && exercise.num2) {
+                const compDiv = document.createElement('div');
+                compDiv.className = 'comparison-display';
+                compDiv.innerHTML = `
+                    <div class="number-box">${exercise.num1}</div>
+                    <div class="vs-text">مقابل</div>
+                    <div class="number-box">${exercise.num2}</div>
+                `;
+                displayArea.appendChild(compDiv);
+            }
+            
+            if (exercise.numbers) {
+                const numbersDiv = document.createElement('div');
+                numbersDiv.className = 'number-display';
+                numbersDiv.style.fontSize = '1.8rem';
+                numbersDiv.textContent = exercise.numbers;
+                displayArea.appendChild(numbersDiv);
+            }
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            exercise.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.onclick = () => selectOption(index);
+                optionsContainer.appendChild(button);
+            });
+
+            // Update progress bar
+            const progress = ((currentExercise + 1) / exercises.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Hide feedback and explanation
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('explanation').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function getPlaceValueBreakdown(number) {
+            const str = number.toString().padStart(3, '0');
+            return `
+                <div class="place-box">${str[0]}</div>
+                <div class="place-box">${str[1]}</div>
+                <div class="place-box">${str[2]}</div>
+            `;
+        }
+
+        function selectOption(selectedIndex) {
+            const exercise = exercises[currentExercise];
+            const isCorrect = selectedIndex === exercise.correct;
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+            }
+
+            // Show feedback
+            const feedbackDiv = document.getElementById('feedback');
+            const explanationDiv = document.getElementById('explanation');
+            
+            if (isCorrect) {
+                feedbackDiv.textContent = "ممتاز! إجابة صحيحة! 🌟";
+                feedbackDiv.className = 'feedback correct';
+            } else {
+                feedbackDiv.textContent = "حاول مرة أخرى! الإجابة الصحيحة هي: " + exercise.options[exercise.correct] + " ❤️";
+                feedbackDiv.className = 'feedback wrong';
+            }
+            
+            feedbackDiv.style.display = 'block';
+            explanationDiv.textContent = exercise.explanation;
+            explanationDiv.style.display = 'block';
+
+            // Color the options
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === exercise.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && !isCorrect) {
+                    option.classList.add('wrong');
+                }
+                option.onclick = null; // Disable further clicks
+            });
+
+            // Show next button
+            if (currentExercise < exercises.length - 1) {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            } else {
+                setTimeout(showCompletion, 2000);
+            }
+        }
+
+        function nextQuestion() {
+            currentExercise++;
+            showExercise();
+        }
+
+        function showCompletion() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('completion').style.display = 'block';
+            document.getElementById('completionName').textContent = studentName;
+            
+            const percentage = Math.round((score / exercises.length) * 100);
+            const scoreText = `نتيجتك: ${score} من ${exercises.length} (${percentage}%)`;
+            document.getElementById('finalScore').textContent = scoreText;
+        }
+
+        function restartGame() {
+            currentExercise = 0;
+            score = 0;
+            document.getElementById('completion').style.display = 'none';
+            document.querySelector('.start-screen').style.display = 'block';
+            document.getElementById('studentName').value = '';
+            document.getElementById('progressBar').style.width = '0%';
+        }
+    </script>
+</body>
+</html>
