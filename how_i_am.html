@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كيف تشعر اليوم؟</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .balloon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; color: #ff6b6b; }
+        .balloon:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; color: #4ecdc4; }
+        .balloon:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; color: #45b7d1; }
+        .balloon:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 0.5s; color: #f9ca24; }
+        .balloon:nth-child(5) { top: 50%; left: 5%; animation-delay: 1.5s; color: #6c5ce7; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .name-input {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 3px solid #3498db;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            border-color: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .encouragement {
+            display: none;
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .completion {
+            display: none;
+            text-align: center;
+        }
+
+        .completion h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 25px;
+        }
+
+        .completion p {
+            color: #7f8c8d;
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin: 0 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .student-name {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="balloon">🎈</div>
+    <div class="balloon">🎈</div>
+    <div class="balloon">🎈</div>
+    <div class="balloon">🎈</div>
+    <div class="balloon">🎈</div>
+
+    <div class="game-container">
+        <div class="header">
+            <h1 class="title">كيف تشعر اليوم؟ <span class="emoji">😊</span></h1>
+            <p class="subtitle">لعبة للتواصل والتشجيع</p>
+        </div>
+
+        <div class="start-screen">
+            <input type="text" class="name-input" placeholder="اكتب اسمك هنا..." id="studentName">
+            <br><br>
+            <button class="start-btn" onclick="startGame()">ابدأ اللعبة <span class="emoji">🌟</span></button>
+        </div>
+
+        <div class="question-container" id="questionContainer">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <div class="encouragement" id="encouragement"></div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">السؤال التالي <span class="emoji">➡️</span></button>
+        </div>
+
+        <div class="completion" id="completion">
+            <h2>أحسنت <span class="student-name" id="completionName"></span>! <span class="emoji">🎉</span></h2>
+            <p>شكراً لك على مشاركة مشاعرك معنا. تذكر أن كل ما تشعر به طبيعي ومهم. هذه الأوقات الصعبة ستمر، وأنت قوي وشجاع! <span class="emoji">💪</span><span class="emoji">❤️</span></p>
+            <br>
+            <button class="start-btn" onclick="restartGame()">ابدأ من جديد <span class="emoji">🔄</span></button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "كيف تشعر اليوم؟",
+                options: ["سعيد ومليء بالطاقة 😊", "هادئ ومسترخي 😌", "متعب قليلاً 😴", "أشعر بالقلق 😟"],
+                encouragements: [
+                    "رائع! سعادتك تضيء يومنا جميعاً! استمر في نشر الإيجابية! 🌟",
+                    "الهدوء قوة حقيقية! أنت تتعامل مع الأمور بحكمة! 🧘‍♀️",
+                    "لا بأس بالشعور بالتعب أحياناً، خذ قسطاً من الراحة! 💤",
+                    "القلق طبيعي في هذه الأوقات، وأنت شجاع لمواجهته! 💪"
+                ]
+            },
+            {
+                question: "ما هو شعورك تجاه التعلم عن بعد؟",
+                options: ["أحبه وأستمتع به 💻", "أتكيف معه تدريجياً 📚", "أجده صعباً أحياناً 🤔", "أفتقد المدرسة كثيراً 🏫"],
+                encouragements: [
+                    "ممتاز! أنت تتقن التكنولوجيا بطريقة رائعة! 🌟",
+                    "التكيف يحتاج وقت، وأنت تقوم بعمل رائع! 👏",
+                    "الصعوبات طبيعية، والمهم أنك تحاول! أنت بطل! 🦸‍♀️",
+                    "الاشتياق طبيعي، وسنعود قريباً أقوى من قبل! ❤️"
+                ]
+            },
+            {
+                question: "كيف تقضي وقت فراغك هذه الأيام؟",
+                options: ["ألعب وأمرح 🎮", "أقرأ وأتعلم 📖", "أساعد الأهل 👨‍👩‍👧‍👦", "أرتاح وأشاهد التلفاز 📺"],
+                encouragements: [
+                    "اللعب مهم للصحة النفسية! استمر في الاستمتاع! 🎯",
+                    "القراءة تجعلك أكثر ذكاءً! أنت تستثمر في مستقبلك! 🧠",
+                    "مساعدة الأهل تُظهر كم أنت رائع ومسؤول! 🌟",
+                    "الراحة ضرورية، وأنت تعرف كيف تعتني بنفسك! 😌"
+                ]
+            },
+            {
+                question: "ما هو شعورك عندما تسمع الأخبار؟",
+                options: ["أحاول فهم ما يحدث 🤔", "أشعر بالقلق أحياناً 😰", "أتجنب سماعها 🙈", "أناقشها مع الأهل 👨‍👩‍👧‍👦"],
+                encouragements: [
+                    "فضولك للفهم يُظهر نضجك وذكاءك! 🧠",
+                    "القلق طبيعي، والمهم أن تتحدث عن مشاعرك! 💗",
+                    "أحياناً نحتاج لحماية أنفسنا، وهذا ذكي منك! 🛡️",
+                    "النقاش مع الأهل يساعدك على الفهم أكثر! 👨‍👩‍👧‍👦"
+                ]
+            },
+            {
+                question: "كيف تشعر نحو أصدقائك الآن؟",
+                options: ["أتواصل معهم كثيراً 📱", "أفتقدهم جداً 💔", "أشعر بالوحدة أحياناً 😔", "أستمتع بالوقت مع العائلة 👪"],
+                encouragements: [
+                    "التواصل مع الأصدقاء يُظهر مدى اهتمامك بهم! 📱❤️",
+                    "الاشتياق يُظهر عمق صداقاتك! ستلتقون قريباً! 🤗",
+                    "الشعور بالوحدة طبيعي، وأنت لست وحدك أبداً! 🤗",
+                    "الوقت مع العائلة كنز حقيقي! 💎"
+                ]
+            },
+            {
+                question: "كيف تتعامل مع المشاعر الصعبة؟",
+                options: ["أتحدث مع الأهل 🗣️", "أكتب أو أرسم 🎨", "ألعب أو أتحرك 🏃‍♀️", "أستمع للموسيقى 🎵"],
+                encouragements: [
+                    "التحدث مع الأهل طريقة رائعة للتعبير! 👨‍👩‍👧‍👦",
+                    "الكتابة والرسم وسائل إبداعية للتعبير! 🎨",
+                    "الحركة واللعب يساعدان على تحسين المزاج! 🏃‍♀️",
+                    "الموسيقى لها قوة سحرية في الشفاء! 🎵"
+                ]
+            },
+            {
+                question: "ما هو شعورك نحو المستقبل؟",
+                options: ["متفائل ومليء بالأمل 🌟", "متردد قليلاً 🤷‍♀️", "قلق من المجهول 😟", "أعيش اليوم بيومه 📅"],
+                encouragements: [
+                    "تفاؤلك قوة عظيمة! استمر في الحلم! 🌈",
+                    "التردد طبيعي، والمهم أن تثق بنفسك! 💪",
+                    "القلق من المجهول طبيعي، وأنت أقوى مما تعتقد! 🦸‍♀️",
+                    "العيش في اللحظة الحالية حكمة حقيقية! 🧘‍♀️"
+                ]
+            },
+            {
+                question: "كيف تشعر عندما تنجز مهامك الدراسية؟",
+                options: ["فخور جداً بنفسي 😎", "مرتاح وسعيد 😊", "متعب لكن راضي 😤", "أحتاج للمزيد من الدعم 🤗"],
+                encouragements: [
+                    "الفخر بالإنجاز علامة على التقدم الرائع! 🏆",
+                    "الراحة بعد الإنجاز شعور جميل! 😊",
+                    "التعب مع الرضا يعني أنك تبذل جهداً حقيقياً! 💪",
+                    "طلب الدعم يُظهر حكمتك وشجاعتك! 🤗"
+                ]
+            },
+            {
+                question: "ما هو الشيء الذي يسعدك أكثر هذه الأيام؟",
+                options: ["الوقت مع العائلة 👨‍👩‍👧‍👦", "تعلم أشياء جديدة 🎓", "اللعب والمرح 🎈", "الحديث مع الأصدقاء 👫"],
+                encouragements: [
+                    "العائلة هي الكنز الأعظم! 💎",
+                    "التعلم يجعلك تنمو كل يوم! 📚",
+                    "اللعب والمرح ضروريان للصحة النفسية! 🎉",
+                    "الصداقات الحقيقية تدوم مدى الحياة! 💕"
+                ]
+            },
+            {
+                question: "ما هي رسالتك للآخرين في هذه الأوقات؟",
+                options: ["كونوا أقوياء ومتفائلين 💪", "اعتنوا بأنفسكم 💗", "ساعدوا بعضكم البعض 🤝", "كل شيء سيكون بخير 🌈"],
+                encouragements: [
+                    "رسالتك ملهمة! أنت تنشر القوة والأمل! 🌟",
+                    "اهتمامك بالآخرين يُظهر قلبك الطيب! ❤️",
+                    "المساعدة المتبادلة تجعلنا أقوى! 🤝",
+                    "إيمانك بالخير يجعل العالم مكاناً أفضل! 🌍"
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let studentName = '';
+
+        function startGame() {
+            studentName = document.getElementById('studentName').value.trim();
+            if (!studentName) {
+                alert('الرجاء كتابة اسمك أولاً! 😊');
+                return;
+            }
+            
+            document.querySelector('.start-screen').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question').innerHTML = `<span class="student-name">${studentName}</span>، ${question.question}`;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.onclick = () => selectOption(index);
+                optionsContainer.appendChild(button);
+            });
+
+            // Update progress bar
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function selectOption(optionIndex) {
+            const encouragement = questions[currentQuestion].encouragements[optionIndex];
+            const encouragementDiv = document.getElementById('encouragement');
+            encouragementDiv.textContent = encouragement;
+            encouragementDiv.style.display = 'block';
+            
+            // Hide options
+            document.getElementById('options').style.display = 'none';
+            
+            // Show next button
+            if (currentQuestion < questions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            } else {
+                setTimeout(showCompletion, 2000);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            document.getElementById('encouragement').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('options').style.display = 'grid';
+            showQuestion();
+        }
+
+        function showCompletion() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('completion').style.display = 'block';
+            document.getElementById('completionName').textContent = studentName;
+        }
+
+        function restartGame() {
+            currentQuestion = 0;
+            document.getElementById('completion').style.display = 'none';
+            document.querySelector('.start-screen').style.display = 'block';
+            document.getElementById('studentName').value = '';
+            document.getElementById('progressBar').style.width = '0%';
+        }
+    </script>
+</body>
+</html>
