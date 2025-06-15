@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة البلدان والعواصم</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .balloon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; color: #ff6b6b; }
+        .balloon:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; color: #4ecdc4; }
+        .balloon:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; color: #45b7d1; }
+        .balloon:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 0.5s; color: #f9ca24; }
+        .balloon:nth-child(5) { top: 50%; left: 5%; animation-delay: 1.5s; color: #6c5ce7; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .name-input {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 3px solid #3498db;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            border-color: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-type {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .question {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .country-display {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 25px 0;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: countryPulse 2s infinite;
+        }
+
+        .country-display::before {
+            content: '🌍';
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            font-size: 2.5rem;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes countryPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .capital-display {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 25px 0;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: capitalPulse 2s infinite;
+        }
+
+        .capital-display::before {
+            content: '🏛️';
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            font-size: 2.5rem;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes capitalPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .flag-display {
+            width: 200px;
+            height: 130px;
+            margin: 20px auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 5px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            animation: flagWave 3s ease-in-out infinite;
+        }
+
+        @keyframes flagWave {
+            0%, 100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(10deg); }
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .option {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px 15px;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .option.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            animation: correctPulse 0.6s ease-in-out;
+        }
+
+        .option.wrong {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            animation: wrongShake 0.6s ease-in-out;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            display: none;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .feedback.wrong {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .explanation {
+            background: linear-gradient(135deg, #ecf0f1, #d5dbdb);
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            font-size: 1.2rem;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            font-weight: bold;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .completion {
+            display: none;
+            text-align: center;
+        }
+
+        .completion h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 25px;
+        }
+
+        .completion p {
+            color: #7f8c8d;
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        .score {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
+
+        .progress {
+            width: 100%;
+            height: 12px;
+            background: #ecf0f1;
+            border-radius: 6px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            width: 0%;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin: 0 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .student-name {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .preview-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .preview-box {
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .arab-countries {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+
+        .world-countries {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+        }
+
+        .african-countries {
+            background: linear-gradient(45deg, #e67e22, #d35400);
+        }
+
+        .asian-countries {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+        }
+
+        .region-icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="balloon">🌍</div>
+    <div class="balloon">🏛️</div>
+    <div class="balloon">🗺️</div>
+    <div class="balloon">🌟</div>
+    <div class="balloon">📍</div>
+
+    <div class="game-container">
+        <div class="header">
+            <h1 class="title">البلدان والعواصم <span class="emoji">🌍</span></h1>
+            <p class="subtitle">تعلم جغرافيا العالم بطريقة ممتعة</p>
+        </div>
+
+        <div class="start-screen" id="startScreen">
+            <input type="text" class="name-input" placeholder="اكتب اسمك هنا..." id="studentName">
+            <br><br>
+            <div class="preview-section">
+                <div class="preview-box arab-countries">
+                    <span class="region-icon">🕌</span>
+                    البلدان العربية
+                </div>
+                <div class="preview-box world-countries">
+                    <span class="region-icon">🌍</span>
+                    البلدان العالمية
+                </div>
+                <div class="preview-box african-countries">
+                    <span class="region-icon">🦁</span>
+                    القارة الأفريقية
+                </div>
+                <div class="preview-box asian-countries">
+                    <span class="region-icon">🏯</span>
+                    القارة الآسيوية
+                </div>
+            </div>
+            <button class="start-btn" onclick="startGame()">ابدأ الرحلة <span class="emoji">✈️</span></button>
+        </div>
+
+        <div class="question-container" id="questionContainer">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="question-type" id="questionType"></div>
+            <div class="question" id="question"></div>
+            <div id="displayArea"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="explanation" id="explanation"></div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">السؤال التالي <span class="emoji">➡️</span></button>
+        </div>
+
+        <div class="completion" id="completion">
+            <h2>رائع <span class="student-name" id="completionName"></span>! <span class="emoji">🏆</span></h2>
+            <div class="score" id="finalScore"></div>
+            <p>لقد تعلمت الكثير عن جغرافيا العالم! أنت الآن خبير في البلدان والعواصم! <span class="emoji">🌍</span><span class="emoji">⭐</span></p>
+            <br>
+            <button class="start-btn" onclick="restartGame()">رحلة جديدة <span class="emoji">🔄</span></button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // الدول العربية
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "مصر",
+                flag: "🇪🇬",
+                options: ["القاهرة", "الإسكندرية", "الجيزة", "أسوان"],
+                correct: 0,
+                region: "🕌 البلدان العربية",
+                explanation: "القاهرة هي عاصمة مصر وأكبر مدنها، وتُلقب بأم الدنيا"
+            },
+            {
+                type: "country_from_capital",
+                question: "ما اسم البلد الذي عاصمته:",
+                capital: "الرياض",
+                flag: "🇸🇦",
+                options: ["الكويت", "السعودية", "قطر", "الإمارات"],
+                correct: 1,
+                region: "🕌 البلدان العربية",
+                explanation: "الرياض هي عاصمة المملكة العربية السعودية"
+            },
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "الأردن",
+                flag: "🇯🇴",
+                options: ["عمان", "إربد", "الزرقاء", "العقبة"],
+                correct: 0,
+                region: "🕌 البلدان العربية",
+                explanation: "عمان هي عاصمة المملكة الأردنية الهاشمية"
+            },
+            {
+                type: "country_from_capital",
+                question: "ما اسم البلد الذي عاصمته:",
+                capital: "بيروت",
+                flag: "🇱🇧",
+                options: ["سوريا", "لبنان", "فلسطين", "العراق"],
+                correct: 1,
+                region: "🕌 البلدان العربية",
+                explanation: "بيروت هي عاصمة لبنان وتُلقب بباريس الشرق"
+            },
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "المغرب",
+                flag: "🇲🇦",
+                options: ["الدار البيضاء", "الرباط", "مراكش", "فاس"],
+                correct: 1,
+                region: "🕌 البلدان العربية",
+                explanation: "الرباط هي العاصمة الرسمية للمملكة المغربية"
+            },
+            
+            // البلدان العالمية
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "فرنسا",
+                flag: "🇫🇷",
+                options: ["ليون", "باريس", "مارسيليا", "نيس"],
+                correct: 1,
+                region: "🌍 البلدان العالمية",
+                explanation: "باريس هي عاصمة فرنسا وتُلقب بمدينة النور"
+            },
+            {
+                type: "country_from_capital",
+                question: "ما اسم البلد الذي عاصمته:",
+                capital: "لندن",
+                flag: "🇬🇧",
+                options: ["أيرلندا", "بريطانيا", "إسكتلندا", "ويلز"],
+                correct: 1,
+                region: "🌍 البلدان العالمية",
+                explanation: "لندن هي عاصمة المملكة المتحدة البريطانية"
+            },
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "إيطاليا",
+                flag: "🇮🇹",
+                options: ["روما", "ميلانو", "نابولي", "فلورنسا"],
+                correct: 0,
+                region: "🌍 البلدان العالمية",
+                explanation: "روما هي عاصمة إيطاليا والمدينة الخالدة"
+            },
+            {
+                type: "country_from_capital",
+                question: "ما اسم البلد الذي عاصمته:",
+                capital: "برلين",
+                flag: "🇩🇪",
+                options: ["النمسا", "ألمانيا", "سويسرا", "هولندا"],
+                correct: 1,
+                region: "🌍 البلدان العالمية",
+                explanation: "برلين هي عاصمة ألمانيا الاتحادية"
+            },
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "إسبانيا",
+                flag: "🇪🇸",
+                options: ["برشلونة", "مدريد", "فالنسيا", "إشبيلية"],
+                correct: 1,
+                region: "🌍 البلدان العالمية",
+                explanation: "مدريد هي عاصمة إسبانيا"
+            },
+            
+            // القارة الأفريقية
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "نيجيريا",
+                flag: "🇳🇬",
+                options: ["لاغوس", "أبوجا", "كانو", "إبادان"],
+                correct: 1,
+                region: "🦁 القارة الأفريقية",
+                explanation: "أبوجا هي عاصمة نيجيريا منذ عام 1991"
+            },
+            {
+                type: "country_from_capital",
+                question: "ما اسم البلد الذي عاصمته:",
+                capital: "كيب تاون",
+                flag: "🇿🇦",
+                options: ["زيمبابوي", "جنوب أفريقيا", "ناميبيا", "بوتسوانا"],
+                correct: 1,
+                region: "🦁 القارة الأفريقية",
+                explanation: "كيب تاون هي إحدى عواصم جنوب أفريقيا الثلاث"
+            },
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "كينيا",
+                flag: "🇰🇪",
+                options: ["نيروبي", "مومباسا", "ناكورو", "كيسومو"],
+                correct: 0,
+                region: "🦁 القارة الأفريقية",
+                explanation: "نيروبي هي عاصمة كينيا وأكبر مدنها"
+            },
+            {
+                type: "country_from_capital",
+                question: "ما اسم البلد الذي عاصمته:",
+                capital: "أديس أبابا",
+                flag: "🇪🇹",
+                options: ["إريتريا", "إثيوبيا", "الصومال", "جيبوتي"],
+                correct: 1,
+                region: "🦁 القارة الأفريقية",
+                explanation: "أديس أبابا هي عاصمة إثيوبيا ومقر الاتحاد الأفريقي"
+            },
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "غانا",
+                flag: "🇬🇭",
+                options: ["أكرا", "كوماسي", "تاماله", "كيب كوست"],
+                correct: 0,
+                region: "🦁 القارة الأفريقية",
+                explanation: "أكرا هي عاصمة غانا وأكبر مدنها"
+            },
+            
+            // القارة الآسيوية
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "اليابان",
+                flag: "🇯🇵",
+                options: ["أوساكا", "طوكيو", "كيوتو", "يوكوهاما"],
+                correct: 1,
+                region: "🏯 القارة الآسيوية",
+                explanation: "طوكيو هي عاصمة اليابان وأكبر مدنها"
+            },
+            {
+                type: "country_from_capital",
+                question: "ما اسم البلد الذي عاصمته:",
+                capital: "بكين",
+                flag: "🇨🇳",
+                options: ["اليابان", "الصين", "كوريا الجنوبية", "منغوليا"],
+                correct: 1,
+                region: "🏯 القارة الآسيوية",
+                explanation: "بكين هي عاصمة جمهورية الصين الشعبية"
+            },
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "الهند",
+                flag: "🇮🇳",
+                options: ["مومباي", "نيودلهي", "كولكاتا", "تشيناي"],
+                correct: 1,
+                region: "🏯 القارة الآسيوية",
+                explanation: "نيودلهي هي عاصمة الهند"
+            },
+            {
+                type: "country_from_capital",
+                question: "ما اسم البلد الذي عاصمته:",
+                capital: "بانكوك",
+                flag: "🇹🇭",
+                options: ["فيتنام", "تايلاند", "كمبوديا", "لاوس"],
+                correct: 1,
+                region: "🏯 القارة الآسيوية",
+                explanation: "بانكوك هي عاصمة تايلاند"
+            },
+            {
+                type: "capital_from_country",
+                question: "ما عاصمة هذا البلد؟",
+                country: "ماليزيا",
+                flag: "🇲🇾",
+                options: ["كوالالمبور", "جوهور باهرو", "إيبوه", "ملقا"],
+                correct: 0,
+                region: "🏯 القارة الآسيوية",
+                explanation: "كوالالمبور هي عاصمة ماليزيا"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let studentName = '';
+        let score = 0;
+
+        function startGame() {
+            studentName = document.getElementById('studentName').value.trim();
+            if (!studentName) {
+                alert('الرجاء كتابة اسمك أولاً! 😊');
+                return;
+            }
+            
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            
+            // Set question type and region
+            document.getElementById('questionType').textContent = question.region;
+            document.getElementById('question').innerHTML = `<span class="student-name">${studentName}</span>، ${question.question}`;
+            
+            const displayArea = document.getElementById('displayArea');
+            displayArea.innerHTML = '';
+            
+            if (question.type === 'capital_from_country') {
+                // Show country name with flag
+                const countryDiv = document.createElement('div');
+                countryDiv.className = 'country-display';
+                countryDiv.innerHTML = `${question.country}`;
+                displayArea.appendChild(countryDiv);
+                
+                const flagDiv = document.createElement('div');
+                flagDiv.className = 'flag-display';
+                flagDiv.textContent = question.flag;
+                displayArea.appendChild(flagDiv);
+                
+            } else if (question.type === 'country_from_capital') {
+                // Show capital name with flag
+                const capitalDiv = document.createElement('div');
+                capitalDiv.className = 'capital-display';
+                capitalDiv.innerHTML = `${question.capital}`;
+                displayArea.appendChild(capitalDiv);
+                
+                const flagDiv = document.createElement('div');
+                flagDiv.className = 'flag-display';
+                flagDiv.textContent = question.flag;
+                displayArea.appendChild(flagDiv);
+            }
+            
+            // Create options
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.onclick = () => selectOption(index);
+                optionsContainer.appendChild(button);
+            });
+
+            // Update progress bar
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Hide feedback and explanation
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('explanation').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function selectOption(selectedIndex) {
+            const question = questions[currentQuestion];
+            const isCorrect = selectedIndex === question.correct;
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+            }
+
+            // Show feedback
+            const feedbackDiv = document.getElementById('feedback');
+            const explanationDiv = document.getElementById('explanation');
+            
+            if (isCorrect) {
+                feedbackDiv.textContent = "إجابة ممتازة! أحسنت! 🌟";
+                feedbackDiv.className = 'feedback correct';
+            } else {
+                feedbackDiv.textContent = "جربت جيداً! الإجابة الصحيحة هي: " + question.options[question.correct] + " 💪";
+                feedbackDiv.className = 'feedback wrong';
+            }
+            
+            feedbackDiv.style.display = 'block';
+            explanationDiv.textContent = question.explanation;
+            explanationDiv.style.display = 'block';
+
+            // Color the options
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && !isCorrect) {
+                    option.classList.add('wrong');
+                }
+                option.onclick = null; // Disable further clicks
+            });
+
+            // Show next button
+            if (currentQuestion < questions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            } else {
+                setTimeout(showCompletion, 2000);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function showCompletion() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('completion').style.display = 'block';
+            document.getElementById('completionName').textContent = studentName;
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            let achievement = '';
+            if (percentage >= 90) achievement = 'خبير جغرافيا! 🏆';
+            else if (percentage >= 80) achievement = 'مستكشف ممتاز! 🌟';
+            else if (percentage >= 70) achievement = 'رحالة جيد! ✈️';
+            else achievement = 'مبتدئ مميز! 🗺️';
+            
+            const scoreText = `نتيجتك: ${score} من ${questions.length} (${percentage}%) - ${achievement}`;
+            document.getElementById('finalScore').textContent = scoreText;
+        }
+
+        function restartGame() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('completion').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('studentName').value = '';
+            document.getElementById('progressBar').style.width = '0%';
+        }
+    </script>
+</body>
+</html>
