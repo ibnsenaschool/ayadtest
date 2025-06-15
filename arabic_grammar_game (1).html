@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة المفرد والمثنى والجمع</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .balloon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; color: #ff6b6b; }
+        .balloon:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; color: #4ecdc4; }
+        .balloon:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; color: #45b7d1; }
+        .balloon:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 0.5s; color: #f9ca24; }
+        .balloon:nth-child(5) { top: 50%; left: 5%; animation-delay: 1.5s; color: #6c5ce7; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .name-input {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 3px solid #3498db;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            border-color: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .word-display {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .option.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+
+        .option.wrong {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .feedback {
+            display: none;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .feedback.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .feedback.wrong {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .completion {
+            display: none;
+            text-align: center;
+        }
+
+        .completion h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 25px;
+        }
+
+        .completion p {
+            color: #7f8c8d;
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        .score {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin: 0 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .student-name {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .explanation {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 1.1rem;
+            border-left: 4px solid #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="balloon">📚</div>
+    <div class="balloon">✏️</div>
+    <div class="balloon">🎈</div>
+    <div class="balloon">⭐</div>
+    <div class="balloon">📖</div>
+
+    <div class="game-container">
+        <div class="header">
+            <h1 class="title">المفرد والمثنى والجمع <span class="emoji">📚</span></h1>
+            <p class="subtitle">لعبة تعليمية للصف الثالث</p>
+        </div>
+
+        <div class="start-screen">
+            <input type="text" class="name-input" placeholder="اكتب اسمك هنا..." id="studentName">
+            <br><br>
+            <button class="start-btn" onclick="startGame()">ابدأ اللعبة <span class="emoji">🌟</span></button>
+        </div>
+
+        <div class="question-container" id="questionContainer">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="question" id="question"></div>
+            <div class="word-display" id="wordDisplay"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="explanation" id="explanation" style="display: none;"></div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">السؤال التالي <span class="emoji">➡️</span></button>
+        </div>
+
+        <div class="completion" id="completion">
+            <h2>أحسنت <span class="student-name" id="completionName"></span>! <span class="emoji">🎉</span></h2>
+            <div class="score" id="finalScore"></div>
+            <p>لقد أنهيت جميع التمارين! أنت تتقن قواعد المفرد والمثنى والجمع بشكل رائع! <span class="emoji">💪</span><span class="emoji">📚</span></p>
+            <br>
+            <button class="start-btn" onclick="restartGame()">ابدأ من جديد <span class="emoji">🔄</span></button>
+        </div>
+    </div>
+
+    <script>
+        const exercises = [
+            {
+                type: "identify",
+                question: "ما نوع هذه الكلمة؟",
+                word: "كتاب",
+                options: ["مفرد", "مثنى", "جمع"],
+                correct: 0,
+                explanation: "كتاب: كلمة مفردة تدل على شيء واحد"
+            },
+            {
+                type: "convert",
+                question: "ما هو مثنى كلمة:",
+                word: "طالب",
+                options: ["طالبان", "طلاب", "طالبين"],
+                correct: 0,
+                explanation: "مثنى طالب هو: طالبان (في حالة الرفع)"
+            },
+            {
+                type: "identify",
+                question: "ما نوع هذه الكلمة؟",
+                word: "ولدان",
+                options: ["مفرد", "مثنى", "جمع"],
+                correct: 1,
+                explanation: "ولدان: كلمة مثناة تدل على اثنين"
+            },
+            {
+                type: "convert",
+                question: "ما هو جمع كلمة:",
+                word: "بيت",
+                options: ["بيتان", "بيوت", "أبيات"],
+                correct: 1,
+                explanation: "جمع بيت هو: بيوت"
+            },
+            {
+                type: "identify",
+                question: "ما نوع هذه الكلمة؟",
+                word: "أطفال",
+                options: ["مفرد", "مثنى", "جمع"],
+                correct: 2,
+                explanation: "أطفال: كلمة جمع تدل على أكثر من اثنين"
+            },
+            {
+                type: "convert",
+                question: "ما هو مثنى كلمة:",
+                word: "شجرة",
+                options: ["شجرتان", "شجرات", "أشجار"],
+                correct: 0,
+                explanation: "مثنى شجرة هو: شجرتان"
+            },
+            {
+                type: "choose",
+                question: "أيٌّ من هذه الكلمات مفرد؟",
+                word: "",
+                options: ["معلمان", "قلم", "كتب"],
+                correct: 1,
+                explanation: "قلم: كلمة مفردة، معلمان مثنى، كتب جمع"
+            },
+            {
+                type: "convert",
+                question: "ما هو جمع كلمة:",
+                word: "نجمة",
+                options: ["نجمتان", "نجوم", "نجمات"],
+                correct: 1,
+                explanation: "جمع نجمة هو: نجوم"
+            },
+            {
+                type: "choose",
+                question: "أيٌّ من هذه الكلمات مثنى؟",
+                word: "",
+                options: ["أقلام", "كتابان", "معلم"],
+                correct: 1,
+                explanation: "كتابان: كلمة مثناة، أقلام جمع، معلم مفرد"
+            },
+            {
+                type: "convert",
+                question: "ما هو مفرد كلمة:",
+                word: "طيور",
+                options: ["طائر", "طائران", "طيرة"],
+                correct: 0,
+                explanation: "مفرد طيور هو: طائر"
+            }
+        ];
+
+        let currentExercise = 0;
+        let studentName = '';
+        let score = 0;
+
+        function startGame() {
+            studentName = document.getElementById('studentName').value.trim();
+            if (!studentName) {
+                alert('الرجاء كتابة اسمك أولاً! 😊');
+                return;
+            }
+            
+            document.querySelector('.start-screen').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            showExercise();
+        }
+
+        function showExercise() {
+            const exercise = exercises[currentExercise];
+            document.getElementById('question').innerHTML = `<span class="student-name">${studentName}</span>، ${exercise.question}`;
+            
+            // Show word if needed
+            const wordDisplay = document.getElementById('wordDisplay');
+            if (exercise.word) {
+                wordDisplay.textContent = exercise.word;
+                wordDisplay.style.display = 'block';
+            } else {
+                wordDisplay.style.display = 'none';
+            }
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            exercise.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.onclick = () => selectOption(index);
+                optionsContainer.appendChild(button);
+            });
+
+            // Update progress bar
+            const progress = ((currentExercise + 1) / exercises.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Hide feedback and explanation
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('explanation').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function selectOption(selectedIndex) {
+            const exercise = exercises[currentExercise];
+            const isCorrect = selectedIndex === exercise.correct;
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+            }
+
+            // Show feedback
+            const feedbackDiv = document.getElementById('feedback');
+            const explanationDiv = document.getElementById('explanation');
+            
+            if (isCorrect) {
+                feedbackDiv.textContent = "أحسنت! إجابة صحيحة! 🌟";
+                feedbackDiv.className = 'feedback correct';
+            } else {
+                feedbackDiv.textContent = "حاول مرة أخرى! الإجابة الصحيحة هي: " + exercise.options[exercise.correct] + " ❤️";
+                feedbackDiv.className = 'feedback wrong';
+            }
+            
+            feedbackDiv.style.display = 'block';
+            explanationDiv.textContent = exercise.explanation;
+            explanationDiv.style.display = 'block';
+
+            // Color the options
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === exercise.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && !isCorrect) {
+                    option.classList.add('wrong');
+                }
+                option.onclick = null; // Disable further clicks
+            });
+
+            // Show next button
+            if (currentExercise < exercises.length - 1) {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            } else {
+                setTimeout(showCompletion, 2000);
+            }
+        }
+
+        function nextQuestion() {
+            currentExercise++;
+            showExercise();
+        }
+
+        function showCompletion() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('completion').style.display = 'block';
+            document.getElementById('completionName').textContent = studentName;
+            
+            const percentage = Math.round((score / exercises.length) * 100);
+            const scoreText = `نتيجتك: ${score} من ${exercises.length} (${percentage}%)`;
+            document.getElementById('finalScore').textContent = scoreText;
+        }
+
+        function restartGame() {
+            currentExercise = 0;
+            score = 0;
+            document.getElementById('completion').style.display = 'none';
+            document.querySelector('.start-screen').style.display = 'block';
+            document.getElementById('studentName').value = '';
+            document.getElementById('progressBar').style.width = '0%';
+        }
+    </script>
+</body>
+</html>
