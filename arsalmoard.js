@@ -43,7 +43,7 @@ var langShinko = [
     "Clay",
     "Iron",
     "Send resources",
-    "تم تصميم التعديل بواسطة "ابو يزن""
+    "Created by Sophie 'Shinko to Kuma'"
 ]
 if (game_data.locale == "en_DK") {
     langShinko = [
