@@ -564,9 +564,9 @@ function askCoordinate() {
     </center>
  </div>`;
     Dialog.show('Supportfilter', content);
-    if (game_data.locale == "ar_AE") {
-        $("#sophieImg").attr("src", "https://media2.giphy.com/media/qYr8p3Dzbet5S/giphy.gif");
-    }
+  //  if (game_data.locale == "ar_AE") {
+  //      $("#sophieImg").attr("src", "https://media2.giphy.com/media/qYr8p3Dzbet5S/giphy.gif");
+ //   }
     $("#saveCoord").click(function () {
         coordinate = $("#coordinateTargetFirstTime")[0].value.match(/\d+\|\d+/)[0];
         sessionStorage.setItem("coordinate", coordinate);
