@@ -227,26 +227,25 @@ if (game_data.locale == "it_IT") {
 }
 //.ae
 if (game_data.locale == "ar_AE") {
-    langShinko = [
-        "Ù…ÙˆØ§Ø±Ù†Ø© Ø§Ù„Ù…ÙˆØ§Ø±Ø¯",
-        "Ø§Ù„Ø£ØµÙ„",
-        "Ø§Ù„Ù‡Ø¯Ù",
-        "Ø§Ù„Ù…Ø³Ø§ÙØ©",
-        "Ø®Ø´Ø¨",
-        "Ø·Ù…ÙŠ",
-        "Ø­Ø¯ÙŠØ¯",
-        "Ø¥Ø±Ø³Ø§Ù„ Ø§Ù„Ù…ÙˆØ§Ø±Ø¯",
-        "ØªÙ…Øª Ø§Ù„Ø¨Ø±Ù…Ø¬Ù‡ Ù…Ù† 'Shinko to Kuma'",
-        "Ù…Ø¬Ù…ÙˆØ¹ Ø§Ù„Ø®Ø´Ø¨",
-        "Ù…Ø¬Ù…ÙˆØ¹ Ø§Ù„Ø·Ù…ÙŠ",
-        "Ù…Ø¬Ù…ÙˆØ¹ Ø§Ù„Ø­Ø¯ÙŠØ¯",
-        "Ø®Ø´Ø¨ Ù„ÙƒÙ„ Ù‚Ø±ÙŠØ©",
-        "Ø·Ù…ÙŠ Ù„ÙƒÙ„ Ù‚Ø±ÙŠØ©",
-        "Ø­Ø¯ÙŠØ¯ Ù„ÙƒÙ„ Ù‚Ø±ÙŠØ©",
-        "Premium exchange",
-        "System"
-    ];
-}
+var langShinko = [
+    "Warehouse balancer",
+    "Source village",
+    "Target village",
+    "Distance",
+    "Wood",
+    "Clay",
+    "Iron",
+    "Send resources",
+    "Created by Sophie 'Shinko to Kuma'",
+    "Total wood",
+    "Total clay",
+    "Total iron",
+    "Wood per village",
+    "Clay per village",
+    "Iron per village",
+    "Premium exchange",
+    "System"
+];
 //.hu
 if (game_data.locale == "hu_HU") {
     langShinko = [
