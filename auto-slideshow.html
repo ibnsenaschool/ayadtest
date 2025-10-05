@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عارض الشرائح التلقائي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .upload-section {
+            margin-bottom: 30px;
+        }
+
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9ff;
+        }
+
+        .upload-area:hover {
+            background: #eef0ff;
+            border-color: #764ba2;
+        }
+
+        .upload-area.dragover {
+            background: #e0e4ff;
+            border-color: #764ba2;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .slideshow-container {
+            position: relative;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            height: 400px;
+            display: none;
+        }
+
+        .slideshow-container.active {
+            display: block;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s;
+        }
+
+        .slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="range"] {
+            width: 150px;
+        }
+
+        .counter {
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .upload-icon {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .loop-toggle {
+            background: #28a745;
+        }
+
+        .loop-toggle:hover {
+            background: #218838;
+        }
+
+        .loop-toggle.active {
+            background: #dc3545;
+        }
+
+        .loop-toggle.active:hover {
+            background: #c82333;
+        }
+
+        .fullscreen-btn {
+            background: #17a2b8;
+        }
+
+        .fullscreen-btn:hover {
+            background: #138496;
+        }
+
+        .close-btn {
+            background: #dc3545;
+        }
+
+        .close-btn:hover {
+            background: #c82333;
+        }
+
+        .slideshow-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            border-radius: 0;
+            max-width: none;
+        }
+
+        .fullscreen-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 15px;
+            display: none;
+        }
+
+        .fullscreen-controls.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 عارض الشرائح التلقائي</h1>
+        
+        <div class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <p>اضغط لتحميل الصور</p>
+            </div>
+            <input type="file" id="fileInput" multiple accept="image/*">
+        </div>
+
+        <div class="slideshow-container" id="slideshowContainer"></div>
+
+        <div class="controls" id="controls" style="display: none;">
+            <button id="prevBtn">⏮️ السابق</button>
+            <button id="playPauseBtn">▶️ تشغيل</button>
+            <button id="nextBtn">⏭️ التالي</button>
+            <button id="loopBtn" class="loop-toggle">🔁 تكرار</button>
+            <button id="fullscreenBtn" class="fullscreen-btn">⛶ ملء الشاشة</button>
+            <button id="closeBtn" class="close-btn">✖️ إغلاق</button>
+            
+            <div class="speed-control">
+                <label>السرعة:</label>
+                <input type="range" id="speedRange" min="1" max="10" value="3">
+                <span id="speedValue">3 ث</span>
+            </div>
+            
+            <div class="counter" id="counter">0 / 0</div>
+        </div>
+
+        <div class="fullscreen-controls" id="fullscreenControls">
+            <button id="fsPrevBtn">⏮️</button>
+            <button id="fsPlayPauseBtn">▶️</button>
+            <button id="fsNextBtn">⏭️</button>
+            <button id="exitFullscreenBtn" class="close-btn">✖️ خروج</button>
+        </div>
+    </div>
+
+    <script>
+        let slides = [];
+        let currentSlide = 0;
+        let isPlaying = false;
+        let isLooping = true;
+        let isFullscreen = false;
+        let intervalId = null;
+        let speed = 3000;
+
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const slideshowContainer = document.getElementById('slideshowContainer');
+        const controls = document.getElementById('controls');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const speedRange = document.getElementById('speedRange');
+        const speedValue = document.getElementById('speedValue');
+        const counter = document.getElementById('counter');
+        const loopBtn = document.getElementById('loopBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const fullscreenControls = document.getElementById('fullscreenControls');
+        const fsPlayPauseBtn = document.getElementById('fsPlayPauseBtn');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            slides = [];
+            slideshowContainer.innerHTML = '';
+            
+            Array.from(files).forEach((file, index) => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const slideDiv = document.createElement('div');
+                        slideDiv.className = 'slide';
+                        slideDiv.innerHTML = `<img src="${e.target.result}" alt="صورة ${index + 1}">`;
+                        slideshowContainer.appendChild(slideDiv);
+                        slides.push(slideDiv);
+                        
+                        if (slides.length === files.length) {
+                            initSlideshow();
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function initSlideshow() {
+            if (slides.length > 0) {
+                slideshowContainer.classList.add('active');
+                controls.style.display = 'flex';
+                currentSlide = 0;
+                showSlide(currentSlide);
+                updateCounter();
+            }
+        }
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            updateCounter();
+        }
+
+        function nextSlide() {
+            if (currentSlide === slides.length - 1 && !isLooping) {
+                clearInterval(intervalId);
+                playPauseBtn.textContent = '▶️ تشغيل';
+                fsPlayPauseBtn.textContent = '▶️';
+                isPlaying = false;
+                return;
+            }
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function togglePlayPause() {
+            if (isPlaying) {
+                clearInterval(intervalId);
+                playPauseBtn.textContent = '▶️ تشغيل';
+                fsPlayPauseBtn.textContent = '▶️';
+                isPlaying = false;
+            } else {
+                intervalId = setInterval(nextSlide, speed);
+                playPauseBtn.textContent = '⏸️ إيقاف';
+                fsPlayPauseBtn.textContent = '⏸️';
+                isPlaying = true;
+            }
+        }
+
+        function updateCounter() {
+            counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+        playPauseBtn.addEventListener('click', togglePlayPause);
+
+        loopBtn.addEventListener('click', () => {
+            isLooping = !isLooping;
+            if (isLooping) {
+                loopBtn.classList.remove('active');
+                loopBtn.textContent = '🔁 تكرار';
+            } else {
+                loopBtn.classList.add('active');
+                loopBtn.textContent = '🔁 مرة واحدة';
+            }
+        });
+
+        fullscreenBtn.addEventListener('click', () => {
+            isFullscreen = true;
+            slideshowContainer.classList.add('fullscreen');
+            fullscreenControls.classList.add('active');
+            controls.style.display = 'none';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            slideshowContainer.classList.remove('active');
+            controls.style.display = 'none';
+            slides = [];
+            slideshowContainer.innerHTML = '';
+            currentSlide = 0;
+            if (isPlaying) togglePlayPause();
+        });
+
+        document.getElementById('exitFullscreenBtn').addEventListener('click', () => {
+            isFullscreen = false;
+            slideshowContainer.classList.remove('fullscreen');
+            fullscreenControls.classList.remove('active');
+            controls.style.display = 'flex';
+        });
+
+        document.getElementById('fsPrevBtn').addEventListener('click', prevSlide);
+        document.getElementById('fsNextBtn').addEventListener('click', nextSlide);
+        fsPlayPauseBtn.addEventListener('click', togglePlayPause);
+
+        speedRange.addEventListener('input', (e) => {
+            speed = e.target.value * 1000;
+            speedValue.textContent = `${e.target.value} ث`;
+            
+            if (isPlaying) {
+                clearInterval(intervalId);
+                intervalId = setInterval(nextSlide, speed);
+            }
+        });
+    </script>
+</body>
+</html>
