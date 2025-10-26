@@ -1,5 +1,4 @@
-// generate-manifest.js (مخصص لمسار wel/all/)
-// يشغّل داخل مجلد wel/all في GitHub Actions، ويولّد manifest.json لكل الملفات المدعومة في هذا المجلد فقط.
+// generate-manifest.js — يمسح wel/all ويولّد manifest.json
 const fs = require('fs');
 const path = require('path');
 
