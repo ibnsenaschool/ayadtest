@@ -199,8 +199,8 @@
         else if (PDF_EXT.includes(ext)) type='pdf';
         else if (PPT_EXT.includes(ext)) type='ppt';
         if (!type) return;
-        const relUrl = item.url.startsWith('http') ? item.url : (basePath + item.url.replace(/^\\.\\//,''));
-        const absUrl = item.url.startsWith('http') ? item.url : (baseAbs + item.url.replace(/^\\.\\//,''));
+        const relUrl = `./${item.url}`;
+const absUrl = `${location.origin}/ayadtest/wel/all/${item.url}`;
         slides.push({ type, name, url: relUrl, absUrl });
       });
 
