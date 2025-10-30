@@ -41,7 +41,6 @@
     }
     @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
 
-    /* ===== Viewer ===== */
     .viewer-wrapper {
       position: relative; background: #000; border-radius: 15px; overflow: hidden;
       margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,.3);
@@ -50,8 +49,6 @@
       min-height: 500px; display: flex; align-items: center; justify-content: center; position: relative; background: #000;
     }
     .media-display { width: 100%; max-height: 600px; object-fit: contain; display: block; }
-
-    /* لا نظهر اسم الصورة أو ميتاداتا */
     .media-info { display: none; }
 
     .placeholder { color: #666; text-align: center; padding: 100px 20px; }
@@ -87,7 +84,7 @@
     .error-box h3 { margin-bottom: 10px; font-size: 20px; }
     .error-box p { line-height: 1.6; font-size: 14px; }
 
-    /* ===== Fullscreen fix: غطاء كامل للشاشة ===== */
+    /* ===== Fullscreen تعديل لملء الصورة بدون إطار أسود ===== */
     .viewer-wrapper:fullscreen,
     .viewer-wrapper:-webkit-full-screen,
     .viewer-wrapper:-moz-full-screen { background: #000; }
@@ -99,22 +96,7 @@
     .viewer-wrapper:fullscreen .media-display,
     .viewer-wrapper:-webkit-full-screen .media-display,
     .viewer-wrapper:-moz-full-screen .media-display {
-      width: 100vw; height: 100vh; object-fit: cover; /* يغطي الشاشة كاملة */
-    }
-
-    @media (max-width: 768px) {
-      .container { padding: 20px; }
-      h1 { font-size: 26px; }
-      .control-row { flex-direction: column; }
-      .nav-btn, .play-btn, .fullscreen-btn { width: 100%; min-width: auto; }
-      .speed-control { flex-direction: column; width: 100%; }
-      .speed-slider { width: 100%; }
-      .viewer-section { min-height: 300px; }
-      .media-display { max-height: 400px; }
-    }
-    @media (max-width: 480px) {
-      h1 { font-size: 22px; }
-      .subtitle { font-size: 14px; }
+      width: 100vw; height: 100vh; object-fit: cover; /* تم تكبير الصورة لتناسب الشاشة بالكامل بدون إطار أسود */
     }
   </style>
 </head>
@@ -131,9 +113,6 @@
     </div>
 
     <div id="mainContent" style="display: none;">
-      <!-- تمت إزالة قسم الإحصائيات كليًا -->
-
-      <!-- منطقة العرض -->
       <div class="viewer-wrapper" id="viewerWrapper">
         <div class="viewer-section" id="viewerSection">
           <div class="placeholder">
@@ -143,8 +122,6 @@
           </div>
         </div>
       </div>
-
-      <!-- أدوات التحكم -->
       <div class="controls">
         <div class="control-row">
           <button class="nav-btn" id="prevBtn" onclick="navigateMedia(-1)">⏮️ السابق</button>
@@ -166,178 +143,27 @@
   </div>
 
   <script>
-    // ===== المتغيرات العامة =====
     let allFiles = [];
     let currentIndex = -1;
     let isPlaying = false;
-    let playSpeed = 3000; // ms
-
+    let playSpeed = 3000;
     const videoExts = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.flv', '.wmv', '.m4v', '.3gp'];
     const imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico'];
 
-    function getFileType(filename){
-      const ext = filename.substring(filename.lastIndexOf('.')).toLowerCase();
-      if (videoExts.includes(ext)) return 'video';
-      if (imageExts.includes(ext)) return 'image';
-      return null;
-    }
-
-    // استخراج معلومات المستودع من رابط GitHub Pages
-    function getRepoInfo(){
-      const url = window.location.href;
-      const match = url.match(/https?:\/\/([^.]+)\.github\.io\/([^\/]+)(?:\/(.*))?/);
-      if (match){
-        const owner = match[1];
-        const repo = match[2];
-        const fullPath = match[3] || '';
-        const pathParts = fullPath.split('/');
-        pathParts.pop(); // إزالة اسم ملف الـ HTML
-        const path = pathParts.join('/');
-        return { owner, repo, path };
-      }
-      return null;
-    }
-
-    // تحميل الملفات من مجلد الصفحة على GitHub
-    async function loadFiles(){
-      try{
-        const repoInfo = getRepoInfo();
-        if (!repoInfo){
-          showError('لا يمكن تحديد معلومات المستودع', 'تأكد من أن الصفحة مرفوعة على GitHub Pages بالشكل الصحيح.<br>الرابط يجب أن يكون: <code>username.github.io/repo-name/</code>');
-          return;
-        }
-        const { owner, repo, path } = repoInfo;
-        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error(`خطأ من GitHub API: ${response.status}`);
-        const files = await response.json();
-
-        allFiles = files
-          .filter(f => f.type === 'file')
-          .map(f => ({ name: f.name, url: f.download_url, type: getFileType(f.name), size: f.size }))
-          .filter(f => f.type !== null);
-
-        if (allFiles.length === 0){
-          showError('لم يتم العثور على ملفات وسائط', 'تأكد من وجود ملفات صور أو فيديو في نفس مجلد الصفحة.');
-          return;
-        }
-        displayContent();
-      }catch(err){
-        console.error(err);
-        showError('فشل تحميل الملفات', `حدث خطأ أثناء الاتصال بـ GitHub: ${err.message}<br><br>تأكد من أن المستودع عام والصفحة مرفوعة على GitHub Pages.`);
-      }
-    }
-
-    function displayContent(){
-      document.getElementById('loadingArea').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
-      if (allFiles.length > 0) playMedia(0);
-    }
-
-    function playMedia(index){
-      if (index < 0 || index >= allFiles.length) return;
-      currentIndex = index;
-      const file = allFiles[index];
-      const viewer = document.getElementById('viewerSection');
-
-      let mediaHtml = '';
-      if (file.type === 'video'){
-        mediaHtml = `
-          <video class="media-display" controls autoplay onended="onMediaEnded()">
-            <source src="${file.url}">
-            متصفحك لا يدعم تشغيل الفيديو
-          </video>`;
-      } else {
-        mediaHtml = `<img src="${file.url}" class="media-display" alt="" onload="onMediaLoaded()">`;
-      }
-
-      // تمت إزالة شريط المعلومات كي لا يظهر اسم الصورة
-      viewer.innerHTML = mediaHtml;
-
-      // تحديث أزرار التنقل (التفاف دائري متاح من لوحة المفاتيح أيضًا)
-      document.getElementById('prevBtn').disabled = false;
-      document.getElementById('nextBtn').disabled = false;
-    }
-
-    function onMediaLoaded(){
-      if (isPlaying && allFiles[currentIndex].type === 'image'){
-        setTimeout(() => { if (isPlaying) navigateMedia(1); }, playSpeed);
-      }
-    }
-
-    function onMediaEnded(){ if (isPlaying) navigateMedia(1); }
-
-    function navigateMedia(direction){
-      let newIndex = currentIndex + direction;
-      if (newIndex >= allFiles.length) newIndex = 0; // التفاف للبداية
-      else if (newIndex < 0) newIndex = allFiles.length - 1; // التفاف للنهاية
-      playMedia(newIndex);
-    }
-
-    function toggleAutoPlay(){
-      isPlaying = !isPlaying;
-      const btn = document.getElementById('playBtn');
-      if (isPlaying){
-        btn.textContent = '⏸️ إيقاف';
-        btn.classList.add('playing');
-        if (allFiles[currentIndex]?.type === 'image') onMediaLoaded();
-      } else {
-        btn.textContent = '▶️ تشغيل تلقائي';
-        btn.classList.remove('playing');
-      }
-    }
-
-    function updateSpeed(value){
-      playSpeed = value * 1000; // sec -> ms
-      document.getElementById('speedValue').textContent = value + ' ث';
-    }
-
-    function toggleFullscreen(){
-      const wrapper = document.getElementById('viewerWrapper');
-      if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement){
-        if (wrapper.requestFullscreen) wrapper.requestFullscreen();
-        else if (wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen();
-        else if (wrapper.mozRequestFullScreen) wrapper.mozRequestFullScreen();
-      } else {
-        if (document.exitFullscreen) document.exitFullscreen();
-        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-        else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-      }
-    }
-
-    // اختصارات لوحة المفاتيح
-    document.addEventListener('keydown', (e) => {
-      if (allFiles.length === 0) return;
-      switch(e.key){
-        case 'ArrowRight':
-        case 'ArrowUp':
-          navigateMedia(-1); // السابق
-          break;
-        case 'ArrowLeft':
-        case 'ArrowDown':
-          navigateMedia(1); // التالي
-          break;
-        case ' ': // مسافة
-          e.preventDefault();
-          toggleAutoPlay();
-          break;
-        case 'f':
-        case 'F':
-          toggleFullscreen();
-          break;
-      }
-    });
-
-    function showError(title, message){
-      document.getElementById('loadingArea').style.display = 'none';
-      document.getElementById('errorArea').innerHTML = `
-        <div class="error-box">
-          <h3>❌ ${title}</h3>
-          <p>${message}</p>
-        </div>`;
-    }
-
-    window.addEventListener('load', loadFiles);
+    function getFileType(filename){ const ext = filename.substring(filename.lastIndexOf('.')).toLowerCase(); if (videoExts.includes(ext)) return 'video'; if (imageExts.includes(ext)) return 'image'; return null; }
+    function getRepoInfo(){ const url = window.location.href; const match = url.match(/https?:\/\/([^.]+)\.github\.io\/([^\/]+)(?:\/(.*))?/); if (match){ const owner = match[1]; const repo = match[2]; const fullPath = match[3] || ''; const pathParts = fullPath.split('/'); pathParts.pop(); const path = pathParts.join('/'); return { owner, repo, path }; } return null; }
+    async function loadFiles(){ try{ const repoInfo = getRepoInfo(); if (!repoInfo){ showError('لا يمكن تحديد معلومات المستودع','تأكد من أن الصفحة مرفوعة على GitHub Pages بالشكل الصحيح.<br>الرابط يجب أن يكون: <code>username.github.io/repo-name/</code>'); return;} const { owner, repo, path } = repoInfo; const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`; const response = await fetch(apiUrl); if (!response.ok) throw new Error(`خطأ من GitHub API: ${response.status}`); const files = await response.json(); allFiles = files.filter(f=>f.type==='file').map(f=>({name:f.name,url:f.download_url,type:getFileType(f.name),size:f.size})).filter(f=>f.type!==null); if(allFiles.length===0){showError('لم يتم العثور على ملفات وسائط','تأكد من وجود ملفات صور أو فيديو في نفس مجلد الصفحة.');return;} displayContent(); }catch(err){ console.error(err); showError('فشل تحميل الملفات',`حدث خطأ أثناء الاتصال بـ GitHub: ${err.message}<br><br>تأكد من أن المستودع عام والصفحة مرفوعة على GitHub Pages.`);}}
+    function displayContent(){ document.getElementById('loadingArea').style.display='none'; document.getElementById('mainContent').style.display='block'; if(allFiles.length>0) playMedia(0); }
+    function playMedia(index){ if(index<0||index>=allFiles.length) return; currentIndex=index; const file=allFiles[index]; const viewer=document.getElementById('viewerSection'); let mediaHtml=''; if(file.type==='video'){ mediaHtml=`<video class="media-display" controls autoplay onended="onMediaEnded()"><source src="${file.url}">متصفحك لا يدعم تشغيل الفيديو</video>`;} else { mediaHtml=`<img src="${file.url}" class="media-display" alt="" onload="onMediaLoaded()">`; } viewer.innerHTML=mediaHtml; document.getElementById('prevBtn').disabled=false; document.getElementById('nextBtn').disabled=false; }
+    function onMediaLoaded(){ if(isPlaying&&allFiles[currentIndex].type==='image'){ setTimeout(()=>{ if(isPlaying) navigateMedia(1); }, playSpeed); } }
+    function onMediaEnded(){ if(isPlaying) navigateMedia(1); }
+    function navigateMedia(direction){ let newIndex=currentIndex+direction; if(newIndex>=allFiles.length) newIndex=0; else if(newIndex<0) newIndex=allFiles.length-1; playMedia(newIndex); }
+    function toggleAutoPlay(){ isPlaying=!isPlaying; const btn=document.getElementById('playBtn'); if(isPlaying){ btn.textContent='⏸️ إيقاف'; btn.classList.add('playing'); if(allFiles[currentIndex]?.type==='image') onMediaLoaded(); } else { btn.textContent='▶️ تشغيل تلقائي'; btn.classList.remove('playing'); } }
+    function updateSpeed(value){ playSpeed=value*1000; document.getElementById('speedValue').textContent=value+' ث'; }
+    function toggleFullscreen(){ const wrapper=document.getElementById('viewerWrapper'); if(!document.fullscreenElement&&!document.webkitFullscreenElement&&!document.mozFullScreenElement){ if(wrapper.requestFullscreen) wrapper.requestFullscreen(); else if(wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen(); else if(wrapper.mozRequestFullScreen) wrapper.mozRequestFullScreen(); } else { if(document.exitFullscreen) document.exitFullscreen(); else if(document.webkitExitFullscreen) document.webkitExitFullscreen(); else if(document.mozCancelFullScreen) document.mozCancelFullScreen(); } }
+    document.addEventListener('keydown',e=>{ if(allFiles.length===0) return; switch(e.key){ case'ArrowRight': case'ArrowUp': navigateMedia(-1); break; case'ArrowLeft': case'ArrowDown': navigateMedia(1); break; case' ': e.preventDefault(); toggleAutoPlay(); break; case'f': case'F': toggleFullscreen(); break; }});
+    function showError(title,message){ document.getElementById('loadingArea').style.display='none'; document.getElementById('errorArea').innerHTML=`<div class="error-box"><h3>❌ ${title}</h3><p>${message}</p></div>`; }
+    window.addEventListener('load',loadFiles);
   </script>
 </body>
 </html>
