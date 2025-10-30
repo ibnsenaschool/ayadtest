@@ -1,732 +1,343 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محطات من حياتنا</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>محطات من حياتنا – نسخة مبسطة</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
 
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+    .container {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+      padding: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    .header { text-align: center; margin-bottom: 30px; }
+    h1 {
+      color: #333;
+      font-size: 36px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .subtitle { color: #666; font-size: 16px; font-style: italic; }
 
-        h1 {
-            color: #333;
-            font-size: 36px;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+    .loading { text-align: center; padding: 80px 20px; color: #667eea; }
+    .loading-spinner {
+      border: 5px solid #f3f3f3; border-top: 5px solid #667eea; border-radius: 50%;
+      width: 60px; height: 60px; animation: spin 1s linear infinite; margin: 0 auto 20px;
+    }
+    @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
 
-        .subtitle {
-            color: #666;
-            font-size: 16px;
-            font-style: italic;
-        }
+    /* ===== Viewer ===== */
+    .viewer-wrapper {
+      position: relative; background: #000; border-radius: 15px; overflow: hidden;
+      margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,.3);
+    }
+    .viewer-section {
+      min-height: 500px; display: flex; align-items: center; justify-content: center; position: relative; background: #000;
+    }
+    .media-display { width: 100%; max-height: 600px; object-fit: contain; display: block; }
 
-        .loading {
-            text-align: center;
-            padding: 80px 20px;
-            color: #667eea;
-        }
+    /* لا نظهر اسم الصورة أو ميتاداتا */
+    .media-info { display: none; }
 
-        .loading-spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #667eea;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
+    .placeholder { color: #666; text-align: center; padding: 100px 20px; }
+    .placeholder-icon { font-size: 100px; margin-bottom: 20px; opacity: .3; }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    .controls { background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+    .control-row { display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 15px; }
+    .control-row:last-child { margin-bottom: 0; }
 
-        .stats {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
+    .nav-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff; border: none; padding: 14px 35px; border-radius: 10px; font-size: 16px; font-weight: bold;
+      cursor: pointer; transition: all .3s ease; box-shadow: 0 4px 10px rgba(102,126,234,.3); min-width: 140px;
+    }
+    .nav-btn:hover:not(:disabled){ transform: translateY(-3px); box-shadow: 0 6px 15px rgba(102,126,234,.5); }
+    .nav-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 
-        .stat-item {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 35px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
+    .play-btn { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); font-size: 18px; min-width: 160px; padding: 16px 40px; }
+    .play-btn:hover:not(:disabled){ box-shadow: 0 6px 15px rgba(40,167,69,.5); }
+    .play-btn.playing { background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); }
 
-        .stat-number {
-            font-size: 32px;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
+    .fullscreen-btn { background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); min-width: 120px; }
+    .fullscreen-btn:hover { box-shadow: 0 6px 15px rgba(220,53,69,.5); }
 
-        .stat-label {
-            font-size: 13px;
-            opacity: 0.95;
-        }
+    .speed-control { display: flex; align-items: center; gap: 15px; background: #fff; padding: 12px 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+    .speed-label { color: #333; font-weight: bold; font-size: 14px; white-space: nowrap; }
+    .speed-slider { width: 180px; height: 6px; border-radius: 5px; background: #e0e0e0; outline: none; cursor: pointer; -webkit-appearance: none; }
+    .speed-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,.3); }
+    .speed-slider::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,.3); border: none; }
+    .speed-value { color: #667eea; font-weight: bold; font-size: 14px; min-width: 45px; text-align: center; }
 
-        .viewer-wrapper {
-            position: relative;
-            background: #000;
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
+    .error-box { background: #ffebee; color: #c62828; padding: 20px; border-radius: 12px; text-align: center; margin: 20px 0; border-right: 5px solid #c62828; }
+    .error-box h3 { margin-bottom: 10px; font-size: 20px; }
+    .error-box p { line-height: 1.6; font-size: 14px; }
 
-        .viewer-section {
-            min-height: 500px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background: #000;
-        }
+    /* ===== Fullscreen fix: غطاء كامل للشاشة ===== */
+    .viewer-wrapper:fullscreen,
+    .viewer-wrapper:-webkit-full-screen,
+    .viewer-wrapper:-moz-full-screen { background: #000; }
 
-        .media-display {
-            width: 100%;
-            max-height: 600px;
-            object-fit: contain;
-            display: block;
-        }
+    .viewer-wrapper:fullscreen .viewer-section,
+    .viewer-wrapper:-webkit-full-screen .viewer-section,
+    .viewer-wrapper:-moz-full-screen .viewer-section { min-height: 100vh; }
 
-        .media-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            color: white;
-            padding: 25px;
-            font-size: 15px;
-        }
+    .viewer-wrapper:fullscreen .media-display,
+    .viewer-wrapper:-webkit-full-screen .media-display,
+    .viewer-wrapper:-moz-full-screen .media-display {
+      width: 100vw; height: 100vh; object-fit: cover; /* يغطي الشاشة كاملة */
+    }
 
-        .media-name {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 5px;
-            direction: ltr;
-            text-align: left;
-        }
-
-        .media-meta {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .placeholder {
-            color: #666;
-            text-align: center;
-            padding: 100px 20px;
-        }
-
-        .placeholder-icon {
-            font-size: 100px;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .controls {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .control-row {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-        }
-
-        .control-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .nav-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 14px 35px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
-            min-width: 140px;
-        }
-
-        .nav-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .play-btn {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            font-size: 18px;
-            min-width: 160px;
-            padding: 16px 40px;
-        }
-
-        .play-btn:hover:not(:disabled) {
-            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.5);
-        }
-
-        .play-btn.playing {
-            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-        }
-
-        .fullscreen-btn {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            min-width: 120px;
-        }
-
-        .fullscreen-btn:hover {
-            box-shadow: 0 6px 15px rgba(220, 53, 69, 0.5);
-        }
-
-        .speed-control {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: white;
-            padding: 12px 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .speed-label {
-            color: #333;
-            font-weight: bold;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-
-        .speed-slider {
-            width: 180px;
-            height: 6px;
-            border-radius: 5px;
-            background: #e0e0e0;
-            outline: none;
-            cursor: pointer;
-            -webkit-appearance: none;
-        }
-
-        .speed-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-
-        .speed-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            border: none;
-        }
-
-        .speed-value {
-            color: #667eea;
-            font-weight: bold;
-            font-size: 14px;
-            min-width: 45px;
-            text-align: center;
-        }
-
-        .error-box {
-            background: #ffebee;
-            color: #c62828;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin: 20px 0;
-            border-right: 5px solid #c62828;
-        }
-
-        .error-box h3 {
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-
-        .error-box p {
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        /* Fullscreen styles */
-        .viewer-wrapper:fullscreen,
-        .viewer-wrapper:-webkit-full-screen,
-        .viewer-wrapper:-moz-full-screen {
-            background: #000;
-        }
-
-        .viewer-wrapper:fullscreen .viewer-section,
-        .viewer-wrapper:-webkit-full-screen .viewer-section,
-        .viewer-wrapper:-moz-full-screen .viewer-section {
-            min-height: 100vh;
-        }
-
-        .viewer-wrapper:fullscreen .media-display,
-        .viewer-wrapper:-webkit-full-screen .media-display,
-        .viewer-wrapper:-moz-full-screen .media-display {
-            max-height: 100vh;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 26px;
-            }
-
-            .control-row {
-                flex-direction: column;
-            }
-
-            .nav-btn, .play-btn, .fullscreen-btn {
-                width: 100%;
-                min-width: auto;
-            }
-
-            .speed-control {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .speed-slider {
-                width: 100%;
-            }
-
-            .viewer-section {
-                min-height: 300px;
-            }
-
-            .media-display {
-                max-height: 400px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 22px;
-            }
-
-            .subtitle {
-                font-size: 14px;
-            }
-        }
-    </style>
+    @media (max-width: 768px) {
+      .container { padding: 20px; }
+      h1 { font-size: 26px; }
+      .control-row { flex-direction: column; }
+      .nav-btn, .play-btn, .fullscreen-btn { width: 100%; min-width: auto; }
+      .speed-control { flex-direction: column; width: 100%; }
+      .speed-slider { width: 100%; }
+      .viewer-section { min-height: 300px; }
+      .media-display { max-height: 400px; }
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 22px; }
+      .subtitle { font-size: 14px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>✨ محطات من حياتنا</h1>
-            <p class="subtitle">ذكريات جميلة تُروى بالصور والفيديو</p>
-        </div>
-
-        <div id="loadingArea" class="loading">
-            <div class="loading-spinner"></div>
-            <p>جاري تحميل الذكريات...</p>
-        </div>
-
-        <div id="mainContent" style="display: none;">
-            <!-- الإحصائيات -->
-            <div class="stats">
-                <div class="stat-item">
-                    <span class="stat-number" id="currentNumber">0</span>
-                    <span class="stat-label">الحالي</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="totalCount">0</span>
-                    <span class="stat-label">إجمالي الذكريات</span>
-                </div>
-            </div>
-
-            <!-- منطقة العرض -->
-            <div class="viewer-wrapper" id="viewerWrapper">
-                <div class="viewer-section" id="viewerSection">
-                    <div class="placeholder">
-                        <div class="placeholder-icon">📸</div>
-                        <h3>استعد لرحلة عبر الذكريات</h3>
-                        <p>اضغط "تشغيل" لبدء العرض</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- أدوات التحكم -->
-            <div class="controls">
-                <div class="control-row">
-                    <button class="nav-btn" id="prevBtn" onclick="navigateMedia(-1)">
-                        ⏮️ السابق
-                    </button>
-                    <button class="play-btn" id="playBtn" onclick="toggleAutoPlay()">
-                        ▶️ تشغيل تلقائي
-                    </button>
-                    <button class="nav-btn" id="nextBtn" onclick="navigateMedia(1)">
-                        التالي ⏭️
-                    </button>
-                </div>
-
-                <div class="control-row">
-                    <div class="speed-control">
-                        <span class="speed-label">⏱️ سرعة العرض:</span>
-                        <input type="range" 
-                               id="speedSlider" 
-                               class="speed-slider" 
-                               min="1" 
-                               max="10" 
-                               value="3" 
-                               step="1"
-                               oninput="updateSpeed(this.value)">
-                        <span class="speed-value" id="speedValue">3 ث</span>
-                    </div>
-                    <button class="fullscreen-btn" onclick="toggleFullscreen()">
-                        🖥️ ملء الشاشة
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="errorArea"></div>
+  <div class="container">
+    <div class="header">
+      <h1>✨ محطات من حياتنا</h1>
+      <p class="subtitle">ذكريات جميلة تُروى بالصور والفيديو</p>
     </div>
 
-    <script>
-        // المتغيرات العامة
-        let allFiles = [];
-        let currentIndex = -1;
-        let isPlaying = false;
-        let playInterval = null;
-        let playSpeed = 3000; // بالميلي ثانية
-        
-        // أنواع الملفات المدعومة
-        const videoExts = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.flv', '.wmv', '.m4v', '.3gp'];
-        const imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico'];
+    <div id="loadingArea" class="loading">
+      <div class="loading-spinner"></div>
+      <p>جاري تحميل الذكريات...</p>
+    </div>
 
-        // تحديد نوع الملف
-        function getFileType(filename) {
-            const ext = filename.substring(filename.lastIndexOf('.')).toLowerCase();
-            if (videoExts.includes(ext)) return 'video';
-            if (imageExts.includes(ext)) return 'image';
-            return null;
+    <div id="mainContent" style="display: none;">
+      <!-- تمت إزالة قسم الإحصائيات كليًا -->
+
+      <!-- منطقة العرض -->
+      <div class="viewer-wrapper" id="viewerWrapper">
+        <div class="viewer-section" id="viewerSection">
+          <div class="placeholder">
+            <div class="placeholder-icon">📸</div>
+            <h3>استعد لرحلة عبر الذكريات</h3>
+            <p>اضغط "تشغيل" لبدء العرض</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- أدوات التحكم -->
+      <div class="controls">
+        <div class="control-row">
+          <button class="nav-btn" id="prevBtn" onclick="navigateMedia(-1)">⏮️ السابق</button>
+          <button class="play-btn" id="playBtn" onclick="toggleAutoPlay()">▶️ تشغيل تلقائي</button>
+          <button class="nav-btn" id="nextBtn" onclick="navigateMedia(1)">التالي ⏭️</button>
+        </div>
+        <div class="control-row">
+          <div class="speed-control">
+            <span class="speed-label">⏱️ سرعة العرض:</span>
+            <input type="range" id="speedSlider" class="speed-slider" min="1" max="10" value="3" step="1" oninput="updateSpeed(this.value)" />
+            <span class="speed-value" id="speedValue">3 ث</span>
+          </div>
+          <button class="fullscreen-btn" onclick="toggleFullscreen()">🖥️ ملء الشاشة</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="errorArea"></div>
+  </div>
+
+  <script>
+    // ===== المتغيرات العامة =====
+    let allFiles = [];
+    let currentIndex = -1;
+    let isPlaying = false;
+    let playSpeed = 3000; // ms
+
+    const videoExts = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.flv', '.wmv', '.m4v', '.3gp'];
+    const imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico'];
+
+    function getFileType(filename){
+      const ext = filename.substring(filename.lastIndexOf('.')).toLowerCase();
+      if (videoExts.includes(ext)) return 'video';
+      if (imageExts.includes(ext)) return 'image';
+      return null;
+    }
+
+    // استخراج معلومات المستودع من رابط GitHub Pages
+    function getRepoInfo(){
+      const url = window.location.href;
+      const match = url.match(/https?:\/\/([^.]+)\.github\.io\/([^\/]+)(?:\/(.*))?/);
+      if (match){
+        const owner = match[1];
+        const repo = match[2];
+        const fullPath = match[3] || '';
+        const pathParts = fullPath.split('/');
+        pathParts.pop(); // إزالة اسم ملف الـ HTML
+        const path = pathParts.join('/');
+        return { owner, repo, path };
+      }
+      return null;
+    }
+
+    // تحميل الملفات من مجلد الصفحة على GitHub
+    async function loadFiles(){
+      try{
+        const repoInfo = getRepoInfo();
+        if (!repoInfo){
+          showError('لا يمكن تحديد معلومات المستودع', 'تأكد من أن الصفحة مرفوعة على GitHub Pages بالشكل الصحيح.<br>الرابط يجب أن يكون: <code>username.github.io/repo-name/</code>');
+          return;
         }
+        const { owner, repo, path } = repoInfo;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error(`خطأ من GitHub API: ${response.status}`);
+        const files = await response.json();
 
-        // استخراج معلومات المستودع من الرابط
-        function getRepoInfo() {
-            const url = window.location.href;
-            
-            // للـ GitHub Pages: https://username.github.io/repo-name/path/file.html
-            const match = url.match(/https?:\/\/([^.]+)\.github\.io\/([^\/]+)(?:\/(.*))?/);
-            
-            if (match) {
-                const owner = match[1];
-                const repo = match[2];
-                const fullPath = match[3] || '';
-                
-                // إزالة اسم الملف HTML من المسار
-                const pathParts = fullPath.split('/');
-                pathParts.pop();
-                const path = pathParts.join('/');
-                
-                return { owner, repo, path };
-            }
-            
-            return null;
+        allFiles = files
+          .filter(f => f.type === 'file')
+          .map(f => ({ name: f.name, url: f.download_url, type: getFileType(f.name), size: f.size }))
+          .filter(f => f.type !== null);
+
+        if (allFiles.length === 0){
+          showError('لم يتم العثور على ملفات وسائط', 'تأكد من وجود ملفات صور أو فيديو في نفس مجلد الصفحة.');
+          return;
         }
+        displayContent();
+      }catch(err){
+        console.error(err);
+        showError('فشل تحميل الملفات', `حدث خطأ أثناء الاتصال بـ GitHub: ${err.message}<br><br>تأكد من أن المستودع عام والصفحة مرفوعة على GitHub Pages.`);
+      }
+    }
 
-        // تحميل الملفات من GitHub API
-        async function loadFiles() {
-            try {
-                const repoInfo = getRepoInfo();
-                
-                if (!repoInfo) {
-                    showError(
-                        'لا يمكن تحديد معلومات المستودع',
-                        'تأكد من أن الصفحة مرفوعة على GitHub Pages بالشكل الصحيح.<br>' +
-                        'الرابط يجب أن يكون: <code>username.github.io/repo-name/</code>'
-                    );
-                    return;
-                }
+    function displayContent(){
+      document.getElementById('loadingArea').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+      if (allFiles.length > 0) playMedia(0);
+    }
 
-                const { owner, repo, path } = repoInfo;
-                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-                
-                console.log('جاري التحميل من:', apiUrl);
-                
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`خطأ من GitHub API: ${response.status}`);
-                }
+    function playMedia(index){
+      if (index < 0 || index >= allFiles.length) return;
+      currentIndex = index;
+      const file = allFiles[index];
+      const viewer = document.getElementById('viewerSection');
 
-                const files = await response.json();
-                
-                // تصفية الملفات (فقط الوسائط)
-                allFiles = files
-                    .filter(file => file.type === 'file')
-                    .map(file => {
-                        const type = getFileType(file.name);
-                        return {
-                            name: file.name,
-                            url: file.download_url,
-                            type: type,
-                            size: file.size
-                        };
-                    })
-                    .filter(file => file.type !== null);
+      let mediaHtml = '';
+      if (file.type === 'video'){
+        mediaHtml = `
+          <video class="media-display" controls autoplay onended="onMediaEnded()">
+            <source src="${file.url}">
+            متصفحك لا يدعم تشغيل الفيديو
+          </video>`;
+      } else {
+        mediaHtml = `<img src="${file.url}" class="media-display" alt="" onload="onMediaLoaded()">`;
+      }
 
-                if (allFiles.length === 0) {
-                    showError(
-                        'لم يتم العثور على ملفات وسائط',
-                        'تأكد من وجود ملفات صور أو فيديو في نفس مجلد الصفحة.'
-                    );
-                    return;
-                }
+      // تمت إزالة شريط المعلومات كي لا يظهر اسم الصورة
+      viewer.innerHTML = mediaHtml;
 
-                // عرض المحتوى
-                displayContent();
-                
-            } catch (error) {
-                console.error('خطأ:', error);
-                showError(
-                    'فشل تحميل الملفات',
-                    `حدث خطأ أثناء الاتصال بـ GitHub: ${error.message}<br><br>` +
-                    'تأكد من أن المستودع عام والصفحة مرفوعة على GitHub Pages.'
-                );
-            }
-        }
+      // تحديث أزرار التنقل (التفاف دائري متاح من لوحة المفاتيح أيضًا)
+      document.getElementById('prevBtn').disabled = false;
+      document.getElementById('nextBtn').disabled = false;
+    }
 
-        // عرض المحتوى
-        function displayContent() {
-            document.getElementById('loadingArea').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            
-            updateStats();
-            
-            // تشغيل أول ملف
-            if (allFiles.length > 0) {
-                playMedia(0);
-            }
-        }
+    function onMediaLoaded(){
+      if (isPlaying && allFiles[currentIndex].type === 'image'){
+        setTimeout(() => { if (isPlaying) navigateMedia(1); }, playSpeed);
+      }
+    }
 
-        // تحديث الإحصائيات
-        function updateStats() {
-            document.getElementById('currentNumber').textContent = currentIndex + 1;
-            document.getElementById('totalCount').textContent = allFiles.length;
-        }
+    function onMediaEnded(){ if (isPlaying) navigateMedia(1); }
 
-        // تشغيل الوسائط
-        function playMedia(index) {
-            if (index < 0 || index >= allFiles.length) return;
-            
-            currentIndex = index;
-            const file = allFiles[index];
-            const viewer = document.getElementById('viewerSection');
+    function navigateMedia(direction){
+      let newIndex = currentIndex + direction;
+      if (newIndex >= allFiles.length) newIndex = 0; // التفاف للبداية
+      else if (newIndex < 0) newIndex = allFiles.length - 1; // التفاف للنهاية
+      playMedia(newIndex);
+    }
 
-            // عرض الملف
-            let mediaHtml = '';
-            if (file.type === 'video') {
-                mediaHtml = `
-                    <video class="media-display" controls autoplay onended="onMediaEnded()">
-                        <source src="${file.url}">
-                        متصفحك لا يدعم تشغيل الفيديو
-                    </video>
-                `;
-            } else {
-                mediaHtml = `<img src="${file.url}" class="media-display" alt="${file.name}" onload="onMediaLoaded()">`;
-            }
+    function toggleAutoPlay(){
+      isPlaying = !isPlaying;
+      const btn = document.getElementById('playBtn');
+      if (isPlaying){
+        btn.textContent = '⏸️ إيقاف';
+        btn.classList.add('playing');
+        if (allFiles[currentIndex]?.type === 'image') onMediaLoaded();
+      } else {
+        btn.textContent = '▶️ تشغيل تلقائي';
+        btn.classList.remove('playing');
+      }
+    }
 
-            mediaHtml += `
-                <div class="media-info">
-                    <div class="media-name">${file.name}</div>
-                    <div class="media-meta">
-                        ${file.type === 'video' ? '🎬 فيديو' : '📷 صورة'} • 
-                        ${currentIndex + 1} من ${allFiles.length}
-                    </div>
-                </div>
-            `;
+    function updateSpeed(value){
+      playSpeed = value * 1000; // sec -> ms
+      document.getElementById('speedValue').textContent = value + ' ث';
+    }
 
-            viewer.innerHTML = mediaHtml;
-            updateStats();
-            
-            // تحديث أزرار التنقل
-            document.getElementById('prevBtn').disabled = (index === 0);
-            document.getElementById('nextBtn').disabled = (index === allFiles.length - 1);
-        }
+    function toggleFullscreen(){
+      const wrapper = document.getElementById('viewerWrapper');
+      if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement){
+        if (wrapper.requestFullscreen) wrapper.requestFullscreen();
+        else if (wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen();
+        else if (wrapper.mozRequestFullScreen) wrapper.mozRequestFullScreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+      }
+    }
 
-        // عند تحميل الصورة (للتشغيل التلقائي)
-        function onMediaLoaded() {
-            if (isPlaying && allFiles[currentIndex].type === 'image') {
-                // الانتقال للتالي بعد الوقت المحدد
-                setTimeout(() => {
-                    if (isPlaying) {
-                        navigateMedia(1);
-                    }
-                }, playSpeed);
-            }
-        }
+    // اختصارات لوحة المفاتيح
+    document.addEventListener('keydown', (e) => {
+      if (allFiles.length === 0) return;
+      switch(e.key){
+        case 'ArrowRight':
+        case 'ArrowUp':
+          navigateMedia(-1); // السابق
+          break;
+        case 'ArrowLeft':
+        case 'ArrowDown':
+          navigateMedia(1); // التالي
+          break;
+        case ' ': // مسافة
+          e.preventDefault();
+          toggleAutoPlay();
+          break;
+        case 'f':
+        case 'F':
+          toggleFullscreen();
+          break;
+      }
+    });
 
-        // عند انتهاء الفيديو
-        function onMediaEnded() {
-            if (isPlaying) {
-                navigateMedia(1);
-            }
-        }
+    function showError(title, message){
+      document.getElementById('loadingArea').style.display = 'none';
+      document.getElementById('errorArea').innerHTML = `
+        <div class="error-box">
+          <h3>❌ ${title}</h3>
+          <p>${message}</p>
+        </div>`;
+    }
 
-        // التنقل بين الملفات
-        function navigateMedia(direction) {
-            let newIndex = currentIndex + direction;
-            
-            // التفاف: العودة للبداية أو النهاية
-            if (newIndex >= allFiles.length) {
-                newIndex = 0;
-            } else if (newIndex < 0) {
-                newIndex = allFiles.length - 1;
-            }
-            
-            playMedia(newIndex);
-        }
-
-        // تشغيل/إيقاف العرض التلقائي
-        function toggleAutoPlay() {
-            isPlaying = !isPlaying;
-            const btn = document.getElementById('playBtn');
-            
-            if (isPlaying) {
-                btn.textContent = '⏸️ إيقاف';
-                btn.classList.add('playing');
-                
-                // بدء العرض التلقائي
-                if (allFiles[currentIndex].type === 'image') {
-                    onMediaLoaded();
-                }
-            } else {
-                btn.textContent = '▶️ تشغيل تلقائي';
-                btn.classList.remove('playing');
-            }
-        }
-
-        // تحديث السرعة
-        function updateSpeed(value) {
-            playSpeed = value * 1000; // تحويل إلى ميلي ثانية
-            document.getElementById('speedValue').textContent = value + ' ث';
-        }
-
-        // ملء الشاشة
-        function toggleFullscreen() {
-            const wrapper = document.getElementById('viewerWrapper');
-            
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
-                // الدخول في وضع ملء الشاشة
-                if (wrapper.requestFullscreen) {
-                    wrapper.requestFullscreen();
-                } else if (wrapper.webkitRequestFullscreen) {
-                    wrapper.webkitRequestFullscreen();
-                } else if (wrapper.mozRequestFullScreen) {
-                    wrapper.mozRequestFullScreen();
-                }
-            } else {
-                // الخروج من وضع ملء الشاشة
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                }
-            }
-        }
-
-        // اختصارات لوحة المفاتيح
-        document.addEventListener('keydown', (e) => {
-            if (allFiles.length === 0) return;
-            
-            switch(e.key) {
-                case 'ArrowRight':
-                case 'ArrowUp':
-                    navigateMedia(-1); // السابق
-                    break;
-                case 'ArrowLeft':
-                case 'ArrowDown':
-                    navigateMedia(1); // التالي
-                    break;
-                case ' ': // مسافة
-                    e.preventDefault();
-                    toggleAutoPlay();
-                    break;
-                case 'f':
-                case 'F':
-                    toggleFullscreen();
-                    break;
-            }
-        });
-
-        // عرض الأخطاء
-        function showError(title, message) {
-            document.getElementById('loadingArea').style.display = 'none';
-            document.getElementById('errorArea').innerHTML = `
-                <div class="error-box">
-                    <h3>❌ ${title}</h3>
-                    <p>${message}</p>
-                </div>
-            `;
-        }
-
-        // بدء التحميل عند فتح الصفحة
-        window.addEventListener('load', loadFiles);
-    </script>
+    window.addEventListener('load', loadFiles);
+  </script>
 </body>
 </html>
