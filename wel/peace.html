@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رسائل السلام</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 4em;
+            margin-bottom: 50px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease-in;
+        }
+
+        .quote-container {
+            background: white;
+            border-radius: 30px;
+            padding: 80px 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            min-height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #4facfe);
+            background-size: 300% 100%;
+            animation: gradient 3s ease infinite;
+        }
+
+        @keyframes gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .quote {
+            display: none;
+            text-align: center;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        .quote.active {
+            display: block;
+        }
+
+        .quote-text {
+            font-size: 3.5em;
+            color: #333;
+            line-height: 1.6;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .quote-number {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .dove-icon {
+            font-size: 5em;
+            margin-top: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            background: #667eea;
+            color: white;
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .speed-control {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .speed-control.show {
+            max-height: 300px;
+            opacity: 1;
+            padding: 30px;
+        }
+
+        .speed-label {
+            text-align: center;
+            font-size: 1.8em;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .speed-slider {
+            width: 100%;
+            height: 12px;
+            border-radius: 6px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .speed-slider::-moz-range-thumb {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .speed-value {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.4em;
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .quote-text {
+                font-size: 1.5em;
+            }
+            .quote-container {
+                padding: 40px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕊️ رسائل السلام والمحبة 🕊️</h1>
+        
+        <div class="quote-container">
+            <div class="quote active">
+                <div class="quote-text">الحوار جسر، والعنف هاوية</div>
+                <div class="quote-number">1 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">القوة الحقيقية في ضبط النفس، لا في إيذاء الآخرين</div>
+                <div class="quote-number">2 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">كلمة طيبة تبني ما يهدمه ألف صراع</div>
+                <div class="quote-number">3 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">السلام يبدأ بابتسامة ويد ممدودة</div>
+                <div class="quote-number">4 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">العنف ضعف يتخفى بقناع القوة</div>
+                <div class="quote-number">5 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">الحكمة في التفاهم، والخسارة في الصدام</div>
+                <div class="quote-number">6 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">نختلف لنتكامل، لا لنتقاتل</div>
+                <div class="quote-number">7 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">التسامح طريق الأقوياء</div>
+                <div class="quote-number">8 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">بالحوار نصل، وبالعنف نفشل</div>
+                <div class="quote-number">9 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">كل مشكلة لها حل سلمي إذا أردنا</div>
+                <div class="quote-number">10 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">الاحترام المتبادل أساس كل حل</div>
+                <div class="quote-number">11 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">العقل نور والعنف ظلام</div>
+                <div class="quote-number">12 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">لنبني جسور التواصل، لا أسوار الكراهية</div>
+                <div class="quote-number">13 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">السلام خيار الشجعان</div>
+                <div class="quote-number">14 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">الصبر والحكمة يفوزان دائماً</div>
+                <div class="quote-number">15 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">العنف يدمر، والحوار يعمر</div>
+                <div class="quote-number">16 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">قوتك في أخلاقك، لا في عنفك</div>
+                <div class="quote-number">17 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">المحبة تهزم الكراهية دائماً</div>
+                <div class="quote-number">18 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">لكل خلاف حل لا يحتاج عنفاً</div>
+                <div class="quote-number">19 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+            <div class="quote">
+                <div class="quote-text">معاً نصنع السلام، كلمة كلمة</div>
+                <div class="quote-number">20 / 20</div>
+                <div class="dove-icon">🕊️</div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+
+        <div class="controls">
+            <button onclick="previousQuote()">⏮️ السابق</button>
+            <button onclick="toggleAutoPlay()" id="playBtn">⏸️ إيقاف</button>
+            <button onclick="nextQuote()">التالي ⏭️</button>
+            <button onclick="toggleSpeedControl()" id="speedBtn">⚙️ السرعة</button>
+        </div>
+
+        <div class="speed-control">
+            <div class="speed-label">⚙️ التحكم في سرعة العرض</div>
+            <input type="range" min="1" max="10" value="5" class="speed-slider" id="speedSlider">
+            <div class="speed-value">السرعة: <span id="speedValue">متوسطة (5 ثواني)</span></div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuote = 0;
+        const quotes = document.querySelectorAll('.quote');
+        const totalQuotes = quotes.length;
+        let autoPlayInterval;
+        let isPlaying = true;
+        let speed = 5000; // السرعة الافتراضية 5 ثواني
+
+        function showQuote(index) {
+            quotes.forEach(quote => quote.classList.remove('active'));
+            quotes[index].classList.add('active');
+            updateProgress();
+        }
+
+        function nextQuote() {
+            currentQuote = (currentQuote + 1) % totalQuotes;
+            showQuote(currentQuote);
+        }
+
+        function previousQuote() {
+            currentQuote = (currentQuote - 1 + totalQuotes) % totalQuotes;
+            showQuote(currentQuote);
+        }
+
+        function toggleAutoPlay() {
+            const playBtn = document.getElementById('playBtn');
+            if (isPlaying) {
+                clearInterval(autoPlayInterval);
+                playBtn.textContent = '▶️ تشغيل';
+                isPlaying = false;
+            } else {
+                startAutoPlay();
+                playBtn.textContent = '⏸️ إيقاف';
+                isPlaying = true;
+            }
+        }
+
+        function startAutoPlay() {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = setInterval(nextQuote, speed);
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuote + 1) / totalQuotes) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function toggleSpeedControl() {
+            const speedControl = document.querySelector('.speed-control');
+            speedControl.classList.toggle('show');
+        }
+
+        // التحكم في السرعة
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+
+        speedSlider.addEventListener('input', function() {
+            const value = this.value;
+            speed = value * 1000; // تحويل إلى ميلي ثانية
+            
+            let speedText = '';
+            if (value <= 3) speedText = 'سريعة';
+            else if (value <= 7) speedText = 'متوسطة';
+            else speedText = 'بطيئة';
+            
+            speedValue.textContent = `السرعة: ${speedText} (${value} ثواني)`;
+            
+            if (isPlaying) {
+                startAutoPlay();
+            }
+        });
+
+        // بدء العرض التلقائي
+        startAutoPlay();
+
+        // دعم لوحة المفاتيح
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                if (e.key === 'ArrowRight') previousQuote();
+                else nextQuote();
+            } else if (e.key === ' ') {
+                e.preventDefault();
+                toggleAutoPlay();
+            }
+        });
+    </script>
+</body>
+</html>
