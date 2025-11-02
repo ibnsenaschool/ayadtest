@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورقة عمل - جدول الضرب</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .selectors {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .selector-group {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 400px;
+        }
+
+        .selector-group h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .table-buttons {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+        }
+
+        .table-btn {
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: 3px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .table-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .table-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .shape-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .shape-btn {
+            padding: 15px 10px;
+            font-size: 2em;
+            border: 3px solid #764ba2;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .shape-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            transform: scale(1.05);
+        }
+
+        .shape-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(240, 147, 251, 0.3);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .worksheet {
+            display: none;
+            background: white;
+            padding: 40px;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .worksheet.active {
+            display: block;
+        }
+
+        .worksheet-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .worksheet-header h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .student-info {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            font-size: 1.1em;
+        }
+
+        .info-field {
+            border-bottom: 2px solid #333;
+            padding: 5px 30px;
+            min-width: 200px;
+        }
+
+        .exercises-section {
+            margin-bottom: 40px;
+        }
+
+        .exercises-section h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #ddd;
+        }
+
+        .exercise-item {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-direction: row-reverse;
+        }
+
+        .exercise-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .exercise-text {
+            font-weight: bold;
+            color: #333;
+            direction: ltr;
+            text-align: left;
+            flex: 1;
+        }
+
+        .answer-box {
+            width: 80px;
+            height: 40px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background: #fafafa;
+            flex-shrink: 0;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .instructions p {
+            color: #555;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        .canvas-area {
+            text-align: center;
+        }
+
+        .canvas-title {
+            color: #667eea;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        #worksheetCanvas {
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            background: white;
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        /* أنماط الطباعة */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+                padding: 20px;
+                border-radius: 0;
+            }
+
+            h1,
+            .subtitle,
+            .selectors,
+            .controls,
+            .btn {
+                display: none !important;
+            }
+
+            .worksheet {
+                display: block !important;
+                border: none;
+                padding: 0;
+                page-break-inside: avoid;
+            }
+
+            .worksheet-header {
+                border-bottom: 3px solid #000;
+            }
+
+            .worksheet-header h2 {
+                color: #000;
+            }
+
+            .exercises-grid {
+                background: white;
+                border: 2px solid #000;
+            }
+
+            .exercise-item {
+                border: 2px solid #000;
+            }
+
+            .exercise-number {
+                background: #000;
+            }
+
+            .instructions {
+                background: #f0f0f0;
+                border: 2px solid #000;
+            }
+
+            .canvas-title {
+                color: #000;
+            }
+
+            #worksheetCanvas {
+                border: 3px solid #000;
+            }
+
+            @page {
+                margin: 1cm;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .table-buttons {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .shape-buttons {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .exercises-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .selector-group {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 ورقة عمل جدول الضرب</h1>
+        <p class="subtitle">اختر جدول الضرب والشكل، ثم اضغط "إنشاء الورقة"</p>
+
+        <div class="selectors">
+            <div class="selector-group">
+                <h3>📊 اختر جدول الضرب</h3>
+                <div class="table-buttons" id="tableButtons"></div>
+            </div>
+
+            <div class="selector-group">
+                <h3>🎨 اختر الشكل</h3>
+                <div class="shape-buttons" id="shapeButtons"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-generate" onclick="generateWorksheet()">✨ إنشاء الورقة</button>
+            <button class="btn btn-print" onclick="printWorksheet()">🖨️ طباعة</button>
+        </div>
+
+        <div class="worksheet" id="worksheet">
+            <div class="worksheet-header">
+                <h2>🧮 ورقة عمل - جدول الضرب</h2>
+                <div class="student-info">
+                    <div>
+                        <strong>الاسم:</strong>
+                        <span class="info-field"></span>
+                    </div>
+                    <div>
+                        <strong>الصف:</strong>
+                        <span class="info-field"></span>
+                    </div>
+                    <div>
+                        <strong>التاريخ:</strong>
+                        <span class="info-field"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercises-section">
+                <h3>📝 حل التمارين التالية:</h3>
+                <div class="exercises-grid" id="exercisesGrid"></div>
+            </div>
+
+            <div class="instructions">
+                <h3>🎯 التعليمات</h3>
+                <p>بعد حل جميع التمارين، وصّل الإجابات بالترتيب (من التمرين 1 إلى التمرين 10) لتكتشف الشكل المخفي!</p>
+            </div>
+
+            <div class="canvas-area">
+                <div class="canvas-title">🎨 وصّل النقاط بالترتيب:</div>
+                <canvas id="worksheetCanvas" width="700" height="700"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('worksheetCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let selectedTable = 3;
+        let selectedShape = 'star';
+
+        // تعريف الأشكال
+        const shapes = {
+            star: {
+                name: 'نجمة ⭐',
+                emoji: '⭐',
+                points: [
+                    {x: 350, y: 100},
+                    {x: 400, y: 250},
+                    {x: 550, y: 250},
+                    {x: 430, y: 350},
+                    {x: 470, y: 500},
+                    {x: 350, y: 420},
+                    {x: 230, y: 500},
+                    {x: 270, y: 350},
+                    {x: 150, y: 250},
+                    {x: 300, y: 250},
+                ]
+            },
+            heart: {
+                name: 'قلب ❤️',
+                emoji: '❤️',
+                points: [
+                    {x: 230, y: 200},
+                    {x: 250, y: 150},
+                    {x: 300, y: 130},
+                    {x: 350, y: 150},
+                    {x: 400, y: 130},
+                    {x: 450, y: 150},
+                    {x: 470, y: 200},
+                    {x: 470, y: 250},
+                    {x: 350, y: 400},
+                    {x: 230, y: 250},
+                ]
+            },
+            house: {
+                name: 'منزل 🏠',
+                emoji: '🏠',
+                points: [
+                    {x: 350, y: 100},
+                    {x: 200, y: 250},
+                    {x: 200, y: 500},
+                    {x: 300, y: 500},
+                    {x: 300, y: 400},
+                    {x: 400, y: 400},
+                    {x: 400, y: 500},
+                    {x: 500, y: 500},
+                    {x: 500, y: 250},
+                    {x: 350, y: 100},
+                ]
+            },
+            tree: {
+                name: 'شجرة 🌲',
+                emoji: '🌲',
+                points: [
+                    {x: 350, y: 100},
+                    {x: 250, y: 230},
+                    {x: 290, y: 230},
+                    {x: 230, y: 330},
+                    {x: 270, y: 330},
+                    {x: 200, y: 430},
+                    {x: 310, y: 430},
+                    {x: 310, y: 550},
+                    {x: 390, y: 550},
+                    {x: 390, y: 430},
+                ]
+            },
+            rocket: {
+                name: 'صاروخ 🚀',
+                emoji: '🚀',
+                points: [
+                    {x: 350, y: 100},
+                    {x: 300, y: 200},
+                    {x: 270, y: 200},
+                    {x: 230, y: 300},
+                    {x: 270, y: 400},
+                    {x: 300, y: 500},
+                    {x: 350, y: 530},
+                    {x: 400, y: 500},
+                    {x: 430, y: 400},
+                    {x: 470, y: 300},
+                ]
+            },
+            fish: {
+                name: 'سمكة 🐟',
+                emoji: '🐟',
+                points: [
+                    {x: 150, y: 350},
+                    {x: 230, y: 280},
+                    {x: 350, y: 230},
+                    {x: 470, y: 260},
+                    {x: 550, y: 320},
+                    {x: 600, y: 350},
+                    {x: 550, y: 380},
+                    {x: 470, y: 440},
+                    {x: 350, y: 470},
+                    {x: 230, y: 420},
+                ]
+            },
+            flower: {
+                name: 'زهرة 🌸',
+                emoji: '🌸',
+                points: [
+                    {x: 350, y: 150},
+                    {x: 300, y: 200},
+                    {x: 250, y: 250},
+                    {x: 270, y: 320},
+                    {x: 330, y: 350},
+                    {x: 330, y: 450},
+                    {x: 350, y: 550},
+                    {x: 370, y: 450},
+                    {x: 370, y: 350},
+                    {x: 430, y: 320},
+                ]
+            },
+            cat: {
+                name: 'قطة 🐱',
+                emoji: '🐱',
+                points: [
+                    {x: 250, y: 150},
+                    {x: 270, y: 230},
+                    {x: 230, y: 300},
+                    {x: 230, y: 400},
+                    {x: 300, y: 450},
+                    {x: 350, y: 470},
+                    {x: 400, y: 450},
+                    {x: 470, y: 400},
+                    {x: 470, y: 300},
+                    {x: 430, y: 230},
+                ]
+            }
+        };
+
+        // إنشاء أزرار جدول الضرب
+        function initTableButtons() {
+            const container = document.getElementById('tableButtons');
+            for (let i = 1; i <= 12; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'table-btn';
+                if (i === selectedTable) btn.classList.add('active');
+                btn.textContent = i;
+                btn.onclick = () => selectTable(i, btn);
+                container.appendChild(btn);
+            }
+        }
+
+        // إنشاء أزرار الأشكال
+        function initShapeButtons() {
+            const container = document.getElementById('shapeButtons');
+            Object.keys(shapes).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = 'shape-btn';
+                if (key === selectedShape) btn.classList.add('active');
+                btn.textContent = shapes[key].emoji;
+                btn.title = shapes[key].name;
+                btn.onclick = () => selectShape(key, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectTable(num, btn) {
+            selectedTable = num;
+            document.querySelectorAll('.table-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            btn.classList.add('active');
+        }
+
+        function selectShape(key, btn) {
+            selectedShape = key;
+            document.querySelectorAll('.shape-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            btn.classList.add('active');
+        }
+
+        function generateWorksheet() {
+            // إنشاء التمارين
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            
+            // خلط الأرقام عشوائياً
+            for (let i = numbers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+            }
+            
+            // إنشاء قائمة التمارين
+            const exercises = [];
+            for (let i = 0; i < 10; i++) {
+                exercises.push({
+                    num1: selectedTable,
+                    num2: numbers[i],
+                    answer: selectedTable * numbers[i],
+                    order: i + 1
+                });
+            }
+            
+            // عرض التمارين
+            const container = document.getElementById('exercisesGrid');
+            container.innerHTML = '';
+            
+            exercises.forEach((ex, index) => {
+                const div = document.createElement('div');
+                div.className = 'exercise-item';
+                
+                div.innerHTML = `
+                    <div class="exercise-number">${index + 1}</div>
+                    <div class="exercise-text">${ex.num1} × ${ex.num2} =</div>
+                    <div class="answer-box"></div>
+                `;
+                
+                container.appendChild(div);
+            });
+            
+            // رسم النقاط على الشكل
+            drawShape(exercises);
+            
+            // إظهار الورقة
+            document.getElementById('worksheet').classList.add('active');
+            
+            // التمرير إلى الورقة
+            document.getElementById('worksheet').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function drawShape(exercises) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const shape = shapes[selectedShape];
+            
+            // رسم النقاط
+            exercises.forEach((ex, index) => {
+                const point = shape.points[index];
+                
+                // رسم الدائرة
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 30, 0, Math.PI * 2);
+                ctx.fillStyle = '#667eea';
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+                
+                // رسم رقم الإجابة
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 22px Comic Sans MS';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(ex.answer, point.x, point.y);
+            });
+        }
+
+        function printWorksheet() {
+            window.print();
+        }
+
+        // تهيئة الصفحة
+        initTableButtons();
+        initShapeButtons();
+    </script>
+</body>
+</html>
