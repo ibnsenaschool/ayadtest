@@ -152,7 +152,7 @@
         .worksheet {
             display: none;
             background: white;
-            padding: 40px;
+            padding: 25px;
             border: 3px solid #667eea;
             border-radius: 15px;
             margin-top: 20px;
@@ -164,15 +164,15 @@
 
         .worksheet-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border-bottom: 3px solid #667eea;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
 
         .worksheet-header h2 {
             color: #667eea;
-            font-size: 2em;
-            margin-bottom: 15px;
+            font-size: 1.6em;
+            margin-bottom: 12px;
         }
 
         .student-info {
@@ -189,42 +189,42 @@
         }
 
         .exercises-section {
-            margin-bottom: 40px;
+            margin-bottom: 25px;
         }
 
         .exercises-section h3 {
             color: #667eea;
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 1.3em;
+            margin-bottom: 15px;
             text-align: center;
         }
 
         .exercises-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 12px;
             background: #f9f9f9;
-            padding: 25px;
+            padding: 18px;
             border-radius: 12px;
             border: 2px solid #ddd;
         }
 
         .exercise-item {
             background: white;
-            padding: 15px 20px;
+            padding: 10px 15px;
             border-radius: 10px;
             border: 2px solid #667eea;
-            font-size: 1.3em;
+            font-size: 1.1em;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .exercise-number {
             background: #667eea;
             color: white;
-            width: 35px;
-            height: 35px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -242,8 +242,8 @@
         }
 
         .answer-box {
-            width: 80px;
-            height: 40px;
+            width: 70px;
+            height: 35px;
             border: 2px solid #333;
             border-radius: 8px;
             background: #fafafa;
@@ -252,22 +252,22 @@
 
         .instructions {
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-align: center;
         }
 
         .instructions h3 {
             color: #333;
-            margin-bottom: 10px;
-            font-size: 1.3em;
+            margin-bottom: 8px;
+            font-size: 1.1em;
         }
 
         .instructions p {
             color: #555;
-            font-size: 1.1em;
-            line-height: 1.8;
+            font-size: 0.95em;
+            line-height: 1.5;
         }
 
         .canvas-area {
@@ -276,9 +276,9 @@
 
         .canvas-title {
             color: #667eea;
-            font-size: 1.4em;
+            font-size: 1.1em;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         #worksheetCanvas {
@@ -300,7 +300,7 @@
             .container {
                 box-shadow: none;
                 max-width: 100%;
-                padding: 20px;
+                padding: 15px;
                 border-radius: 0;
             }
 
@@ -320,41 +320,99 @@
             }
 
             .worksheet-header {
-                border-bottom: 3px solid #000;
+                border-bottom: 2px solid #000;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
             }
 
             .worksheet-header h2 {
                 color: #000;
+                font-size: 1.4em;
+                margin-bottom: 8px;
+            }
+
+            .student-info {
+                font-size: 0.85em;
+            }
+
+            .info-field {
+                border-bottom: 1px solid #333;
+                padding: 3px 20px;
+                min-width: 150px;
+            }
+
+            .exercises-section {
+                margin-bottom: 15px;
+            }
+
+            .exercises-section h3 {
+                font-size: 1.1em;
+                margin-bottom: 10px;
             }
 
             .exercises-grid {
                 background: white;
                 border: 2px solid #000;
+                padding: 12px;
+                gap: 8px;
             }
 
             .exercise-item {
-                border: 2px solid #000;
+                border: 1.5px solid #000;
+                padding: 8px 12px;
+                font-size: 0.95em;
             }
 
             .exercise-number {
                 background: #000;
+                width: 28px;
+                height: 28px;
+                font-size: 0.9em;
+            }
+
+            .answer-box {
+                width: 60px;
+                height: 30px;
+                border: 1.5px solid #333;
             }
 
             .instructions {
                 background: #f0f0f0;
-                border: 2px solid #000;
+                border: 1.5px solid #000;
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+
+            .instructions h3 {
+                font-size: 1em;
+                margin-bottom: 5px;
+            }
+
+            .instructions p {
+                font-size: 0.85em;
+                line-height: 1.4;
+            }
+
+            .canvas-area {
+                page-break-inside: avoid;
             }
 
             .canvas-title {
                 color: #000;
+                font-size: 1em;
+                margin-bottom: 8px;
             }
 
             #worksheetCanvas {
-                border: 3px solid #000;
+                border: 2px solid #000;
+                max-width: 100%;
+                height: auto !important;
+                width: 480px !important;
             }
 
             @page {
-                margin: 1cm;
+                margin: 0.5cm;
+                size: A4;
             }
         }
 
@@ -430,7 +488,7 @@
 
             <div class="canvas-area">
                 <div class="canvas-title">🎨 وصّل النقاط بالترتيب:</div>
-                <canvas id="worksheetCanvas" width="700" height="700"></canvas>
+                <canvas id="worksheetCanvas" width="500" height="500"></canvas>
             </div>
         </div>
     </div>
@@ -448,128 +506,128 @@
                 name: 'نجمة ⭐',
                 emoji: '⭐',
                 points: [
-                    {x: 350, y: 100},
-                    {x: 400, y: 250},
-                    {x: 550, y: 250},
-                    {x: 430, y: 350},
-                    {x: 470, y: 500},
-                    {x: 350, y: 420},
-                    {x: 230, y: 500},
-                    {x: 270, y: 350},
-                    {x: 150, y: 250},
-                    {x: 300, y: 250},
+                    {x: 250, y: 70},
+                    {x: 285, y: 180},
+                    {x: 390, y: 180},
+                    {x: 305, y: 250},
+                    {x: 335, y: 355},
+                    {x: 250, y: 300},
+                    {x: 165, y: 355},
+                    {x: 195, y: 250},
+                    {x: 110, y: 180},
+                    {x: 215, y: 180},
                 ]
             },
             heart: {
                 name: 'قلب ❤️',
                 emoji: '❤️',
                 points: [
-                    {x: 230, y: 200},
-                    {x: 250, y: 150},
-                    {x: 300, y: 130},
-                    {x: 350, y: 150},
-                    {x: 400, y: 130},
-                    {x: 450, y: 150},
-                    {x: 470, y: 200},
-                    {x: 470, y: 250},
-                    {x: 350, y: 400},
-                    {x: 230, y: 250},
+                    {x: 165, y: 145},
+                    {x: 180, y: 110},
+                    {x: 215, y: 95},
+                    {x: 250, y: 110},
+                    {x: 285, y: 95},
+                    {x: 320, y: 110},
+                    {x: 335, y: 145},
+                    {x: 335, y: 180},
+                    {x: 250, y: 285},
+                    {x: 165, y: 180},
                 ]
             },
             house: {
                 name: 'منزل 🏠',
                 emoji: '🏠',
                 points: [
-                    {x: 350, y: 100},
-                    {x: 200, y: 250},
-                    {x: 200, y: 500},
-                    {x: 300, y: 500},
-                    {x: 300, y: 400},
-                    {x: 400, y: 400},
-                    {x: 400, y: 500},
-                    {x: 500, y: 500},
-                    {x: 500, y: 250},
-                    {x: 350, y: 100},
+                    {x: 250, y: 70},
+                    {x: 145, y: 180},
+                    {x: 145, y: 355},
+                    {x: 215, y: 355},
+                    {x: 215, y: 285},
+                    {x: 285, y: 285},
+                    {x: 285, y: 355},
+                    {x: 355, y: 355},
+                    {x: 355, y: 180},
+                    {x: 250, y: 70},
                 ]
             },
             tree: {
                 name: 'شجرة 🌲',
                 emoji: '🌲',
                 points: [
-                    {x: 350, y: 100},
-                    {x: 250, y: 230},
-                    {x: 290, y: 230},
-                    {x: 230, y: 330},
-                    {x: 270, y: 330},
-                    {x: 200, y: 430},
-                    {x: 310, y: 430},
-                    {x: 310, y: 550},
-                    {x: 390, y: 550},
-                    {x: 390, y: 430},
+                    {x: 250, y: 70},
+                    {x: 180, y: 165},
+                    {x: 208, y: 165},
+                    {x: 165, y: 235},
+                    {x: 193, y: 235},
+                    {x: 145, y: 305},
+                    {x: 222, y: 305},
+                    {x: 222, y: 390},
+                    {x: 278, y: 390},
+                    {x: 278, y: 305},
                 ]
             },
             rocket: {
                 name: 'صاروخ 🚀',
                 emoji: '🚀',
                 points: [
-                    {x: 350, y: 100},
-                    {x: 300, y: 200},
-                    {x: 270, y: 200},
-                    {x: 230, y: 300},
-                    {x: 270, y: 400},
-                    {x: 300, y: 500},
-                    {x: 350, y: 530},
-                    {x: 400, y: 500},
-                    {x: 430, y: 400},
-                    {x: 470, y: 300},
+                    {x: 250, y: 70},
+                    {x: 215, y: 145},
+                    {x: 193, y: 145},
+                    {x: 165, y: 215},
+                    {x: 193, y: 285},
+                    {x: 215, y: 355},
+                    {x: 250, y: 378},
+                    {x: 285, y: 355},
+                    {x: 307, y: 285},
+                    {x: 335, y: 215},
                 ]
             },
             fish: {
                 name: 'سمكة 🐟',
                 emoji: '🐟',
                 points: [
-                    {x: 150, y: 350},
-                    {x: 230, y: 280},
-                    {x: 350, y: 230},
-                    {x: 470, y: 260},
-                    {x: 550, y: 320},
-                    {x: 600, y: 350},
-                    {x: 550, y: 380},
-                    {x: 470, y: 440},
-                    {x: 350, y: 470},
-                    {x: 230, y: 420},
+                    {x: 110, y: 250},
+                    {x: 165, y: 200},
+                    {x: 250, y: 165},
+                    {x: 335, y: 185},
+                    {x: 390, y: 228},
+                    {x: 428, y: 250},
+                    {x: 390, y: 272},
+                    {x: 335, y: 315},
+                    {x: 250, y: 335},
+                    {x: 165, y: 300},
                 ]
             },
             flower: {
                 name: 'زهرة 🌸',
                 emoji: '🌸',
                 points: [
-                    {x: 350, y: 150},
-                    {x: 300, y: 200},
-                    {x: 250, y: 250},
-                    {x: 270, y: 320},
-                    {x: 330, y: 350},
-                    {x: 330, y: 450},
-                    {x: 350, y: 550},
-                    {x: 370, y: 450},
-                    {x: 370, y: 350},
-                    {x: 430, y: 320},
+                    {x: 250, y: 110},
+                    {x: 215, y: 145},
+                    {x: 180, y: 180},
+                    {x: 193, y: 228},
+                    {x: 235, y: 250},
+                    {x: 235, y: 320},
+                    {x: 250, y: 390},
+                    {x: 265, y: 320},
+                    {x: 265, y: 250},
+                    {x: 307, y: 228},
                 ]
             },
             cat: {
                 name: 'قطة 🐱',
                 emoji: '🐱',
                 points: [
-                    {x: 250, y: 150},
-                    {x: 270, y: 230},
-                    {x: 230, y: 300},
-                    {x: 230, y: 400},
-                    {x: 300, y: 450},
-                    {x: 350, y: 470},
-                    {x: 400, y: 450},
-                    {x: 470, y: 400},
-                    {x: 470, y: 300},
-                    {x: 430, y: 230},
+                    {x: 180, y: 110},
+                    {x: 193, y: 165},
+                    {x: 165, y: 215},
+                    {x: 165, y: 285},
+                    {x: 215, y: 320},
+                    {x: 250, y: 335},
+                    {x: 285, y: 320},
+                    {x: 335, y: 285},
+                    {x: 335, y: 215},
+                    {x: 307, y: 165},
                 ]
             }
         };
@@ -676,16 +734,16 @@
                 
                 // رسم الدائرة
                 ctx.beginPath();
-                ctx.arc(point.x, point.y, 30, 0, Math.PI * 2);
+                ctx.arc(point.x, point.y, 22, 0, Math.PI * 2);
                 ctx.fillStyle = '#667eea';
                 ctx.fill();
                 ctx.strokeStyle = 'white';
-                ctx.lineWidth = 4;
+                ctx.lineWidth = 3;
                 ctx.stroke();
                 
                 // رسم رقم الإجابة
                 ctx.fillStyle = 'white';
-                ctx.font = 'bold 22px Comic Sans MS';
+                ctx.font = 'bold 16px Comic Sans MS';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(ex.answer, point.x, point.y);
