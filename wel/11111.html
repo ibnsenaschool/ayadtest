@@ -13,15 +13,13 @@
         }
         
         .calendar-container {
-            position: fixed;
+            position: relative;
             top: 0;
             right: 0;
             left: 0;
-            z-index: 1000;
+            z-index: 1;
             background: linear-gradient(to bottom right, #eff6ff, #f3e8ff, #fce7f3);
             padding: 16px;
-            max-height: 100vh;
-            overflow-y: auto;
         }
         
         .calendar-grid {
@@ -592,9 +590,28 @@
             });
         }
 
+        // FAB: add event quickly (today by default)
+        const fab = document.getElementById('fab-add');
+        if (fab) {
+            fab.addEventListener('click', () => {
+                const today = new Date();
+                // If a day is already selected in the current month, keep it; otherwise select today's if same month/year; else switch to today's month
+                if (currentDate.getFullYear() !== today.getFullYear() || currentDate.getMonth() !== today.getMonth()) {
+                    currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                    renderCalendar();
+                }
+                selectDay(today.getDate());
+                document.getElementById('event-input').focus();
+            });
+        }
+
         // Re-render on initial load
         renderCalendar();
     </script>
+
+
+    <!-- Floating Add Event Button -->
+    <button id="fab-add" title="إضافة فعالية" class="fixed bottom-6 left-6 z-50 px-5 py-3 rounded-2xl shadow-2xl bg-gradient-to-r from-green-600 to-emerald-600 text-white font-extrabold hover:from-green-700 hover:to-emerald-700 transition-transform hover:scale-105">+ إضافة فعالية</button>
 
 </body>
 </html>
