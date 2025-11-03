@@ -1,679 +1,254 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التقويم الشهري</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
-        
-        body {
-            font-family: 'Tajawal', sans-serif;
-        }
-        
-        .calendar-container {
-            position: relative;
-            top: 0;
-            right: 0;
-            left: 0;
-            z-index: 1;
-            background: linear-gradient(to bottom right, #eff6ff, #f3e8ff, #fce7f3);
-            padding: 16px;
-        }
-        
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 0;
-            grid-auto-rows: minmax(140px, auto);
-        }
-        
-        .day-cell {
-            aspect-ratio: 1.8;
-            min-height: 150px; /* fallback for browsers/layouts where aspect-ratio collapses */
-            border: 1px solid #e5e7eb;
-            position: relative;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .day-cell:hover {
-            background-color: #eff6ff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-        }
-        
-        .day-number {
-            position: absolute;
-            top: 8px;
-            right: 12px;
-            font-size: 20px;
-            font-weight: 900;
-            color: #1f2937;
-        }
-        
-        .today-cell {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
-            border: 3px solid #10b981 !important;
-            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4) !important;
-        }
-        
-        .today-cell:hover {
-            background: linear-gradient(135deg, #a7f3d0 0%, #86efac 100%) !important;
-        }
-        
-        .today-number {
-            color: #047857 !important;
-            font-size: 24px !important;
-            font-weight: 900 !important;
-        }
-        
-        .events-container {
-            position: absolute;
-            top: 40px;
-            bottom: 8px;
-            left: 8px;
-            right: 8px;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-        
-        .events-container::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .events-container::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 3px;
-        }
-        
-        .events-container::-webkit-scrollbar-thumb {
-            background: #94a3b8;
-            border-radius: 3px;
-        }
-        
-        .events-container::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-        
-        .event-item {
-            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-            color: #3730a3;
-            padding: 6px 10px;
-            border-radius: 6px;
-            margin-bottom: 5px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s;
-            line-height: 1.2;
-            word-wrap: break-word;
-        }
-        
-        .event-size-1 {
-            font-size: 16px;
-            padding: 8px 12px;
-        }
-        
-        .event-size-2 {
-            font-size: 14px;
-            padding: 7px 10px;
-        }
-        
-        .event-size-3 {
-            font-size: 13px;
-            padding: 6px 10px;
-        }
-        
-        .event-size-4 {
-            font-size: 12px;
-            padding: 5px 9px;
-        }
-        
-        .event-size-5plus {
-            font-size: 11px;
-            padding: 5px 8px;
-            margin-bottom: 4px;
-        }
-        
-        .event-item:hover {
-            background: linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 100%);
-            transform: translateX(-3px);
-        }
-        
-        .delete-btn {
-            opacity: 0;
-            transition: opacity 0.2s;
-            cursor: pointer;
-            color: #dc2626;
-            font-weight: 900;
-            padding: 1px 6px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 4px;
-            font-size: 14px;
-            flex-shrink: 0;
-            margin-right: 4px;
-        }
-        
-        .delete-btn:hover {
-            background: rgba(255, 255, 255, 1);
-            color: #991b1b;
-        }
-        
-        .event-item:hover .delete-btn {
-            opacity: 1;
-        }
-        
-        .week-header {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-weight: 900;
-            font-size: 19px;
-            border-left: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .week-header:last-child {
-            border-left: none;
-        }
-        
-        .nav-button {
-            width: 100%;
-            height: 100%;
-            padding: 0;
-            font-weight: 900;
-            font-size: 18px;
-            border-radius: 12px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .prev-button {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-        }
-        
-        .prev-button:hover {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-            transform: scale(1.03);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
-        }
-        
-        .next-button {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-        }
-        
-        .next-button:hover {
-            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-            transform: scale(1.03);
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-        }
-        
-        .selected-day {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
-            border: 3px solid #3b82f6 !important;
-        }
-        
-        .nav-row {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            padding: 8px;
-            background: #f8fafc;
-            height: 100px;
-        }
-        
-        .date-time-box {
-            grid-column: 2 / 5;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-            padding: 0 32px;
-            color: white;
-        }
-        
-        .event-section-wrapper {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 1001;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>التقويم (إصدار مُعاد البناء)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
+    body{font-family:'Tajawal',sans-serif;}
+    .calendar-shell{background:linear-gradient(to bottom right,#eff6ff,#f3e8ff,#fce7f3);min-height:100vh;padding:16px;}
+    .week-header{background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);color:#fff;padding:18px;text-align:center;font-weight:900;font-size:18px;}
+    .calendar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid #e5e7eb;}
+    .day-cell{position:relative;background:#fff;border:1px solid #e5e7eb;min-height:180px;transition:transform .15s, background .15s;cursor:pointer;}
+    .day-cell:hover{background:#eff6ff;transform:translateY(-2px);z-index:2;}
+    .day-number{position:absolute;top:10px;right:12px;font-weight:900;font-size:20px;color:#111827;}
+    .today{background:linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%)!important;border:3px solid #10b981!important;box-shadow:0 6px 25px rgba(16,185,129,.35)!important;}
+    .today .day-number{color:#065f46!important;font-size:22px;}
+    .selected{background:linear-gradient(135deg,#dbeafe 0%,#bfdbfe 100%)!important;border:3px solid #3b82f6!important;}
+    .events{position:absolute;left:8px;right:8px;top:44px;bottom:8px;overflow:auto;}
+    .events::-webkit-scrollbar{width:6px}
+    .events::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:4px}
+    .event{background:linear-gradient(135deg,#e0e7ff 0%,#c7d2fe 100%);color:#3730a3;padding:6px 10px;border-radius:8px;margin-bottom:6px;font-weight:800;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 4px rgba(0,0,0,.08);}
+    .event .del{opacity:0;transition:opacity .15s;color:#dc2626;background:#fff;padding:0 6px;border-radius:4px;font-weight:900;margin-right:6px;}
+    .event:hover .del{opacity:1}
+    .fab{position:fixed;left:16px;bottom:16px;z-index:50}
+  </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-    <div class="calendar-container">
-        <div class="max-w-[1600px] mx-auto">
-            <!-- Header with Month/Year -->
-            <div class="bg-white rounded-3xl shadow-xl p-6 mb-4">
-                <div class="flex items-center justify-center">
-                    <h1 id="month-year" class="text-5xl font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"></h1>
-                </div>
-            </div>
+<body class="calendar-shell">
+  <div class="max-w-[1600px] mx-auto space-y-4">
 
-            <!-- Calendar Container -->
-            <div class="bg-white rounded-3xl shadow-2xl overflow-visible">
-                <!-- Navigation and Date/Time Row -->
-                <div class="nav-row">
-                    <!-- Column 1: الأحد - Previous Button -->
-                    <div style="grid-column: 1 / 2;">
-                        <button id="prev-btn" class="nav-button prev-button">← السابق</button>
-                    </div>
-                    
-                    <!-- Columns 2-4: Date/Time Box -->
-                    <div class="date-time-box">
-                        <!-- التاريخ على اليمين -->
-                        <div id="current-date" class="text-5xl font-black"></div>
-                        
-                        <!-- اليوم في الوسط -->
-                        <div id="current-day" class="text-5xl font-black"></div>
-                        
-                        <!-- الساعة على اليسار -->
-                        <div id="current-time" class="text-5xl font-black"></div>
-                    </div>
-                    
-                    <!-- Column 5: الخميس - Next Button -->
-                    <div style="grid-column: 5 / 6;">
-                        <button id="next-btn" class="nav-button next-button">التالي →</button>
-                    </div>
-                </div>
-
-                <!-- Week Headers -->
-                <div class="calendar-grid">
-                    <div class="week-header">الأحد</div>
-                    <div class="week-header">الاثنين</div>
-                    <div class="week-header">الثلاثاء</div>
-                    <div class="week-header">الأربعاء</div>
-                    <div class="week-header">الخميس</div>
-                </div>
-
-                <!-- Calendar Grid -->
-                <div id="calendar" class="calendar-grid" style="border-top:1px solid #e5e7eb;"></div>
-            </div>
-
-            <!-- Info -->
-            <div class="bg-white rounded-3xl shadow-xl p-4 mt-4">
-                <div class="flex flex-wrap items-center justify-center gap-6 text-sm mb-4">
-                    <div class="flex items-center gap-2">
-                        <div class="w-4 h-4 rounded-lg bg-gradient-to-br from-green-300 to-green-400 border-2 border-green-600 shadow-lg"></div>
-                        <span class="font-bold text-gray-800">اليوم الحالي</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-4 h-4 rounded-lg bg-gradient-to-br from-indigo-200 to-indigo-300 shadow-md"></div>
-                        <span class="font-bold text-gray-800">فعالية</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xl">💡</span>
-                        <span class="font-bold text-gray-800">انقر على اليوم لإضافة فعاليات</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xl">🗑️</span>
-                        <span class="font-bold text-gray-800">مرر على الفعالية للحذف</span>
-                    </div>
-                </div>
-                
-                <!-- Link Sharing Button -->
-                <div class="flex gap-3 justify-center flex-wrap">
-                    <button id="copy-link-btn" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 font-black text-base shadow-lg hover:shadow-xl transition-all transform hover:scale-105 flex items-center gap-2">🔗 نسخ رابط التقويم</button>
-                </div>
-            </div>
-        </div>
+    <!-- Header -->
+    <div class="bg-white rounded-3xl shadow-xl p-6">
+      <div class="flex items-center justify-center">
+        <h1 id="title" class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"></h1>
+      </div>
     </div>
 
-    <!-- Event Input Section - Fixed at bottom -->
-    <div id="event-section" class="event-section-wrapper hidden">
-        <div class="bg-white shadow-2xl p-6 max-w-[1600px] mx-auto border-t-4 border-blue-500">
-            <h2 id="event-title" class="text-2xl font-black text-gray-800 mb-4"></h2>
-            
-            <div class="flex gap-3 mb-3">
-                <input
-                    type="text"
-                    id="event-input"
-                    placeholder="✍️ اكتب الفعالية هنا واضغط Enter أو إضافة..."
-                    class="flex-1 px-5 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-lg font-bold"
-                />
-                <button id="add-event" class="px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 font-black text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 whitespace-nowrap">
-                    ✓ إضافة
-                </button>
-            </div>
-            
-            <button id="close-event" class="w-full px-6 py-3 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-xl hover:from-gray-500 hover:to-gray-600 font-black text-lg shadow-lg hover:shadow-xl transition-all">
-                ✓ تم الانتهاء
-            </button>
+    <!-- Nav + datetime -->
+    <div class="bg-white rounded-3xl shadow-2xl">
+      <div class="grid grid-cols-5 gap-2 p-2 bg-slate-50">
+        <button id="prev" class="rounded-xl text-white font-black text-lg h-24 shadow-lg bg-gradient-to-br from-amber-500 to-orange-600 hover:scale-[1.02] transition">← السابق</button>
+        <div class="col-span-3 rounded-xl h-24 flex items-center justify-between px-8 text-white font-black shadow-lg bg-gradient-to-r from-emerald-500 to-emerald-700">
+          <div id="now-date" class="text-4xl"></div>
+          <div id="now-day" class="text-4xl"></div>
+          <div id="now-time" class="text-4xl"></div>
         </div>
+        <button id="next" class="rounded-xl text-white font-black text-lg h-24 shadow-lg bg-gradient-to-br from-violet-500 to-violet-700 hover:scale-[1.02] transition">التالي →</button>
+      </div>
+
+      <!-- Week headers -->
+      <div class="calendar-grid rounded-b-3xl overflow-hidden">
+        <div class="week-header">الأحد</div>
+        <div class="week-header">الاثنين</div>
+        <div class="week-header">الثلاثاء</div>
+        <div class="week-header">الأربعاء</div>
+        <div class="week-header">الخميس</div>
+      </div>
+
+      <!-- Days grid -->
+      <div id="grid" class="calendar-grid rounded-b-3xl overflow-visible"></div>
     </div>
 
-    
-<script>
-        const months = [
-            'كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران',
-            'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'
-        ];
+    <!-- Legend + Link -->
+    <div class="bg-white rounded-3xl shadow-xl p-4">
+      <div class="flex flex-wrap items-center justify-center gap-6 text-sm mb-4">
+        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-green-400 border-2 border-green-600 shadow"></div><span class="font-bold text-gray-800">اليوم الحالي</span></div>
+        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-indigo-300 shadow"></div><span class="font-bold text-gray-800">فعالية</span></div>
+        <div class="flex items-center gap-2"><span class="text-xl">💡</span><span class="font-bold text-gray-800">انقر على اليوم لإضافة فعاليات</span></div>
+        <div class="flex items-center gap-2"><span class="text-xl">🗑️</span><span class="font-bold text-gray-800">مرر على الفعالية للحذف</span></div>
+      </div>
+      <div class="flex justify-center">
+        <button id="copyLink" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black shadow-lg flex items-center gap-2">🔗 نسخ رابط التقويم</button>
+      </div>
+    </div>
+  </div>
 
-        const daysOfWeek = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  <!-- Add Event Panel -->
+  <div id="panel" class="fixed left-0 right-0 bottom-0 z-40 hidden">
+    <div class="bg-white shadow-2xl border-t-4 border-blue-600 max-w-[1600px] mx-auto p-6 rounded-t-3xl">
+      <h2 id="panelTitle" class="text-2xl font-black mb-3 text-gray-800"></h2>
+      <div class="flex gap-2 mb-3">
+        <input id="input" type="text" placeholder="✍️ اكتب الفعالية ثم Enter أو زر الإضافة" class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-lg font-bold">
+        <button id="addBtn" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-black shadow">✓ إضافة</button>
+      </div>
+      <button id="done" class="w-full px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl font-black shadow">✓ تم</button>
+    </div>
+  </div>
 
-        let currentDate = new Date();
-        let selectedDay = null;
-        let events = {};
+  <!-- FAB -->
+  <button id="fab" class="fab px-5 py-3 rounded-2xl shadow-2xl bg-gradient-to-r from-green-600 to-emerald-600 text-white font-extrabold hover:from-green-700 hover:to-emerald-700 transition">+ إضافة فعالية</button>
 
-        // ===== URL Hash Persistence (no localStorage, no login) =====
-        function loadEventsFromHash() {
-            try {
-                if (location.hash && location.hash.startsWith('#data=')) {
-                    const b64 = decodeURIComponent(location.hash.slice(6));
-                    const json = atob(b64);
-                    const parsed = JSON.parse(json);
-                    if (parsed && typeof parsed === 'object') {
-                        events = parsed;
-                    }
-                }
-            } catch (e) {
-                console.warn('تعذّر قراءة البيانات من الرابط:', e);
-            }
+  <script>
+    const months = ['كانون الثاني','شباط','آذار','نيسان','أيار','حزيران','تموز','آب','أيلول','تشرين الأول','تشرين الثاني','كانون الأول'];
+    const daysNames = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+    let current = new Date();
+    let selectedDay = null;
+    let events = {}; // { "YYYY-M-D": ["...","..."] }
+
+    // --- URL hash (no login, no localStorage) ---
+    function loadFromHash(){
+      try{
+        if(location.hash.startsWith('#data=')){
+          const b64 = decodeURIComponent(location.hash.slice(6));
+          const json = atob(b64);
+          const obj = JSON.parse(json);
+          if(obj && typeof obj === 'object'){ events = obj; }
         }
+      }catch(e){ console.warn('hash read error',e); }
+    }
+    function saveToHash(){
+      try{
+        const json = JSON.stringify(events);
+        const b64 = btoa(unescape(encodeURIComponent(json)));
+        const newHash = '#data=' + encodeURIComponent(b64);
+        if(location.hash !== newHash){ history.replaceState(null,'',newHash); }
+      }catch(e){ console.warn('hash write error',e); }
+    }
+    loadFromHash();
 
-        function saveEventsToHash() {
-            try {
-                const json = JSON.stringify(events);
-                const b64 = btoa(unescape(encodeURIComponent(json)));
-                const newHash = '#data=' + encodeURIComponent(b64);
-                if (location.hash !== newHash) {
-                    history.replaceState(null, '', newHash);
-                }
-            } catch (e) {
-                console.warn('تعذّر حفظ البيانات إلى الرابط:', e);
-            }
+    // --- UI helpers ---
+    function keyFor(y,m,d){ return `${y}-${m}-${d}`; } // month is 0-based
+    function openPanel(day){
+      selectedDay = day;
+      document.getElementById('panel').classList.remove('hidden');
+      const m = current.getMonth();
+      document.getElementById('panelTitle').textContent = `فعاليات يوم ${day} ${months[m]}`;
+      const inp = document.getElementById('input'); inp.value=''; inp.focus();
+      render();
+    }
+    function closePanel(){ selectedDay = null; document.getElementById('panel').classList.add('hidden'); render(); }
+
+    // --- render ---
+    function render(){
+      const y = current.getFullYear(), m = current.getMonth();
+      document.getElementById('title').textContent = `${months[m]} ${y}`;
+
+      const grid = document.getElementById('grid');
+      grid.innerHTML='';
+
+      const first = new Date(y,m,1);
+      const last = new Date(y,m+1,0);
+      const today = new Date();
+      // Build list of Sun..Thu days
+      const days = [];
+      for(let d=1; d<=last.getDate(); d++){
+        const dow = new Date(y,m,d).getDay();
+        if(dow>=0 && dow<=4) days.push(d);
+      }
+      // Render every day in order, grid takes care of rows
+      for(const d of days){
+        const k = keyFor(y,m,d);
+        const isToday = (d===today.getDate() && m===today.getMonth() && y===today.getFullYear());
+        const isSelected = (d===selectedDay);
+
+        const cell = document.createElement('div');
+        cell.className = 'day-cell' + (isToday ? ' today' : '') + (isSelected && !isToday ? ' selected' : '');
+
+        const num = document.createElement('div');
+        num.className = 'day-number';
+        num.textContent = d;
+        cell.appendChild(num);
+
+        const list = document.createElement('div');
+        list.className = 'events';
+
+        const arr = events[k] || [];
+        for(let i=0;i<arr.length;i++){
+          const wrap = document.createElement('div');
+          wrap.className = 'event';
+          const span = document.createElement('span');
+          span.textContent = arr[i];
+          span.className = 'flex-1';
+          const del = document.createElement('button');
+          del.className = 'del';
+          del.textContent = '✕';
+          del.onclick = (e)=>{ e.stopPropagation(); arr.splice(i,1); if(arr.length===0) delete events[k]; else events[k]=arr; saveToHash(); render(); };
+          wrap.appendChild(span); wrap.appendChild(del);
+          list.appendChild(wrap);
         }
+        cell.appendChild(list);
+        cell.onclick = ()=>openPanel(d);
+        grid.appendChild(cell);
+      }
+      // datetime
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2,'0');
+      const mm = String(now.getMonth()+1).padStart(2,'0');
+      const yy = String(now.getFullYear()).slice(-2);
+      document.getElementById('now-date').textContent = `${dd}/${mm}/${yy}`;
+      document.getElementById('now-day').textContent = daysNames[now.getDay()];
+      const hh = String(now.getHours()).padStart(2,'0');
+      const mi = String(now.getMinutes()).padStart(2,'0');
+      const ss = String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('now-time').textContent = `${hh}:${mi}:${ss}`;
+    }
 
-        // Initialize from URL
-        loadEventsFromHash();
+    setInterval(()=>{
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2,'0');
+      const mm = String(now.getMonth()+1).padStart(2,'0');
+      const yy = String(now.getFullYear()).slice(-2);
+      document.getElementById('now-date').textContent = `${dd}/${mm}/${yy}`;
+      document.getElementById('now-day').textContent = daysNames[now.getDay()];
+      const hh = String(now.getHours()).padStart(2,'0');
+      const mi = String(now.getMinutes()).padStart(2,'0');
+      const ss = String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('now-time').textContent = `${hh}:${mi}:${ss}`;
+    },1000);
 
-        function updateCurrentDateTime() {
-            const now = new Date();
-            
-            const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const year = String(now.getFullYear()).slice(-2);
-            const dateStr = `${day}/${month}/${year}`;
-            
-            const dayName = daysOfWeek[now.getDay()];
-            
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const timeStr = `${hours}:${minutes}:${seconds}`;
-            
-            document.getElementById('current-date').textContent = dateStr;
-            document.getElementById('current-day').textContent = dayName;
-            document.getElementById('current-time').textContent = timeStr;
-        }
+    // --- actions ---
+    document.getElementById('prev').onclick = ()=>{ current = new Date(current.getFullYear(), current.getMonth()-1, 1); closePanel(); };
+    document.getElementById('next').onclick = ()=>{ current = new Date(current.getFullYear(), current.getMonth()+1, 1); closePanel(); };
 
-        setInterval(updateCurrentDateTime, 1000);
-        updateCurrentDateTime();
+    document.getElementById('addBtn').onclick = ()=>{
+      if(!selectedDay) return;
+      const txt = document.getElementById('input').value.trim();
+      if(!txt) return;
+      const y = current.getFullYear(), m = current.getMonth();
+      const k = keyFor(y,m,selectedDay);
+      if(!events[k]) events[k]=[];
+      events[k].push(txt);
+      saveToHash();
+      document.getElementById('input').value='';
+      render();
+    };
+    document.getElementById('input').addEventListener('keypress', (e)=>{
+      if(e.key==='Enter'){ document.getElementById('addBtn').click(); }
+    });
+    document.getElementById('done').onclick = closePanel;
 
-        function getDateKey(day) {
-            return `${currentDate.getFullYear()}-${currentDate.getMonth()}-${day}`;
-        }
+    document.getElementById('fab').onclick = ()=>{
+      const t = new Date();
+      if(current.getFullYear()!==t.getFullYear() || current.getMonth()!==t.getMonth()){
+        current = new Date(t.getFullYear(), t.getMonth(), 1);
+      }
+      openPanel(t.getDate());
+    };
 
-        function getEventSizeClass(eventCount) {
-            if (eventCount === 1) return 'event-size-1';
-            if (eventCount === 2) return 'event-size-2';
-            if (eventCount === 3) return 'event-size-3';
-            if (eventCount === 4) return 'event-size-4';
-            return 'event-size-5plus';
-        }
+    document.getElementById('copyLink').onclick = async ()=>{
+      saveToHash();
+      try{ await navigator.clipboard.writeText(location.href); alert('✅ تم نسخ رابط التقويم مع البيانات.'); }
+      catch(e){
+        const i=document.createElement('input'); i.value=location.href; document.body.appendChild(i); i.select(); document.execCommand('copy'); document.body.removeChild(i);
+        alert('✅ تم نسخ رابط التقويم مع البيانات.');
+      }
+    };
 
-        function selectDay(day) {
-            selectedDay = day;
-            document.getElementById('event-section').classList.remove('hidden');
-            document.getElementById('event-title').textContent = 
-                `فعاليات يوم ${day} ${months[currentDate.getMonth()]}`;
-            document.getElementById('event-input').value = '';
-            document.getElementById('event-input').focus();
-            renderCalendar();
-        }
-
-        function closeEventSection() {
-            selectedDay = null;
-            document.getElementById('event-section').classList.add('hidden');
-            renderCalendar();
-        }
-
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            const daysInMonth = lastDay.getDate();
-
-            document.getElementById('month-year').textContent = `${months[month]} ${year}`;
-
-            const calendar = document.getElementById('calendar');
-            calendar.innerHTML = '';
-
-            const today = new Date();
-            const todayDate = today.getDate();
-            const todayMonth = today.getMonth();
-            const todayYear = today.getFullYear();
-
-            // Build an array with only Sun..Thu days (0..4)
-            const validDays = [];
-            for (let d = 1; d <= daysInMonth; d++) {
-                const dow = new Date(year, month, d).getDay();
-                if (dow >= 0 && dow <= 4) validDays.push(d);
-            }
-
-            // Ensure at least one row exists even if something goes wrong
-            if (validDays.length === 0) {
-                for (let k = 0; k < 5; k++) {
-                    const empty = document.createElement('div');
-                    empty.className = 'day-cell';
-                    calendar.appendChild(empty);
-                }
-                return;
-            }
-
-            // Render in rows of 5 (Sun..Thu)
-            validDays.forEach((day) => {
-                const isToday = (day === todayDate && month === todayMonth && year === todayYear);
-                const isSelected = (day === selectedDay);
-
-                const cell = document.createElement('div');
-                cell.className = `day-cell ${isToday ? 'today-cell' : ''} ${isSelected && !isToday ? 'selected-day' : ''}`;
-
-                const dayNum = document.createElement('div');
-                dayNum.className = `day-number ${isToday ? 'today-number' : ''}`;
-                dayNum.textContent = day;
-                cell.appendChild(dayNum);
-
-                const eventsDiv = document.createElement('div');
-                eventsDiv.className = 'events-container';
-
-                const dateKey = getDateKey(day);
-                if (events[dateKey]) {
-                    const eventCount = events[dateKey].length;
-                    const sizeClass = getEventSizeClass(eventCount);
-
-                    events[dateKey].forEach((event, index) => {
-                        const eventItem = document.createElement('div');
-                        eventItem.className = `event-item ${sizeClass}`;
-
-                        const eventText = document.createElement('span');
-                        eventText.textContent = event;
-                        eventText.className = 'flex-1';
-                        eventText.style.wordBreak = 'break-word';
-                        eventText.title = event;
-
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.className = 'delete-btn';
-                        deleteBtn.textContent = '✕';
-                        deleteBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            deleteEvent(day, index);
-                        };
-
-                        eventItem.appendChild(eventText);
-                        eventItem.appendChild(deleteBtn);
-                        eventsDiv.appendChild(eventItem);
-                    });
-                }
-
-                cell.appendChild(eventsDiv);
-                cell.onclick = () => selectDay(day);
-                calendar.appendChild(cell);
-            });
-        }
-                
-                const cell = document.createElement('div');
-                const isToday = (day === todayDate && month === todayMonth && year === todayYear);
-                const isSelected = (day === selectedDay);
-                
-                cell.className = `day-cell ${isToday ? 'today-cell' : ''} ${isSelected && !isToday ? 'selected-day' : ''}`;
-                
-                const dayNum = document.createElement('div');
-                dayNum.className = `day-number ${isToday ? 'today-number' : ''}`;
-                dayNum.textContent = day;
-                cell.appendChild(dayNum);
-
-                const eventsDiv = document.createElement('div');
-                eventsDiv.className = 'events-container';
-                
-                const dateKey = getDateKey(day);
-                if (events[dateKey]) {
-                    const eventCount = events[dateKey].length;
-                    const sizeClass = getEventSizeClass(eventCount);
-                    
-                    events[dateKey].forEach((event, index) => {
-                        const eventItem = document.createElement('div');
-                        eventItem.className = `event-item ${sizeClass}`;
-                        
-                        const eventText = document.createElement('span');
-                        eventText.textContent = event;
-                        eventText.className = 'flex-1';
-                        eventText.style.wordBreak = 'break-word';
-                        eventText.title = event;
-                        
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.className = 'delete-btn';
-                        deleteBtn.textContent = '✕';
-                        deleteBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            deleteEvent(day, index);
-                        };
-                        
-                        eventItem.appendChild(eventText);
-                        eventItem.appendChild(deleteBtn);
-                        eventsDiv.appendChild(eventItem);
-                    });
-                }
-                
-                cell.appendChild(eventsDiv);
-                cell.onclick = () => selectDay(day);
-                calendar.appendChild(cell);
-            }
-        }
-
-        function addEvent() {
-            const input = document.getElementById('event-input');
-            const text = input.value.trim();
-            
-            if (selectedDay && text) {
-                const key = getDateKey(selectedDay);
-                if (!events[key]) events[key] = [];
-                events[key].push(text);
-                saveEventsToHash();
-                input.value = '';
-                input.focus();
-                renderCalendar();
-            }
-        }
-
-        function deleteEvent(day, index) {
-            const key = getDateKey(day);
-            events[key].splice(index, 1);
-            if (events[key].length === 0) delete events[key];
-            saveEventsToHash();
-            renderCalendar();
-        }
-
-        document.getElementById('prev-btn').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            closeEventSection();
-        });
-
-        document.getElementById('next-btn').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            closeEventSection();
-        });
-
-        document.getElementById('add-event').addEventListener('click', addEvent);
-        document.getElementById('close-event').addEventListener('click', closeEventSection);
-        
-        document.getElementById('event-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') addEvent();
-        });
-
-        // Copy-link button: copies URL with embedded data
-        const copyBtn = document.getElementById('copy-link-btn');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', async () => {
-                // Ensure latest data is in the hash
-                saveEventsToHash();
-                try {
-                    await navigator.clipboard.writeText(location.href);
-                    alert('✅ تم نسخ رابط التقويم مع البيانات.
-افتح الرابط على أي جهاز لعرض الفعاليات.');
-                } catch (e) {
-                    // Fallback
-                    const temp = document.createElement('input');
-                    temp.value = location.href;
-                    document.body.appendChild(temp);
-                    temp.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(temp);
-                    alert('✅ تم نسخ رابط التقويم مع البيانات.
-افتح الرابط على أي جهاز لعرض الفعاليات.');
-                }
-            });
-        }
-
-        // FAB: add event quickly (today by default)
-        const fab = document.getElementById('fab-add');
-        if (fab) {
-            fab.addEventListener('click', () => {
-                const today = new Date();
-                // If a day is already selected in the current month, keep it; otherwise select today's if same month/year; else switch to today's month
-                if (currentDate.getFullYear() !== today.getFullYear() || currentDate.getMonth() !== today.getMonth()) {
-                    currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
-                    renderCalendar();
-                }
-                selectDay(today.getDate());
-                document.getElementById('event-input').focus();
-            });
-        }
-
-        // Re-render on initial load
-        renderCalendar();
-    </script>
-
-
-    <!-- Floating Add Event Button -->
-    <button id="fab-add" title="إضافة فعالية" class="fixed bottom-6 left-6 z-50 px-5 py-3 rounded-2xl shadow-2xl bg-gradient-to-r from-green-600 to-emerald-600 text-white font-extrabold hover:from-green-700 hover:to-emerald-700 transition-transform hover:scale-105">+ إضافة فعالية</button>
-
+    // initial
+    render();
+  </script>
 </body>
 </html>
