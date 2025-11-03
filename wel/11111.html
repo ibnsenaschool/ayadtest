@@ -303,7 +303,7 @@
                 </div>
 
                 <!-- Calendar Grid -->
-                <div id="calendar" class="calendar-grid"></div>
+                <div id="calendar" class="calendar-grid" style="border-top:1px solid #e5e7eb;"></div>
             </div>
 
             <!-- Info -->
@@ -460,7 +460,6 @@
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
             const daysInMonth = lastDay.getDate();
-            const startingDay = firstDay.getDay();
 
             document.getElementById('month-year').textContent = `${months[month]} ${year}`;
 
@@ -472,12 +471,73 @@
             const todayMonth = today.getMonth();
             const todayYear = today.getFullYear();
 
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayOfWeek = new Date(year, month, day).getDay();
-                
-                if (dayOfWeek === 5 || dayOfWeek === 6) {
-                    continue;
+            // Build an array with only Sun..Thu days (0..4)
+            const validDays = [];
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dow = new Date(year, month, d).getDay();
+                if (dow >= 0 && dow <= 4) validDays.push(d);
+            }
+
+            // Ensure at least one row exists even if something goes wrong
+            if (validDays.length === 0) {
+                for (let k = 0; k < 5; k++) {
+                    const empty = document.createElement('div');
+                    empty.className = 'day-cell';
+                    calendar.appendChild(empty);
                 }
+                return;
+            }
+
+            // Render in rows of 5 (Sun..Thu)
+            validDays.forEach((day) => {
+                const isToday = (day === todayDate && month === todayMonth && year === todayYear);
+                const isSelected = (day === selectedDay);
+
+                const cell = document.createElement('div');
+                cell.className = `day-cell ${isToday ? 'today-cell' : ''} ${isSelected && !isToday ? 'selected-day' : ''}`;
+
+                const dayNum = document.createElement('div');
+                dayNum.className = `day-number ${isToday ? 'today-number' : ''}`;
+                dayNum.textContent = day;
+                cell.appendChild(dayNum);
+
+                const eventsDiv = document.createElement('div');
+                eventsDiv.className = 'events-container';
+
+                const dateKey = getDateKey(day);
+                if (events[dateKey]) {
+                    const eventCount = events[dateKey].length;
+                    const sizeClass = getEventSizeClass(eventCount);
+
+                    events[dateKey].forEach((event, index) => {
+                        const eventItem = document.createElement('div');
+                        eventItem.className = `event-item ${sizeClass}`;
+
+                        const eventText = document.createElement('span');
+                        eventText.textContent = event;
+                        eventText.className = 'flex-1';
+                        eventText.style.wordBreak = 'break-word';
+                        eventText.title = event;
+
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'delete-btn';
+                        deleteBtn.textContent = '✕';
+                        deleteBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            deleteEvent(day, index);
+                        };
+
+                        eventItem.appendChild(eventText);
+                        eventItem.appendChild(deleteBtn);
+                        eventsDiv.appendChild(eventItem);
+                    });
+                }
+
+                cell.appendChild(eventsDiv);
+                cell.onclick = () => selectDay(day);
+                calendar.appendChild(cell);
+            });
+        }
                 
                 const cell = document.createElement('div');
                 const isToday = (day === todayDate && month === todayMonth && year === todayYear);
