@@ -70,7 +70,8 @@
         <div class="flex items-center gap-2"><span class="text-xl">🗑️</span><span class="font-bold text-gray-800">مرر على الفعالية للحذف</span></div>
       </div>
       <div class="flex justify-center">
-        <button id="copyLink" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black shadow-lg flex items-center gap-2">🔗 نسخ رابط التقويم</button>
+        <button id="saveNow" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black shadow-lg flex items-center gap-2">💾 حفظ الفعاليات</button>
+        <button id="openSettings" class="px-4 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-xl font-black shadow-lg flex items-center gap-2">⚙️ الإعدادات</button>
       </div>
     </div>
   </div>
@@ -98,26 +99,56 @@
     let selectedDay = null;
     let events = {}; // { "YYYY-M-D": ["...","..."] }
 
-    // --- URL hash (no login, no localStorage) ---
-    function loadFromHash(){
+    // (hash sync removed)
+
+    
+    // --- storage via events.json ---
+    let gh = {user:'', repo:'', token:'', enabled:false, sha:null};
+
+    async function loadFromFile(){
       try{
-        if(location.hash.startsWith('#data=')){
-          const b64 = decodeURIComponent(location.hash.slice(6));
-          const json = atob(b64);
-          const obj = JSON.parse(json);
-          if(obj && typeof obj === 'object'){ events = obj; }
+        const res = await fetch('events.json', {cache:'no-store'});
+        if(res.ok){
+          const data = await res.json();
+          if(data && typeof data==='object'){ events = data; }
         }
-      }catch(e){ console.warn('hash read error',e); }
+      }catch(e){ console.log('no events.json yet'); }
     }
-    function saveToHash(){
+
+    async function fetchShaIfExists(){
+      if(!gh.enabled) return null;
       try{
-        const json = JSON.stringify(events);
-        const b64 = btoa(unescape(encodeURIComponent(json)));
-        const newHash = '#data=' + encodeURIComponent(b64);
-        if(location.hash !== newHash){ history.replaceState(null,'',newHash); }
-      }catch(e){ console.warn('hash write error',e); }
+        const r = await fetch(`https://api.github.com/repos/${gh.user}/${gh.repo}/contents/events.json`, {
+          headers:{'Authorization':`token ${gh.token}`,'Accept':'application/vnd.github.v3+json'}
+        });
+        if(r.ok){
+          const j = await r.json();
+          gh.sha = j.sha;
+          return gh.sha;
+        }
+      }catch(e){}
+      return null;
     }
-    loadFromHash();
+
+    async function saveToGithub(){
+      if(!gh.enabled) { alert('فعّل الحفظ من الإعدادات أولاً.'); return; }
+      try{
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(events,null,2))));
+        // ensure SHA
+        await fetchShaIfExists();
+        const r = await fetch(`https://api.github.com/repos/${gh.user}/${gh.repo}/contents/events.json`, {
+          method:'PUT',
+          headers:{
+            'Authorization':`token ${gh.token}`,
+            'Accept':'application/vnd.github.v3+json',
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({message:'تحديث التقويم', content, sha: gh.sha || undefined})
+        });
+        if(r.ok){ const j = await r.json(); gh.sha = j.content.sha; alert('✅ تم الحفظ إلى events.json'); }
+        else { const e = await r.json(); alert('❌ فشل الحفظ: '+(e.message||'')); }
+      }catch(e){ alert('❌ خطأ في الاتصال: '+e.message); }
+    }
 
     // --- UI helpers ---
     function keyFor(y,m,d){ return `${y}-${m}-${d}`; } // month is 0-based
@@ -175,7 +206,7 @@
           const del = document.createElement('button');
           del.className = 'del';
           del.textContent = '✕';
-          del.onclick = (e)=>{ e.stopPropagation(); arr.splice(i,1); if(arr.length===0) delete events[k]; else events[k]=arr; saveToHash(); render(); };
+          del.onclick = async (e)=>{ e.stopPropagation(); arr.splice(i,1); if(arr.length===0) delete events[k]; else events[k]=arr; if(gh.enabled){ await saveToGithub(); } render(); };
           wrap.appendChild(span); wrap.appendChild(del);
           list.appendChild(wrap);
         }
@@ -209,6 +240,34 @@
       document.getElementById('now-time').textContent = `${hh}:${mi}:${ss}`;
     },1000);
 
+    
+    // settings
+    const settings = document.getElementById('settings');
+    document.getElementById('openSettings').onclick = ()=>{ settings.classList.remove('hidden'); };
+    document.getElementById('closeSettings').onclick = ()=>{ settings.classList.add('hidden'); };
+    document.getElementById('testConn').onclick = async ()=>{
+      const u = document.getElementById('ghUser').value.trim();
+      const r = document.getElementById('ghRepo').value.trim();
+      const t = document.getElementById('ghToken').value.trim();
+      if(!u||!r||!t){ alert('املأ الحقول أولاً'); return; }
+      try{
+        const res = await fetch(`https://api.github.com/repos/${u}/${r}`, {headers:{'Authorization':`token ${t}`}});
+        if(res.ok){ alert('✅ الاتصال ناجح'); } else { const e = await res.json(); alert('❌ فشل الاتصال: '+(e.message||'')); }
+      }catch(e){ alert('❌ خطأ: '+e.message); }
+    };
+    document.getElementById('enableSave').onclick = ()=>{
+      gh.user = document.getElementById('ghUser').value.trim();
+      gh.repo = document.getElementById('ghRepo').value.trim();
+      gh.token = document.getElementById('ghToken').value.trim();
+      if(!gh.user||!gh.repo||!gh.token){ alert('املأ الحقول'); return; }
+      gh.enabled = true;
+      settings.classList.add('hidden');
+      alert('✅ تم تفعيل الحفظ التلقائي أثناء الإضافة/الحذف');
+    };
+
+    // manual save
+    document.getElementById('saveNow').onclick = saveToGithub;
+
     // --- actions ---
     document.getElementById('prev').onclick = ()=>{ current = new Date(current.getFullYear(), current.getMonth()-1, 1); closePanel(); };
     document.getElementById('next').onclick = ()=>{ current = new Date(current.getFullYear(), current.getMonth()+1, 1); closePanel(); };
@@ -221,7 +280,7 @@
       const k = keyFor(y,m,selectedDay);
       if(!events[k]) events[k]=[];
       events[k].push(txt);
-      saveToHash();
+      if(gh.enabled){ await saveToGithub(); }
       document.getElementById('input').value='';
       render();
     };
@@ -238,7 +297,7 @@
       openPanel(t.getDate());
     };
 
-    document.getElementById('copyLink').onclick = async ()=>{
+    // removed copyLink = async ()=>{
       saveToHash();
       try{ await navigator.clipboard.writeText(location.href); alert('✅ تم نسخ رابط التقويم مع البيانات.'); }
       catch(e){
@@ -248,7 +307,7 @@
     };
 
     // initial
-    render();
+    (async()=>{ await loadFromFile(); render(); })();
   </script>
 </body>
 </html>
