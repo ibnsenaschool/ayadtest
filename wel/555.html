@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقويم المدرسي - مدرسة ابن سينا</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .month-display {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 25px;
+        }
+
+        .nav-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .today-btn {
+            background: #764ba2;
+            color: white;
+            padding: 12px 25px;
+        }
+
+        .today-btn:hover {
+            background: #653a8f;
+            transform: translateY(-2px);
+        }
+
+        .calendar {
+            padding: 30px;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .weekday {
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .day {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 140px;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .day.has-event {
+            cursor: pointer;
+        }
+
+        .day.has-event:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .day.other-month {
+            opacity: 0.3;
+        }
+
+        .day.today {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .day-number {
+            font-weight: bold;
+            font-size: 1.3em;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .day.today .day-number {
+            color: white;
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 8px;
+        }
+
+        .event-display {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
+            border-right: 4px solid #38ef7d;
+        }
+
+        .day.today .event-display {
+            background: rgba(255,255,255,0.95);
+            border-right-color: white;
+        }
+
+        .event-display.empty {
+            display: none;
+        }
+
+        .refresh-banner {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 15px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-banner:hover {
+            background: linear-gradient(135deg, #0d8078 0%, #2dd66c 100%);
+        }
+
+        .refresh-banner span {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+            display: block;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 2px solid #bee5eb;
+            display: block;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 2px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .days {
+                gap: 5px;
+            }
+
+            .day {
+                min-height: 120px;
+                padding: 10px;
+            }
+
+            .weekday {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .month-display {
+                font-size: 1.5em;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-events-message {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 التقويم المدرسي</h1>
+            <p>مدرسة ابن سينا الابتدائية</p>
+        </div>
+
+        <div class="refresh-banner" onclick="loadEvents()">
+            <span>🔄 اضغط هنا لتحديث الأحداث</span>
+        </div>
+
+        <div class="controls">
+            <button class="nav-btn" onclick="previousMonth()">◀ الشهر السابق</button>
+            <div class="month-display" id="monthDisplay"></div>
+            <button class="nav-btn" onclick="nextMonth()">الشهر التالي ▶</button>
+            <button class="today-btn" onclick="goToToday()">🏠 اليوم</button>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <div class="calendar">
+            <div class="weekdays">
+                <div class="weekday">الأحد</div>
+                <div class="weekday">الاثنين</div>
+                <div class="weekday">الثلاثاء</div>
+                <div class="weekday">الأربعاء</div>
+                <div class="weekday">الخميس</div>
+                <div class="weekday">الجمعة</div>
+                <div class="weekday">السبت</div>
+            </div>
+            <div class="days" id="daysContainer"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalEvents">0</div>
+                <div class="stat-label">إجمالي الأحداث</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="monthEvents">0</div>
+                <div class="stat-label">أحداث هذا الشهر</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Made with ❤️ by Ibn Sina Elementary School
+        </div>
+    </div>
+
+    <script>
+        let currentDate = new Date();
+        let events = {};
+
+        const monthNames = [
+            'يناير', 'فبراير', 'مارس', 'إبريل', 'مايو', 'يونيو',
+            'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+        ];
+
+        window.onload = function() {
+            loadEvents();
+        };
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            document.getElementById('monthDisplay').textContent = 
+                `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+            const daysContainer = document.getElementById('daysContainer');
+            daysContainer.innerHTML = '';
+
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+            const todayDate = today.getDate();
+
+            // أيام الشهر السابق
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const dayDiv = createDayElement(
+                    daysInPrevMonth - i,
+                    year,
+                    month - 1,
+                    true
+                );
+                daysContainer.appendChild(dayDiv);
+            }
+
+            // أيام الشهر الحالي
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isToday = isCurrentMonth && day === todayDate;
+                const dayDiv = createDayElement(day, year, month, false, isToday);
+                daysContainer.appendChild(dayDiv);
+            }
+
+            // أيام الشهر التالي
+            const totalCells = daysContainer.children.length;
+            const remainingCells = 42 - totalCells;
+            
+            for (let day = 1; day <= remainingCells; day++) {
+                const dayDiv = createDayElement(day, year, month + 1, true);
+                daysContainer.appendChild(dayDiv);
+            }
+
+            updateStats();
+        }
+
+        function createDayElement(day, year, month, isOtherMonth, isToday = false) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'day';
+            
+            if (isOtherMonth) {
+                dayDiv.classList.add('other-month');
+            }
+            
+            if (isToday) {
+                dayDiv.classList.add('today');
+            }
+
+            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+            const dayNumber = document.createElement('span');
+            dayNumber.className = 'day-number';
+            dayNumber.textContent = day;
+
+            const eventDisplay = document.createElement('div');
+            eventDisplay.className = 'event-display';
+            const eventText = events[dateKey] || '';
+            
+            if (eventText) {
+                eventDisplay.textContent = eventText;
+                dayDiv.classList.add('has-event');
+            } else {
+                eventDisplay.classList.add('empty');
+            }
+
+            dayDiv.appendChild(dayNumber);
+            dayDiv.appendChild(eventDisplay);
+
+            return dayDiv;
+        }
+
+        function previousMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        }
+
+        function goToToday() {
+            currentDate = new Date();
+            renderCalendar();
+        }
+
+        async function loadEvents() {
+            showStatus('جاري تحميل الأحداث...', 'info');
+
+            try {
+                // محاولة تحميل من events.json في نفس المجلد
+                const response = await fetch('events.json?t=' + new Date().getTime());
+                
+                if (response.ok) {
+                    events = await response.json();
+                    showStatus('✅ تم تحميل الأحداث بنجاح!', 'success');
+                } else {
+                    showStatus('⚠️ لم يتم العثور على أحداث', 'error');
+                    events = {};
+                }
+            } catch (error) {
+                showStatus('⚠️ لم يتم العثور على ملف الأحداث', 'error');
+                console.error('خطأ في التحميل:', error);
+                events = {};
+            }
+
+            renderCalendar();
+        }
+
+        function updateStats() {
+            const totalEvents = Object.keys(events).length;
+            document.getElementById('totalEvents').textContent = totalEvents;
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const monthPrefix = `${year}-${String(month + 1).padStart(2, '0')}`;
+            
+            const monthEvents = Object.keys(events).filter(key => 
+                key.startsWith(monthPrefix)
+            ).length;
+            
+            document.getElementById('monthEvents').textContent = monthEvents;
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status ' + type;
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
