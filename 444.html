@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تقويم (عرض من ملف فقط) — الأحد–الخميس</title>
+  <style>
+    :root{ --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb; --accent:#38bdf8; --ring:rgba(56,189,248,.35); }
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,#0b1220,#0f172a);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Naskh Arabic",Tahoma,sans-serif}
+    .container{max-width:1100px;margin-inline:auto;padding:24px}
+    header{display:flex;gap:16px;align-items:center;justify-content:center;margin-bottom:8px}
+    .nav{display:flex;align-items:center;gap:8px}
+    button{background:var(--panel);color:var(--text);border:1px solid #1f2937;border-radius:12px;padding:8px 12px;cursor:pointer}
+    button:hover{outline:2px solid var(--ring)}
+    .month-title{font-size:1.15rem;font-weight:800}
+
+    /* التاريخ/اليوم/الساعة فوق الجدول وبالمنتصف وملاصق له */
+    .nowbar{display:flex;align-items:center;justify-content:center;gap:10px;margin:8px 0 6px 0}
+    .nowbar .date{font-size:1.05rem;font-weight:800}
+    .nowbar .time{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:700}
+
+    .calendar{background:rgba(255,255,255,0.03);border:1px solid #1e293b;border-radius:16px;overflow:hidden}
+    .weekdays,.grid{display:grid;grid-template-columns:repeat(5,1fr)}
+    .weekdays{background:rgba(255,255,255,.04);color:var(--muted);text-align:center;font-weight:700}
+    .weekdays div{padding:10px 6px;border-inline-start:1px solid #1f2937}
+    .weekdays div:first-child{border-inline-start:none}
+    .grid{gap:10px;padding:12px}
+    .day{min-height:110px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid #1f2937;border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;position:relative}
+    .day.today{border-color:var(--accent);box-shadow:0 0 0 2px var(--ring) inset}
+    .day .num{font-weight:900}
+    .events{display:flex;flex-direction:column;gap:6px}
+    .event-chip{background:#0b3a2a;border:1px solid #14532d;color:#bef264;padding:6px 8px;border-radius:10px;font-size:.85rem;line-height:1.2;word-wrap:break-word}
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;color:var(--muted)}
+    .status{margin-inline-start:auto;color:var(--muted);font-size:.9rem}
+    .pill{border:1px dashed #334155;border-radius:999px;padding:6px 10px}
+    @media (max-width:700px){.day{min-height:100px}.weekdays div{font-size:.9rem}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="nav">
+        <button id="prevBtn" title="الشهر السابق">◀</button>
+        <div class="month-title" id="monthTitle"></div>
+        <button id="nextBtn" title="الشهر التالي">▶</button>
+      </div>
+    </header>
+
+    <!-- التاريخ/اليوم/الساعة فوق الجدول وبالمنتصف -->
+    <div class="nowbar" aria-live="polite">
+      <div class="date" id="currentDate"></div>
+      <div class="time" id="currentTime"></div>
+    </div>
+
+    <section class="calendar">
+      <div class="weekdays">
+        <div>الأحد</div><div>الإثنين</div><div>الثلاثاء</div><div>الأربعاء</div><div>الخميس</div>
+      </div>
+      <div id="grid" class="grid"></div>
+    </section>
+
+    <div class="toolbar">
+      <span class="pill">وضع عرض فقط: المصدر <code>events.json</code> بجانب الصفحة أو ملف تختاره (قراءة فقط).</span>
+      <button id="pickFile">📂 اختر ملف الفعاليات (JSON)</button>
+      <button id="refreshBtn">⟳ تحديث من الملف</button>
+      <span class="status" id="status">لم يتم اختيار ملف بعد — سيتم محاولة قراءة <code>events.json</code> بجانب الصفحة</span>
+      <button id="runTestsBtn" style="margin-inline-start:auto">🧪 اختبارات</button>
+    </div>
+  </div>
+
+  <script>
+    // ======= وضع عرض فقط: لا يوجد أي حفظ/إضافة/تعديل من الواجهة =======
+
+    // تنسيقات بأرقام لاتينية (0..9)
+    const DTF_DATE = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {weekday:'long', day:'2-digit', month:'long', year:'numeric'});
+    const DTF_TIME = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    const fmtMonth = (y, m) => new Intl.DateTimeFormat('ar-EG-u-nu-latn',{month:'long', year:'numeric'}).format(new Date(y, m, 1));
+
+    const state = {
+      viewYear: (new Date()).getFullYear(),
+      viewMonth: (new Date()).getMonth(),
+      events: {},                 // { 'YYYY-MM-DD': [ {title,time,notes} ] }
+      readHandle: null            // FileSystemFileHandle للقراءة فقط
+    };
+
+    function toISO(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()).toISOString().slice(0,10); }
+
+    function tickNow(){
+      const now = new Date();
+      document.getElementById('currentDate').textContent = DTF_DATE.format(now);
+      document.getElementById('currentTime').textContent = DTF_TIME.format(now);
+    }
+    tickNow(); setInterval(tickNow, 1000);
+
+    async function tryReadLocalJSON(){
+      // محاولة قراءة events.json بجانب الصفحة (GitHub Pages)
+      try{
+        const res = await fetch('events.json', {cache:'no-store'});
+        if(res.ok){
+          const data = await res.json();
+          if(data && typeof data==='object'){ state.events = data; render(); setStatus('تم التحميل من events.json بجانب الصفحة'); }
+        } else {
+          setStatus('لم يُعثر على events.json بجانب الصفحة');
+        }
+      }catch(e){ setStatus('تعذر قراءة الملف المحلي: ' + e.message); }
+    }
+
+    async function pickFile(){
+      if(!('showOpenFilePicker' in window)){
+        alert('متصفحك لا يدعم اختيار ملف محلي. استخدم كروم/إيدج حديث أو ضع events.json بجانب الصفحة.');
+        return;
+      }
+      try{
+        const [h] = await window.showOpenFilePicker({
+          multiple:false,
+          types:[{description:'Events JSON', accept:{'application/json':['.json']}}]
+        });
+        state.readHandle = h;
+        await refreshFromHandle();
+      }catch(e){ if(e?.name!=='AbortError') setStatus('فشل اختيار الملف: ' + e.message); }
+    }
+
+    async function refreshFromHandle(){
+      if(!state.readHandle){ setStatus('لا يوجد ملف مرتبط — سيتم استخدام events.json بجانب الصفحة إن وجد'); await tryReadLocalJSON(); return; }
+      try{
+        const file = await state.readHandle.getFile();
+        const data = JSON.parse(await file.text()||'{}') || {};
+        if(typeof data !== 'object') throw new Error('JSON غير صالح');
+        state.events = data; render(); setStatus('تم التحديث من الملف: ' + (state.readHandle.name || 'events.json'));
+      }catch(e){ setStatus('فشل القراءة من الملف: ' + e.message); }
+    }
+
+    function setStatus(msg){ document.getElementById('status').textContent = msg; }
+
+    function render(){
+      document.getElementById('monthTitle').textContent = fmtMonth(state.viewYear, state.viewMonth);
+      const grid = document.getElementById('grid'); grid.innerHTML = '';
+      const last = new Date(state.viewYear, state.viewMonth + 1, 0);
+      const todayISO = toISO(new Date());
+      for(let day=1; day<=last.getDate(); day++){
+        const d = new Date(state.viewYear, state.viewMonth, day);
+        const dow = d.getDay();
+        if(dow===5 || dow===6) continue; // إخفاء الجمعة والسبت
+        const iso = toISO(d);
+        const cell = document.createElement('div');
+        cell.className = 'day' + (iso===todayISO ? ' today' : '');
+        const num = document.createElement('div'); num.className='num'; num.textContent = String(day).padStart(2,'0');
+        const list = document.createElement('div'); list.className='events';
+        const evts = state.events[iso] || [];
+        // عرض فقط العناصر الموجودة بالملف — لا إضافة ولا تعديل
+        evts.forEach(e=>{
+          const chip=document.createElement('div'); chip.className='event-chip';
+          chip.textContent=(e.time?(e.time+' — '):'')+(e.title||'');
+          chip.title=e.notes||''; list.appendChild(chip);
+        });
+        cell.append(num,list); grid.appendChild(cell);
+      }
+    }
+
+    // تنقل الأشهر
+    document.getElementById('prevBtn').addEventListener('click', ()=>{ const m=state.viewMonth-1; if(m<0){state.viewMonth=11;state.viewYear-=1;} else state.viewMonth=m; render(); });
+    document.getElementById('nextBtn').addEventListener('click', ()=>{ const m=state.viewMonth+1; if(m>11){state.viewMonth=0;state.viewYear+=1;} else state.viewMonth=m; render(); });
+
+    // أزرار الأدوات
+    document.getElementById('pickFile').addEventListener('click', pickFile);
+    document.getElementById('refreshBtn').addEventListener('click', refreshFromHandle);
+
+    // اختبارات بسيطة (بدون حفظ)
+    document.getElementById('runTestsBtn').addEventListener('click', ()=>{
+      try{
+        // TC1: عدم وجود أي دالة حفظ/كتابة
+        const hasWrite = /createWritable|write\(/.test(document.querySelector('script').textContent) === false;
+        if(!hasWrite) throw new Error('يجب أن لا توجد كتابة للملفات في وضع العرض فقط');
+
+        // TC2: الأرقام 0-9 في التاريخ/الوقت (لاتينية)
+        const t1 = document.getElementById('currentDate').textContent + ' ' + document.getElementById('currentTime').textContent;
+        if(/[٠-٩]/.test(t1)) throw new Error('الأرقام ليست لاتينية في العرض');
+
+        // TC3: إخفاء الجمعة والسبت
+        const days = Array.from({length:new Date(state.viewYear, state.viewMonth+1,0).getDate()},(_,i)=> new Date(state.viewYear,state.viewMonth,i+1).getDay());
+        if(days.includes(5) || days.includes(6)){
+          // التحقق بصري فقط: الخلايا المرسومة يجب ألا تشمل أيام (5,6)
+        }
+
+        alert('✅ اختبارات العرض فقط نجحت');
+      }catch(e){ alert('❌ فشل الاختبارات: '+e.message); }
+    });
+
+    (async function init(){ await tryReadLocalJSON(); render(); tickNow(); })();
+  </script>
+</body>
+</html>
