@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>تقويم الفعاليات (الأحد–الخميس) — وضع GitHub Pages بدون PHP</title>
   <style>
-    :root{
-      --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb; --brand:#22c55e; --accent:#38bdf8; --danger:#ef4444; --ring:rgba(56,189,248,.35);
-    }
+    :root{ --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb; --brand:#22c55e; --accent:#38bdf8; --danger:#ef4444; --ring:rgba(56,189,248,.35); }
     html,body{height:100%}
     body{margin:0;background:linear-gradient(180deg,#0b1220,#0f172a);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Naskh Arabic",Tahoma,sans-serif}
     .container{max-width:1100px;margin-inline:auto;padding:24px}
@@ -72,6 +70,7 @@
       <button id="importBtn">⬆️ استيراد ملف (قراءة فقط)</button>
       <button id="exportBtn">⬇️ تصدير كـ JSON</button>
       <button id="testBtn">🧪 اختبار الحفظ</button>
+      <button id="runTestsBtn">🧪 تشغيل اختبارات الوحدة</button>
       <span class="status" id="status">لا يوجد ملف مرتبط بعد</span>
     </div>
   </div>
@@ -104,7 +103,7 @@
   </dialog>
 
   <script>
-    // ======= وضع GitHub Pages: بدون PHP — مزود تخزين قائم على ملف محلي عبر File System Access API =======
+    // ======= وضع GitHub Pages: بدون PHP — تخزين عبر File System Access API =======
 
     // الحالة
     const state = {
@@ -126,7 +125,7 @@
     }
     tickNow(); setInterval(tickNow, 1000);
 
-    // تحميل أولي: جرّب قراءة ملف ثابت events.json (إن وُجد بجانب الصفحة — قراءة فقط)
+    // تحميل أولي (قراءة فقط) من ملف ثابت events.json إن وُجد بجانب الصفحة
     async function bootstrapLoad(){
       try{
         const res = await fetch('events.json', {cache:'no-store'});
@@ -137,13 +136,35 @@
       }catch(_){/* تجاهل */}
     }
 
+    // تطبيع القيم قبل الحفظ لتجنب محارف غير صالحة في JSON
+    function normalizeEvents(obj){
+      const out = {};
+      for(const [k,v] of Object.entries(obj||{})){
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(k)) continue;
+        if(!Array.isArray(v)) continue;
+        out[k] = v.map(e=>({
+          title: String(e.title ?? ''),
+          time: String(e.time ?? ''),
+          notes: String(e.notes ?? '')
+        }));
+      }
+      return out;
+    }
+
     // حفظ إلى الملف المختار عبر File System Access API
     async function saveToFile(){
       if(!state.fileHandle){ throw new Error('لا يوجد ملف مرتبط. استخدم زر "اختر/أنشئ ملف الفعاليات…"'); }
+      const payload = normalizeEvents(state.events);
+      let json;
+      try{
+        json = JSON.stringify(payload, null, 2);
+      }catch(e){
+        throw new Error('فشل تحويل البيانات إلى JSON: '+ e.message);
+      }
       const writable = await state.fileHandle.createWritable();
-      await writable.write(new Blob([JSON.stringify(state.events, null, 2)], {type:'application/json'}));
+      await writable.write(new Blob([json], {type:'application/json'}));
       await writable.close();
-      setStatus('تم الحفظ إلى '+(state.fileHandle.name || state.fileName));
+      setStatus('تم الحفظ إلى ' + (state.fileHandle.name || state.fileName));
     }
 
     // اختيار ملف/إنشاء ملف
@@ -153,7 +174,6 @@
         return;
       }
       try{
-        // حاول فتح ملف موجود
         const [handle] = await window.showOpenFilePicker({
           multiple:false,
           types:[{description:'Events JSON', accept:{'application/json':['.json']}}]
@@ -162,11 +182,10 @@
         const file = await handle.getFile();
         const text = await file.text();
         state.events = JSON.parse(text || '{}') || {};
-        setStatus('مرتبط بالملف: '+(handle.name || 'events.json'));
+        setStatus('مرتبط بالملف: ' + (handle.name || 'events.json'));
         render();
       }catch(err){
         if(err && err.name === 'AbortError') return;
-        // إن لم يختر المستخدم ملفًا، اسمح بإنشاء جديد
         if('showSaveFilePicker' in window){
           try{
             const handle = await window.showSaveFilePicker({
@@ -174,8 +193,8 @@
               types:[{description:'Events JSON', accept:{'application/json':['.json']}}]
             });
             state.fileHandle = handle;
-            await saveToFile(); // ينشئ ملفًا فارغًا مع الحالة الحالية
-            setStatus('تم إنشاء ملف جديد: '+(handle.name||state.fileName));
+            await saveToFile(); // ينشئ ملفًا فارغًا
+            setStatus('تم إنشاء ملف جديد: ' + (handle.name||state.fileName));
           }catch(_e){ /* تجاهل */ }
         }
       }
@@ -190,11 +209,11 @@
         if(typeof data !== 'object') throw new Error('ملف غير صالح');
         state.events = data;
         render();
-        setStatus('تم الاستيراد من '+(handle.name||'ملف'));
-      }catch(e){ if(e?.name!=='AbortError') alert('فشل الاستيراد: '+e.message); }
+        setStatus('تم الاستيراد من ' + (handle.name||'ملف'));
+      }catch(e){ if(e?.name!=='AbortError') alert('فشل الاستيراد: ' + e.message); }
     }
     function exportJSON(){
-      const blob = new Blob([JSON.stringify(state.events, null, 2)],{type:'application/json'});
+      const blob = new Blob([JSON.stringify(normalizeEvents(state.events), null, 2)],{type:'application/json'});
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = state.fileName;
@@ -213,11 +232,11 @@
       const todayISO = toISO(new Date());
       for(let day=1; day<=last.getDate(); day++){
         const d = new Date(state.viewYear, state.viewMonth, day);
-        const dow = d.getDay(); // 0=الأحد في JS؟ لا: JS 0=الأحد فعلاً.
+        const dow = d.getDay(); // 0=الأحد في بيئات عربية، وعلى JS القياسي 0=الأحد
         if(dow===5 || dow===6) continue; // استثناء الجمعة (5) والسبت (6)
         const iso = toISO(d);
         const cell = document.createElement('div');
-        cell.className = 'day'+(iso===todayISO?' today':'');
+        cell.className = 'day' + (iso===todayISO ? ' today' : '');
         const num = document.createElement('div'); num.className='num'; num.textContent = day.toString().padStart(2,'0');
         const list = document.createElement('div'); list.className='events';
         const evts = state.events[iso] || [];
@@ -254,19 +273,19 @@
       const list = state.events[activeISO] || [];
       if(activeIndex!=null) list.splice(activeIndex,1);
       if(list.length===0) delete state.events[activeISO]; else state.events[activeISO]=list;
-      try{ await saveToFile(); }catch(e){ alert('فشل الحفظ: '+e.message); }
+      try{ await saveToFile(); }catch(e){ alert('فشل الحفظ: ' + e.message); }
       render(); dlg.close();
     });
 
     document.getElementById('eventForm').addEventListener('submit', async (e)=>{
       e.preventDefault(); if(!activeISO) return;
-      const entry = {title: evtTitle.value.trim(), time: (evtTime.value||'').trim(), notes: (evtNotes.value||'').trim()};
+      const entry = {title: String(evtTitle.value||'').trim(), time: String(evtTime.value||'').trim(), notes: String(evtNotes.value||'').trim()};
       if(!entry.title){ dlg.close(); return; }
       const list = state.events[activeISO] || [];
       if(activeIndex!=null){ list[activeIndex]=entry; } else { list.push(entry); }
       state.events[activeISO]=list;
-      try{ await saveToFile(); }catch(err){ alert('فشل الحفظ: '+err.message+"
-اختر ملفًا للحفظ عبر الزر في الشريط."); }
+      try{ await saveToFile(); }
+      catch(err){ alert('فشل الحفظ: ' + err.message + "\n" + 'اختر ملفًا للحفظ عبر الزر في الشريط.'); }
       render(); dlg.close();
     });
 
@@ -284,8 +303,44 @@
       const note = 'اختبار حفظ تلقائي — يُمكنك حذفه لاحقًا';
       state.events[iso] = [{title:'🧪 Test Event', time:new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}), notes:note}];
       try{ await saveToFile(); setStatus('✅ نجح الاختبار: تم الحفظ'); render(); }
-      catch(e){ alert('❌ فشل الاختبار: '+e.message); setStatus('فشل الاختبار: '+e.message); }
+      catch(e){ alert('❌ فشل الاختبار: ' + e.message); setStatus('فشل الاختبار: ' + e.message); }
     });
+
+    // اختبارات وحدة — Test Cases
+    document.getElementById('runTestsBtn').addEventListener('click', runTests);
+    function assert(cond, msg){ if(!cond) throw new Error(msg); }
+    function runTests(){
+      try{
+        // TC1: JSON round-trip مع نص عربي، إيموجي، أسطر جديدة، علامات اقتباس
+        const sample = {
+          '2025-01-01': [{title:'حدث "تجريبي" — 😀', time:'08:30', notes:'سطر1\nسطر2\nعلامات: " \' \n انتهى'}],
+        };
+        const s = JSON.stringify(normalizeEvents(sample));
+        const parsed = JSON.parse(s);
+        assert(parsed['2025-01-01'][0].title.includes('تجريبي'), 'TC1: فشل round-trip للعنوان');
+
+        // TC2: مفاتيح التواريخ بصيغة صحيحة
+        assert(/^\d{4}-\d{2}-\d{2}$/.test(Object.keys(parsed)[0]), 'TC2: صيغة التاريخ غير صحيحة');
+
+        // TC3: render لا يرمي أخطاء عندما لا توجد فعاليات
+        const backup = state.events; state.events = {}; render(); state.events = backup; render();
+
+        // TC4: saveToFile يرمي خطأ واضح إن لم يكن هناك ملف مرتبط
+        let threw=false; try{ saveToFile(); }catch(_){ threw=true; }
+        assert(threw === true, 'TC4: يجب أن يفشل الحفظ بدون ملف مرتبط');
+
+        // TC5: normalizeEvents يُسقط المفاتيح غير الصالحة
+        const mixed = {'x':[{title:123}], '2025-01-02':[{}]};
+        const norm = normalizeEvents(mixed);
+        assert(!('x' in norm) && Array.isArray(norm['2025-01-02']), 'TC5: التطبيع لا يعمل كما يجب');
+
+        setStatus('✅ جميع الاختبارات مرت بنجاح');
+        alert('✅ جميع الاختبارات مرت بنجاح');
+      }catch(e){
+        setStatus('❌ فشل اختبار: ' + e.message);
+        alert('❌ فشل اختبار: ' + e.message);
+      }
+    }
 
     (async function init(){ await bootstrapLoad(); render(); })();
   </script>
