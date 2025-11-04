@@ -1,313 +1,293 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>التقويم (إصدار مُعاد البناء)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تقويم الفعاليات (الأحد–الخميس) — وضع GitHub Pages بدون PHP</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
-    body{font-family:'Tajawal',sans-serif;}
-    .calendar-shell{background:linear-gradient(to bottom right,#eff6ff,#f3e8ff,#fce7f3);min-height:100vh;padding:16px;}
-    .week-header{background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);color:#fff;padding:18px;text-align:center;font-weight:900;font-size:18px;}
-    .calendar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid #e5e7eb;}
-    .day-cell{position:relative;background:#fff;border:1px solid #e5e7eb;min-height:180px;transition:transform .15s, background .15s;cursor:pointer;}
-    .day-cell:hover{background:#eff6ff;transform:translateY(-2px);z-index:2;}
-    .day-number{position:absolute;top:10px;right:12px;font-weight:900;font-size:20px;color:#111827;}
-    .today{background:linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%)!important;border:3px solid #10b981!important;box-shadow:0 6px 25px rgba(16,185,129,.35)!important;}
-    .today .day-number{color:#065f46!important;font-size:22px;}
-    .selected{background:linear-gradient(135deg,#dbeafe 0%,#bfdbfe 100%)!important;border:3px solid #3b82f6!important;}
-    .events{position:absolute;left:8px;right:8px;top:44px;bottom:8px;overflow:auto;}
-    .events::-webkit-scrollbar{width:6px}
-    .events::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:4px}
-    .event{background:linear-gradient(135deg,#e0e7ff 0%,#c7d2fe 100%);color:#3730a3;padding:6px 10px;border-radius:8px;margin-bottom:6px;font-weight:800;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 4px rgba(0,0,0,.08);}
-    .event .del{opacity:0;transition:opacity .15s;color:#dc2626;background:#fff;padding:0 6px;border-radius:4px;font-weight:900;margin-right:6px;}
-    .event:hover .del{opacity:1}
-    .fab{position:fixed;left:16px;bottom:16px;z-index:50}
+    :root{
+      --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb; --brand:#22c55e; --accent:#38bdf8; --danger:#ef4444; --ring:rgba(56,189,248,.35);
+    }
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,#0b1220,#0f172a);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Naskh Arabic",Tahoma,sans-serif}
+    .container{max-width:1100px;margin-inline:auto;padding:24px}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .now{display:flex;flex-direction:column;gap:4px}
+    .now .date{font-size:1.1rem;font-weight:700}
+    .now .time{font-variant-numeric:tabular-nums;color:var(--muted)}
+    .nav{display:flex;align-items:center;gap:8px}
+    button{background:var(--panel);color:var(--text);border:1px solid #1f2937;border-radius:12px;padding:8px 12px;cursor:pointer}
+    button:hover{outline:2px solid var(--ring)}
+    .month-title{font-size:1.15rem;font-weight:800}
+    .calendar{background:rgba(255,255,255,0.03);border:1px solid #1e293b;border-radius:16px;overflow:hidden}
+    .weekdays,.grid{display:grid;grid-template-columns:repeat(5,1fr)}
+    .weekdays{background:rgba(255,255,255,.04);color:var(--muted);text-align:center;font-weight:700}
+    .weekdays div{padding:10px 6px;border-inline-start:1px solid #1f2937}
+    .weekdays div:first-child{border-inline-start:none}
+    .grid{gap:10px;padding:12px}
+    .day{min-height:110px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid #1f2937;border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;position:relative}
+    .day.today{border-color:var(--accent);box-shadow:0 0 0 2px var(--ring) inset}
+    .day .num{font-weight:900}
+    .events{display:flex;flex-direction:column;gap:6px}
+    .event-chip{background:#0b3a2a;border:1px solid #14532d;color:#bef264;padding:6px 8px;border-radius:10px;font-size:.85rem;line-height:1.2;word-wrap:break-word}
+    .add{position:absolute;inset-inline-end:8px;inset-block-end:8px;background:var(--brand);color:#002b10;border:none;padding:6px 10px;border-radius:999px;font-weight:800}
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;color:var(--muted)}
+    .status{margin-inline-start:auto;color:var(--muted);font-size:.9rem}
+    dialog{border:none;border-radius:16px;padding:0;max-width:520px;width:92vw;background:#0b1220;color:var(--text)}
+    .modal{padding:16px;display:flex;flex-direction:column;gap:12px}
+    input,textarea{width:100%;background:#0a0f1a;border:1px solid #1f2937;color:var(--text);border-radius:10px;padding:10px}
+    .modal .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .modal .actions{display:flex;gap:8px;justify-content:flex-start}
+    .muted{color:var(--muted)}
+    .help{font-size:.9rem;color:var(--muted)}
+    .empty{color:#6b7280;font-style:italic}
+    .pill{border:1px dashed #334155;border-radius:999px;padding:6px 10px}
+    @media (max-width:700px){.day{min-height:100px}.weekdays div{font-size:.9rem}}
   </style>
 </head>
-<body class="calendar-shell">
-  <div class="max-w-[1600px] mx-auto space-y-4">
-
-    <!-- Header -->
-    <div class="bg-white rounded-3xl shadow-xl p-6">
-      <div class="flex items-center justify-center">
-        <h1 id="title" class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"></h1>
+<body>
+  <div class="container">
+    <header>
+      <div class="now">
+        <div class="date" id="currentDate"></div>
+        <div class="time" id="currentTime"></div>
       </div>
-    </div>
+      <div class="nav">
+        <button id="prevBtn" title="الشهر السابق">◀</button>
+        <div class="month-title" id="monthTitle"></div>
+        <button id="nextBtn" title="الشهر التالي">▶</button>
+      </div>
+    </header>
 
-    <!-- Nav + datetime -->
-    <div class="bg-white rounded-3xl shadow-2xl">
-      <div class="grid grid-cols-5 gap-2 p-2 bg-slate-50">
-        <button id="prev" class="rounded-xl text-white font-black text-lg h-24 shadow-lg bg-gradient-to-br from-amber-500 to-orange-600 hover:scale-[1.02] transition">← السابق</button>
-        <div class="col-span-3 rounded-xl h-24 flex items-center justify-between px-8 text-white font-black shadow-lg bg-gradient-to-r from-emerald-500 to-emerald-700">
-          <div id="now-date" class="text-4xl"></div>
-          <div id="now-day" class="text-4xl"></div>
-          <div id="now-time" class="text-4xl"></div>
+    <section class="calendar">
+      <div class="weekdays">
+        <div>الأحد</div><div>الإثنين</div><div>الثلاثاء</div><div>الأربعاء</div><div>الخميس</div>
+      </div>
+      <div id="grid" class="grid"></div>
+    </section>
+
+    <div class="toolbar">
+      <span class="pill">وضع بدون خادم (GitHub Pages): للحفظ استخدم ملف <code>events.json</code> محلي/سحابي.</span>
+      <button id="pickFile">📂 اختر/أنشئ ملف الفعاليات…</button>
+      <button id="importBtn">⬆️ استيراد ملف (قراءة فقط)</button>
+      <button id="exportBtn">⬇️ تصدير كـ JSON</button>
+      <button id="testBtn">🧪 اختبار الحفظ</button>
+      <span class="status" id="status">لا يوجد ملف مرتبط بعد</span>
+    </div>
+  </div>
+
+  <!-- نافذة إضافة/تعديل فعالية -->
+  <dialog id="eventDialog">
+    <form method="dialog" class="modal" id="eventForm">
+      <h3 style="margin:0">إدارة فعالية لليوم: <span id="dlgDate" class="muted"></span></h3>
+      <div class="row">
+        <div>
+          <label class="muted">العنوان</label>
+          <input id="evtTitle" placeholder="مثال: رحلة صفية" required />
         </div>
-        <button id="next" class="rounded-xl text-white font-black text-lg h-24 shadow-lg bg-gradient-to-br from-violet-500 to-violet-700 hover:scale-[1.02] transition">التالي →</button>
+        <div>
+          <label class="muted">الوقت (اختياري)</label>
+          <input id="evtTime" type="time" />
+        </div>
       </div>
-
-      <!-- Week headers -->
-      <div class="calendar-grid rounded-b-3xl overflow-hidden">
-        <div class="week-header">الأحد</div>
-        <div class="week-header">الاثنين</div>
-        <div class="week-header">الثلاثاء</div>
-        <div class="week-header">الأربعاء</div>
-        <div class="week-header">الخميس</div>
+      <div>
+        <label class="muted">ملاحظات</label>
+        <textarea id="evtNotes" rows="4" placeholder="تفاصيل إضافية..."></textarea>
       </div>
-
-      <!-- Days grid -->
-      <div id="grid" class="calendar-grid rounded-b-3xl overflow-visible"></div>
-    </div>
-
-    <!-- Legend + Link -->
-    <div class="bg-white rounded-3xl shadow-xl p-4">
-      <div class="flex flex-wrap items-center justify-center gap-6 text-sm mb-4">
-        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-green-400 border-2 border-green-600 shadow"></div><span class="font-bold text-gray-800">اليوم الحالي</span></div>
-        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-indigo-300 shadow"></div><span class="font-bold text-gray-800">فعالية</span></div>
-        <div class="flex items-center gap-2"><span class="text-xl">💡</span><span class="font-bold text-gray-800">انقر على اليوم لإضافة فعاليات</span></div>
-        <div class="flex items-center gap-2"><span class="text-xl">🗑️</span><span class="font-bold text-gray-800">مرر على الفعالية للحذف</span></div>
+      <div class="actions">
+        <button value="cancel">إلغاء</button>
+        <button id="saveBtn" value="default" style="background:var(--accent);border-color:#075985">حفظ</button>
+        <button id="deleteBtn" type="button" style="background:var(--danger);border-color:#7f1d1d">حذف</button>
       </div>
-      <div class="flex justify-center">
-        <button id="saveNow" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black shadow-lg flex items-center gap-2">💾 حفظ الفعاليات</button>
-        <button id="openSettings" class="px-4 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-xl font-black shadow-lg flex items-center gap-2">⚙️ الإعدادات</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Add Event Panel -->
-  <div id="panel" class="fixed left-0 right-0 bottom-0 z-40 hidden">
-    <div class="bg-white shadow-2xl border-t-4 border-blue-600 max-w-[1600px] mx-auto p-6 rounded-t-3xl">
-      <h2 id="panelTitle" class="text-2xl font-black mb-3 text-gray-800"></h2>
-      <div class="flex gap-2 mb-3">
-        <input id="input" type="text" placeholder="✍️ اكتب الفعالية ثم Enter أو زر الإضافة" class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-lg font-bold">
-        <button id="addBtn" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-black shadow">✓ إضافة</button>
-      </div>
-      <button id="done" class="w-full px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl font-black shadow">✓ تم</button>
-    </div>
-  </div>
-
-  <!-- FAB -->
-  <button id="fab" class="fab px-5 py-3 rounded-2xl shadow-2xl bg-gradient-to-r from-green-600 to-emerald-600 text-white font-extrabold hover:from-green-700 hover:to-emerald-700 transition">+ إضافة فعالية</button>
+      <div class="help">في هذا الوضع: الحفظ يتم إلى ملف تختاره عبر المتصفح. ضع الملف داخل مجلد سحابي (Dropbox/Drive/OneDrive) لو أردت المزامنة بين الأجهزة.</div>
+    </form>
+  </dialog>
 
   <script>
-    const months = ['كانون الثاني','شباط','آذار','نيسان','أيار','حزيران','تموز','آب','أيلول','تشرين الأول','تشرين الثاني','كانون الأول'];
-    const daysNames = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+    // ======= وضع GitHub Pages: بدون PHP — مزود تخزين قائم على ملف محلي عبر File System Access API =======
 
-    let current = new Date();
-    let selectedDay = null;
-    let events = {}; // { "YYYY-M-D": ["...","..."] }
+    // الحالة
+    const state = {
+      viewYear: (new Date()).getFullYear(),
+      viewMonth: (new Date()).getMonth(),
+      events: {},            // { 'YYYY-MM-DD': [ {title,time,notes} ] }
+      fileHandle: null,      // FileSystemFileHandle للحفظ التلقائي
+      fileName: 'events.json'
+    };
 
-    // (hash sync removed)
+    const fmtMonth = (y, m) => new Date(y, m, 1).toLocaleDateString('ar-EG',{month:'long', year:'numeric'});
+    const toISO = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).toISOString().slice(0,10);
 
-    
-    // --- storage via events.json ---
-    let gh = {user:'', repo:'', token:'', enabled:false, sha:null};
+    // الساعة الحية
+    function tickNow(){
+      const now = new Date();
+      document.getElementById('currentDate').textContent = now.toLocaleDateString('ar-EG',{weekday:'long', day:'2-digit', month:'long', year:'numeric'});
+      document.getElementById('currentTime').textContent = now.toLocaleTimeString('ar-EG',{hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    }
+    tickNow(); setInterval(tickNow, 1000);
 
-    async function loadFromFile(){
+    // تحميل أولي: جرّب قراءة ملف ثابت events.json (إن وُجد بجانب الصفحة — قراءة فقط)
+    async function bootstrapLoad(){
       try{
         const res = await fetch('events.json', {cache:'no-store'});
         if(res.ok){
           const data = await res.json();
-          if(data && typeof data==='object'){ events = data; }
+          if(data && typeof data === 'object') state.events = data;
         }
-      }catch(e){ console.log('no events.json yet'); }
+      }catch(_){/* تجاهل */}
     }
 
-    async function fetchShaIfExists(){
-      if(!gh.enabled) return null;
+    // حفظ إلى الملف المختار عبر File System Access API
+    async function saveToFile(){
+      if(!state.fileHandle){ throw new Error('لا يوجد ملف مرتبط. استخدم زر "اختر/أنشئ ملف الفعاليات…"'); }
+      const writable = await state.fileHandle.createWritable();
+      await writable.write(new Blob([JSON.stringify(state.events, null, 2)], {type:'application/json'}));
+      await writable.close();
+      setStatus('تم الحفظ إلى '+(state.fileHandle.name || state.fileName));
+    }
+
+    // اختيار ملف/إنشاء ملف
+    async function pickFile(){
+      if(!('showOpenFilePicker' in window || 'showSaveFilePicker' in window)){
+        alert('متصفحك لا يدعم File System Access API. استخدم كروم/إيدج حديث أو استورد/صدر يدويًا.');
+        return;
+      }
       try{
-        const r = await fetch(`https://api.github.com/repos/${gh.user}/${gh.repo}/contents/events.json`, {
-          headers:{'Authorization':`token ${gh.token}`,'Accept':'application/vnd.github.v3+json'}
+        // حاول فتح ملف موجود
+        const [handle] = await window.showOpenFilePicker({
+          multiple:false,
+          types:[{description:'Events JSON', accept:{'application/json':['.json']}}]
         });
-        if(r.ok){
-          const j = await r.json();
-          gh.sha = j.sha;
-          return gh.sha;
+        state.fileHandle = handle;
+        const file = await handle.getFile();
+        const text = await file.text();
+        state.events = JSON.parse(text || '{}') || {};
+        setStatus('مرتبط بالملف: '+(handle.name || 'events.json'));
+        render();
+      }catch(err){
+        if(err && err.name === 'AbortError') return;
+        // إن لم يختر المستخدم ملفًا، اسمح بإنشاء جديد
+        if('showSaveFilePicker' in window){
+          try{
+            const handle = await window.showSaveFilePicker({
+              suggestedName: state.fileName,
+              types:[{description:'Events JSON', accept:{'application/json':['.json']}}]
+            });
+            state.fileHandle = handle;
+            await saveToFile(); // ينشئ ملفًا فارغًا مع الحالة الحالية
+            setStatus('تم إنشاء ملف جديد: '+(handle.name||state.fileName));
+          }catch(_e){ /* تجاهل */ }
         }
-      }catch(e){}
-      return null;
+      }
     }
 
-    async function saveToGithub(){
-      if(!gh.enabled) { alert('فعّل الحفظ من الإعدادات أولاً.'); return; }
+    // استيراد/تصدير (اختيار ملف للقراءة فقط أو تنزيل)
+    async function importJSON(){
       try{
-        const content = btoa(unescape(encodeURIComponent(JSON.stringify(events,null,2))));
-        // ensure SHA
-        await fetchShaIfExists();
-        const r = await fetch(`https://api.github.com/repos/${gh.user}/${gh.repo}/contents/events.json`, {
-          method:'PUT',
-          headers:{
-            'Authorization':`token ${gh.token}`,
-            'Accept':'application/vnd.github.v3+json',
-            'Content-Type':'application/json'
-          },
-          body:JSON.stringify({message:'تحديث التقويم', content, sha: gh.sha || undefined})
-        });
-        if(r.ok){ const j = await r.json(); gh.sha = j.content.sha; alert('✅ تم الحفظ إلى events.json'); }
-        else { const e = await r.json(); alert('❌ فشل الحفظ: '+(e.message||'')); }
-      }catch(e){ alert('❌ خطأ في الاتصال: '+e.message); }
+        const [handle] = await window.showOpenFilePicker({multiple:false, types:[{description:'Events JSON', accept:{'application/json':['.json']}}]});
+        const file = await handle.getFile();
+        const data = JSON.parse(await file.text() || '{}') || {};
+        if(typeof data !== 'object') throw new Error('ملف غير صالح');
+        state.events = data;
+        render();
+        setStatus('تم الاستيراد من '+(handle.name||'ملف'));
+      }catch(e){ if(e?.name!=='AbortError') alert('فشل الاستيراد: '+e.message); }
+    }
+    function exportJSON(){
+      const blob = new Blob([JSON.stringify(state.events, null, 2)],{type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = state.fileName;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      setStatus('تم تنزيل نسخة من البيانات');
     }
 
-    // --- UI helpers ---
-    function keyFor(y,m,d){ return `${y}-${m}-${d}`; } // month is 0-based
-    function openPanel(day){
-      selectedDay = day;
-      document.getElementById('panel').classList.remove('hidden');
-      const m = current.getMonth();
-      document.getElementById('panelTitle').textContent = `فعاليات يوم ${day} ${months[m]}`;
-      const inp = document.getElementById('input'); inp.value=''; inp.focus();
-      render();
-    }
-    function closePanel(){ selectedDay = null; document.getElementById('panel').classList.add('hidden'); render(); }
+    function setStatus(msg){ document.getElementById('status').textContent = msg; }
 
-    // --- render ---
+    // رسم شبكة الأحد→الخميس
     function render(){
-      const y = current.getFullYear(), m = current.getMonth();
-      document.getElementById('title').textContent = `${months[m]} ${y}`;
-
-      const grid = document.getElementById('grid');
-      grid.innerHTML='';
-
-      const first = new Date(y,m,1);
-      const last = new Date(y,m+1,0);
-      const today = new Date();
-      // Build list of Sun..Thu days
-      const days = [];
-      for(let d=1; d<=last.getDate(); d++){
-        const dow = new Date(y,m,d).getDay();
-        if(dow>=0 && dow<=4) days.push(d);
-      }
-      // Render every day in order, grid takes care of rows
-      for(const d of days){
-        const k = keyFor(y,m,d);
-        const isToday = (d===today.getDate() && m===today.getMonth() && y===today.getFullYear());
-        const isSelected = (d===selectedDay);
-
+      document.getElementById('monthTitle').textContent = fmtMonth(state.viewYear, state.viewMonth);
+      const grid = document.getElementById('grid'); grid.innerHTML = '';
+      const last = new Date(state.viewYear, state.viewMonth + 1, 0);
+      const todayISO = toISO(new Date());
+      for(let day=1; day<=last.getDate(); day++){
+        const d = new Date(state.viewYear, state.viewMonth, day);
+        const dow = d.getDay(); // 0=الأحد في JS؟ لا: JS 0=الأحد فعلاً.
+        if(dow===5 || dow===6) continue; // استثناء الجمعة (5) والسبت (6)
+        const iso = toISO(d);
         const cell = document.createElement('div');
-        cell.className = 'day-cell' + (isToday ? ' today' : '') + (isSelected && !isToday ? ' selected' : '');
-
-        const num = document.createElement('div');
-        num.className = 'day-number';
-        num.textContent = d;
-        cell.appendChild(num);
-
-        const list = document.createElement('div');
-        list.className = 'events';
-
-        const arr = events[k] || [];
-        for(let i=0;i<arr.length;i++){
-          const wrap = document.createElement('div');
-          wrap.className = 'event';
-          const span = document.createElement('span');
-          span.textContent = arr[i];
-          span.className = 'flex-1';
-          const del = document.createElement('button');
-          del.className = 'del';
-          del.textContent = '✕';
-          del.onclick = async (e)=>{ e.stopPropagation(); arr.splice(i,1); if(arr.length===0) delete events[k]; else events[k]=arr; if(gh.enabled){ await saveToGithub(); } render(); };
-          wrap.appendChild(span); wrap.appendChild(del);
-          list.appendChild(wrap);
-        }
-        cell.appendChild(list);
-        cell.onclick = ()=>openPanel(d);
-        grid.appendChild(cell);
+        cell.className = 'day'+(iso===todayISO?' today':'');
+        const num = document.createElement('div'); num.className='num'; num.textContent = day.toString().padStart(2,'0');
+        const list = document.createElement('div'); list.className='events';
+        const evts = state.events[iso] || [];
+        if(evts.length){ evts.forEach(e=>{const chip=document.createElement('div'); chip.className='event-chip'; chip.textContent=(e.time?(e.time+' — '):'')+e.title; chip.title=e.notes||''; list.appendChild(chip);}); }
+        else { const empty=document.createElement('div'); empty.className='empty'; empty.textContent='لا فعاليات'; list.appendChild(empty); }
+        const btn = document.createElement('button'); btn.className='add'; btn.type='button'; btn.textContent='+';
+        btn.addEventListener('click', ()=> openDialog(iso));
+        cell.addEventListener('click', (ev)=>{ if(ev.target===btn) return; openDialog(iso); });
+        cell.append(num,list,btn); grid.appendChild(cell);
       }
-      // datetime
-      const now = new Date();
-      const dd = String(now.getDate()).padStart(2,'0');
-      const mm = String(now.getMonth()+1).padStart(2,'0');
-      const yy = String(now.getFullYear()).slice(-2);
-      document.getElementById('now-date').textContent = `${dd}/${mm}/${yy}`;
-      document.getElementById('now-day').textContent = daysNames[now.getDay()];
-      const hh = String(now.getHours()).padStart(2,'0');
-      const mi = String(now.getMinutes()).padStart(2,'0');
-      const ss = String(now.getSeconds()).padStart(2,'0');
-      document.getElementById('now-time').textContent = `${hh}:${mi}:${ss}`;
     }
 
-    setInterval(()=>{
-      const now = new Date();
-      const dd = String(now.getDate()).padStart(2,'0');
-      const mm = String(now.getMonth()+1).padStart(2,'0');
-      const yy = String(now.getFullYear()).slice(-2);
-      document.getElementById('now-date').textContent = `${dd}/${mm}/${yy}`;
-      document.getElementById('now-day').textContent = daysNames[now.getDay()];
-      const hh = String(now.getHours()).padStart(2,'0');
-      const mi = String(now.getMinutes()).padStart(2,'0');
-      const ss = String(now.getSeconds()).padStart(2,'0');
-      document.getElementById('now-time').textContent = `${hh}:${mi}:${ss}`;
-    },1000);
+    // نافذة إدارة فعالية
+    const dlg = document.getElementById('eventDialog');
+    const dlgDate = document.getElementById('dlgDate');
+    const evtTitle = document.getElementById('evtTitle');
+    const evtTime  = document.getElementById('evtTime');
+    const evtNotes = document.getElementById('evtNotes');
+    const deleteBtn = document.getElementById('deleteBtn');
 
-    
-    // settings
-    const settings = document.getElementById('settings');
-    document.getElementById('openSettings').onclick = ()=>{ settings.classList.remove('hidden'); };
-    document.getElementById('closeSettings').onclick = ()=>{ settings.classList.add('hidden'); };
-    document.getElementById('testConn').onclick = async ()=>{
-      const u = document.getElementById('ghUser').value.trim();
-      const r = document.getElementById('ghRepo').value.trim();
-      const t = document.getElementById('ghToken').value.trim();
-      if(!u||!r||!t){ alert('املأ الحقول أولاً'); return; }
-      try{
-        const res = await fetch(`https://api.github.com/repos/${u}/${r}`, {headers:{'Authorization':`token ${t}`}});
-        if(res.ok){ alert('✅ الاتصال ناجح'); } else { const e = await res.json(); alert('❌ فشل الاتصال: '+(e.message||'')); }
-      }catch(e){ alert('❌ خطأ: '+e.message); }
-    };
-    document.getElementById('enableSave').onclick = ()=>{
-      gh.user = document.getElementById('ghUser').value.trim();
-      gh.repo = document.getElementById('ghRepo').value.trim();
-      gh.token = document.getElementById('ghToken').value.trim();
-      if(!gh.user||!gh.repo||!gh.token){ alert('املأ الحقول'); return; }
-      gh.enabled = true;
-      settings.classList.add('hidden');
-      alert('✅ تم تفعيل الحفظ التلقائي أثناء الإضافة/الحذف');
-    };
+    let activeISO = null; let activeIndex = null;
 
-    // manual save
-    document.getElementById('saveNow').onclick = saveToGithub;
+    function openDialog(iso){
+      activeISO = iso; activeIndex = null;
+      dlgDate.textContent = new Date(iso).toLocaleDateString('ar-EG',{weekday:'long', day:'2-digit', month:'long', year:'numeric'});
+      const list = state.events[iso] || [];
+      if(list.length){ activeIndex=0; evtTitle.value=list[0].title||''; evtTime.value=list[0].time||''; evtNotes.value=list[0].notes||''; }
+      else { evtTitle.value=''; evtTime.value=''; evtNotes.value=''; }
+      dlg.showModal();
+    }
 
-    // --- actions ---
-    document.getElementById('prev').onclick = ()=>{ current = new Date(current.getFullYear(), current.getMonth()-1, 1); closePanel(); };
-    document.getElementById('next').onclick = ()=>{ current = new Date(current.getFullYear(), current.getMonth()+1, 1); closePanel(); };
-
-    document.getElementById('addBtn').onclick = ()=>{
-      if(!selectedDay) return;
-      const txt = document.getElementById('input').value.trim();
-      if(!txt) return;
-      const y = current.getFullYear(), m = current.getMonth();
-      const k = keyFor(y,m,selectedDay);
-      if(!events[k]) events[k]=[];
-      events[k].push(txt);
-      if(gh.enabled){ await saveToGithub(); }
-      document.getElementById('input').value='';
-      render();
-    };
-    document.getElementById('input').addEventListener('keypress', (e)=>{
-      if(e.key==='Enter'){ document.getElementById('addBtn').click(); }
+    deleteBtn.addEventListener('click', async ()=>{
+      if(!activeISO) return;
+      const list = state.events[activeISO] || [];
+      if(activeIndex!=null) list.splice(activeIndex,1);
+      if(list.length===0) delete state.events[activeISO]; else state.events[activeISO]=list;
+      try{ await saveToFile(); }catch(e){ alert('فشل الحفظ: '+e.message); }
+      render(); dlg.close();
     });
-    document.getElementById('done').onclick = closePanel;
 
-    document.getElementById('fab').onclick = ()=>{
-      const t = new Date();
-      if(current.getFullYear()!==t.getFullYear() || current.getMonth()!==t.getMonth()){
-        current = new Date(t.getFullYear(), t.getMonth(), 1);
-      }
-      openPanel(t.getDate());
-    };
+    document.getElementById('eventForm').addEventListener('submit', async (e)=>{
+      e.preventDefault(); if(!activeISO) return;
+      const entry = {title: evtTitle.value.trim(), time: (evtTime.value||'').trim(), notes: (evtNotes.value||'').trim()};
+      if(!entry.title){ dlg.close(); return; }
+      const list = state.events[activeISO] || [];
+      if(activeIndex!=null){ list[activeIndex]=entry; } else { list.push(entry); }
+      state.events[activeISO]=list;
+      try{ await saveToFile(); }catch(err){ alert('فشل الحفظ: '+err.message+"
+اختر ملفًا للحفظ عبر الزر في الشريط."); }
+      render(); dlg.close();
+    });
 
-    // removed copyLink = async ()=>{
-      saveToHash();
-      try{ await navigator.clipboard.writeText(location.href); alert('✅ تم نسخ رابط التقويم مع البيانات.'); }
-      catch(e){
-        const i=document.createElement('input'); i.value=location.href; document.body.appendChild(i); i.select(); document.execCommand('copy'); document.body.removeChild(i);
-        alert('✅ تم نسخ رابط التقويم مع البيانات.');
-      }
-    };
+    // تنقل الأشهر
+    document.getElementById('prevBtn').addEventListener('click', ()=>{ const m=state.viewMonth-1; if(m<0){state.viewMonth=11;state.viewYear-=1;} else state.viewMonth=m; render(); });
+    document.getElementById('nextBtn').addEventListener('click', ()=>{ const m=state.viewMonth+1; if(m>11){state.viewMonth=0;state.viewYear+=1;} else state.viewMonth=m; render(); });
 
-    // initial
-    (async()=>{ await loadFromFile(); render(); })();
+    // أزرار الأدوات
+    document.getElementById('pickFile').addEventListener('click', pickFile);
+    document.getElementById('importBtn').addEventListener('click', importJSON);
+    document.getElementById('exportBtn').addEventListener('click', exportJSON);
+    document.getElementById('testBtn').addEventListener('click', async ()=>{
+      // اختبار: أضف فعالية تجريبية لليوم واحفظ
+      const iso = toISO(new Date());
+      const note = 'اختبار حفظ تلقائي — يُمكنك حذفه لاحقًا';
+      state.events[iso] = [{title:'🧪 Test Event', time:new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}), notes:note}];
+      try{ await saveToFile(); setStatus('✅ نجح الاختبار: تم الحفظ'); render(); }
+      catch(e){ alert('❌ فشل الاختبار: '+e.message); setStatus('فشل الاختبار: '+e.message); }
+    });
+
+    (async function init(){ await bootstrapLoad(); render(); })();
   </script>
 </body>
 </html>
