@@ -15,10 +15,8 @@
     .stage{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:#0f1115;position:relative;overflow:hidden}
     img,video{max-width:100%;max-height:100%;object-fit:contain;border-radius:var(--radius);box-shadow:var(--shadow)}
     .caption{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);padding:6px 10px;border-radius:8px;font-size:.9rem}
-    .center-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:10px 16px;border-radius:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);font-weight:700;letter-spacing:.3px;text-align:center;box-shadow:var(--shadow)}
+    .center-title{position:absolute;left:50%;top:12px;transform:translateX(-50%);padding:10px 16px;border-radius:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);font-weight:700;letter-spacing:.3px;text-align:center;box-shadow:var(--shadow);z-index:5;pointer-events:none}
     .center-title span{display:block;font-size:clamp(16px,3.5vw,28px)}
-
-    /* عناصر تحكم خفيفة للسرعة */
     .controls{position:absolute;right:12px;bottom:12px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:8px 10px;display:flex;align-items:center;gap:8px}
     .controls label{font-size:.85rem;opacity:.9}
     .controls input[type=range]{width:140px}
@@ -34,7 +32,6 @@
     <div class="center-title"><span>يوم الزيت والزيتون - مدرسة ابن سينا</span></div>
     <div class="caption" id="caption"></div>
 
-    <!-- عناصر تحكم بسيطة: سرعة + تشغيل/إيقاف -->
     <div class="controls">
       <button class="btn toggle" id="playPause" aria-pressed="true">إيقاف</button>
       <label for="speed">السرعة</label>
@@ -44,21 +41,7 @@
   </div>
 
   <script>
-    // يدعم صور JPG/PNG/WEBP وفيديوهات MP4/WEBM/MOV
     const CONFIG={interval:5000};
-    let items=[];
-
-    async function loadList(){
-      try{
-        const res=await fetch('manifest.json',{cache:'no-store'});
-        if(res.ok){
-          const arr=await res.json();
-          if(Array.isArray(arr)) return arr.filter(x=>typeof x==='string');
-        }
-      }catch{}
-      // fallback: 1..20 صور jpg
-      return Array.from({length:20},(_,i)=>`${i+1}.jpg`);
-    }
 
     const img=document.getElementById('mediaImage');
     const vid=document.getElementById('mediaVideo');
@@ -69,6 +52,27 @@
     const speedVal=document.getElementById('speedVal');
 
     let idx=0, timer=null, intervalMs=CONFIG.interval;
+    let files=[];
+
+    async function fetchFiles(){
+      // جلب جميع الملفات (صور + فيديوهات) من نفس المجلد عبر طلب HTTP إلى الخادم
+      // سيعمل فقط إذا كان الخادم يسمح بعرض المجلد (GitHub لا يدعم ذلك)
+      try{
+        const res = await fetch(window.location.pathname);
+        const text = await res.text();
+        const regex = /href="(.*?)"/g;
+        let m;
+        const arr=[];
+        while((m=regex.exec(text))!==null){
+          if(/\.(jpg|jpeg|png|webp|mp4|webm|mov)$/i.test(m[1])){
+            arr.push(m[1]);
+          }
+        }
+        return arr;
+      }catch{
+        return [];
+      }
+    }
 
     function isVideo(src){
       const ext=src.split('.').pop().toLowerCase();
@@ -76,7 +80,7 @@
     }
 
     function showItem(i){
-      const src=items[i];
+      const src=files[i];
       if(!src) return;
       if(isVideo(src)){
         img.style.display='none';
@@ -89,30 +93,27 @@
         img.style.display='block';
         if(img.src!==src){ img.src=src; }
       }
-      caption.textContent=src + ` — (${i+1}/${items.length})`;
-      // تحميل مسبق للآتي
-      const nextIndex=(i+1)%items.length; const pre=new Image(); if(!isVideo(items[nextIndex])) pre.src=items[nextIndex];
+      caption.textContent=src + ` — (${i+1}/${files.length})`;
     }
 
-    function next(){ idx=(idx+1)%items.length; showItem(idx); }
-    function prev(){ idx=(idx-1+items.length)%items.length; showItem(idx); }
+    function next(){ idx=(idx+1)%files.length; showItem(idx); }
+    function prev(){ idx=(idx-1+files.length)%files.length; showItem(idx); }
 
     function startTimer(){ stopTimer(); timer=setInterval(()=>{
-      if(vid.style.display==='block' && !vid.ended && !vid.paused) return; // لا تتقدم أثناء تشغيل الفيديو
+      if(vid.style.display==='block' && !vid.ended && !vid.paused) return;
       next();
     }, intervalMs); }
     function stopTimer(){ if(timer){ clearInterval(timer); timer=null; } }
 
     function togglePlay(){
       const on = playPause.getAttribute('aria-pressed')==='true';
-      if(on){ // إيقاف
+      if(on){
         playPause.setAttribute('aria-pressed','false'); playPause.textContent='تشغيل'; stopTimer(); try{ vid.pause(); }catch{}
-      }else{ // تشغيل
+      }else{
         playPause.setAttribute('aria-pressed','true'); playPause.textContent='إيقاف'; startTimer(); if(vid.style.display==='block'){ vid.play().catch(()=>{}); }
       }
     }
 
-    // سرعة الانتقال
     function updateSpeed(){
       const s = Math.max(1, Math.min(12, +speedRange.value||5));
       speedVal.textContent = s+'s';
@@ -121,14 +122,12 @@
       localStorage.setItem('albumSpeed', String(s));
     }
 
-    // تفاعل لوحة المفاتيح
     window.addEventListener('keydown', (e)=>{
       if(e.key==='ArrowLeft'){ prev(); }
       if(e.key==='ArrowRight'){ next(); }
       if(e.key===' '){ e.preventDefault(); togglePlay(); }
     });
 
-    // سحب باللمس للتالي/السابق
     let touchX=null; let touchY=null;
     stage.addEventListener('touchstart', (e)=>{ touchX=e.touches[0].clientX; touchY=e.touches[0].clientY; }, {passive:true});
     stage.addEventListener('touchend', (e)=>{
@@ -145,15 +144,12 @@
     speedRange.addEventListener('input', updateSpeed);
 
     async function start(){
-      // استعادة السرعة
       const saved = +localStorage.getItem('albumSpeed');
       if(!isNaN(saved) && saved>=1 && saved<=12){ speedRange.value=String(saved); }
       updateSpeed();
-
-      items = await loadList();
-      if(!items.length){ caption.textContent='لا توجد ملفات.'; return; }
+      files = await fetchFiles();
+      if(!files.length){ caption.textContent='لا توجد ملفات أو لا يمكن جلبها من الخادم.'; return; }
       showItem(idx);
-      // تشغيل تلقائي افتراضيًا
       playPause.setAttribute('aria-pressed','true');
       playPause.textContent='إيقاف';
       startTimer();
