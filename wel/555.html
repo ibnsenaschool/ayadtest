@@ -1,540 +1,364 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التقويم المدرسي - مدرسة ابن سينا</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            direction: rtl;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.8em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.95;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 25px 30px;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .month-display {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #667eea;
-            min-width: 250px;
-            text-align: center;
-        }
-
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-
-        .nav-btn {
-            background: #667eea;
-            color: white;
-            padding: 12px 25px;
-        }
-
-        .nav-btn:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .today-btn {
-            background: #764ba2;
-            color: white;
-            padding: 12px 25px;
-        }
-
-        .today-btn:hover {
-            background: #653a8f;
-            transform: translateY(-2px);
-        }
-
-        .calendar {
-            padding: 30px;
-        }
-
-        .weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .weekday {
-            text-align: center;
-            font-weight: bold;
-            color: #667eea;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            font-size: 1.1em;
-        }
-
-        .days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-        }
-
-        .day {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-            min-height: 140px;
-            position: relative;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .day.has-event {
-            cursor: pointer;
-        }
-
-        .day.has-event:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            border-color: #667eea;
-        }
-
-        .day.other-month {
-            opacity: 0.3;
-        }
-
-        .day.today {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .day-number {
-            font-weight: bold;
-            font-size: 1.3em;
-            color: #667eea;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .day.today .day-number {
-            color: white;
-            background: rgba(255,255,255,0.2);
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 8px;
-        }
-
-        .event-display {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.95em;
-            margin-top: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            min-height: 60px;
-            white-space: pre-wrap;
-            word-break: break-word;
-            line-height: 1.5;
-            border-right: 4px solid #38ef7d;
-        }
-
-        .day.today .event-display {
-            background: rgba(255,255,255,0.95);
-            border-right-color: white;
-        }
-
-        .event-display.empty {
-            display: none;
-        }
-
-        .refresh-banner {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            padding: 15px 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .refresh-banner:hover {
-            background: linear-gradient(135deg, #0d8078 0%, #2dd66c 100%);
-        }
-
-        .refresh-banner span {
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        .status {
-            text-align: center;
-            padding: 15px;
-            margin: 20px 30px;
-            border-radius: 10px;
-            font-weight: bold;
-            display: none;
-        }
-
-        .status.success {
-            background: #d4edda;
-            color: #155724;
-            border: 2px solid #c3e6cb;
-            display: block;
-        }
-
-        .status.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 2px solid #bee5eb;
-            display: block;
-        }
-
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 2px solid #f5c6cb;
-            display: block;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background: #f8f9fa;
-            color: #6c757d;
-            font-size: 0.9em;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-top: 2px solid #e9ecef;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 15px 25px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .stat-label {
-            color: #6c757d;
-            margin-top: 5px;
-        }
-
-        @media (max-width: 768px) {
-            .controls {
-                flex-direction: column;
-            }
-
-            .header h1 {
-                font-size: 2em;
-            }
-
-            .days {
-                gap: 5px;
-            }
-
-            .day {
-                min-height: 120px;
-                padding: 10px;
-            }
-
-            .weekday {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-
-            .month-display {
-                font-size: 1.5em;
-            }
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .no-events-message {
-            text-align: center;
-            padding: 40px;
-            color: #6c757d;
-            font-size: 1.1em;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ألبوم الصور</title>
+  <meta name="color-scheme" content="light dark" />
+  <style>
+    :root{
+      --bg:#0b0b0c; --fg:#f5f7fb; --muted:#9aa3af; --card:#141519; --accent:#3b82f6; --accent-2:#22c55e;
+      --gap:10px; --radius:16px; --shadow:0 6px 30px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg)}
+    .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(20,21,25,.95),rgba(20,21,25,.8));backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .wrap{max-width:1080px;margin:auto;padding:12px}
+    .title{display:flex;align-items:center;gap:10px;font-weight:700}
+    .title .dot{width:10px;height:10px;background:var(--accent);border-radius:50%}
+    .controls{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:8px}
+    .control{display:flex;flex-direction:column;gap:6px;background:var(--card);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.06)}
+    .control label{font-size:.85rem;color:var(--muted)}
+    .control input[type="range"]{width:100%}
+    .control input[type="text"], .control select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:#0f1115;color:var(--fg)}
+    .grid{max-width:1080px;margin:16px auto;padding:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap)}
+    @media(min-width:520px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(min-width:840px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+    figure{margin:0;background:var(--card);border-radius:var(--radius);overflow:hidden;border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow);display:flex;flex-direction:column}
+    .imgbox{position:relative;aspect-ratio:1/1;overflow:hidden}
+    img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.02);transition:transform .3s ease}
+    figure:hover img{transform:scale(1.03)}
+    figcaption{padding:8px 10px;font-size:.9rem;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .badge{font-variant-numeric:tabular-nums;background:rgba(255,255,255,.06);color:var(--fg);padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.08)}
+    .hide-names figcaption{display:none}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{appearance:none;border:none;border-radius:10px;padding:10px 12px;background:#1b1d23;color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.06)}
+    .btn[aria-pressed="true"], .btn.primary{background:var(--accent);color:white;border-color:transparent}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}
+    .lightbox.open{display:flex}
+    .lightbox img{max-width:100%;max-height:90vh;object-fit:contain}
+    .lb-caption{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(20,21,25,.9);border:1px solid rgba(255,255,255,.08);color:var(--fg);padding:8px 12px;border-radius:10px;font-size:.95rem}
+    .lb-nav{position:absolute;top:50%;left:0;right:0;display:flex;justify-content:space-between;transform:translateY(-50%);padding:0 8px}
+    .lb-nav button{background:rgba(20,21,25,.8);border:1px solid rgba(255,255,255,.1);color:var(--fg);padding:10px 12px;border-radius:12px}
+    .lb-top{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📅 التقويم المدرسي</h1>
-            <p>مدرسة ابن سينا الابتدائية</p>
+  <header class="topbar">
+    <div class="wrap">
+      <div class="title"><span class="dot" aria-hidden="true"></span><span>ألبوم الصور</span></div>
+      <div class="controls" id="controls">
+        <div class="control">
+          <label>المدى الرقمي (من → إلى)</label>
+          <div style="display:flex;gap:6px">
+            <input id="startNum" type="text" inputmode="numeric" placeholder="1" value="1" />
+            <input id="endNum" type="text" inputmode="numeric" placeholder="100" value="60" />
+          </div>
         </div>
-
-        <div class="refresh-banner" onclick="loadEvents()">
-            <span>🔄 اضغط هنا لتحديث الأحداث</span>
+        <div class="control">
+          <label>عدد الأصفار اليسار</label>
+          <input id="pad" type="text" inputmode="numeric" placeholder="0" value="0" />
         </div>
-
-        <div class="controls">
-            <button class="nav-btn" onclick="previousMonth()">◀ الشهر السابق</button>
-            <div class="month-display" id="monthDisplay"></div>
-            <button class="nav-btn" onclick="nextMonth()">الشهر التالي ▶</button>
-            <button class="today-btn" onclick="goToToday()">🏠 اليوم</button>
+        <div class="control">
+          <label>الامتداد</label>
+          <select id="ext">
+            <option value="jpg" selected>jpg</option>
+            <option value="jpeg">jpeg</option>
+            <option value="png">png</option>
+            <option value="webp">webp</option>
+          </select>
         </div>
-
-        <div class="status" id="status"></div>
-
-        <div class="calendar">
-            <div class="weekdays">
-                <div class="weekday">الأحد</div>
-                <div class="weekday">الاثنين</div>
-                <div class="weekday">الثلاثاء</div>
-                <div class="weekday">الأربعاء</div>
-                <div class="weekday">الخميس</div>
-                <div class="weekday">الجمعة</div>
-                <div class="weekday">السبت</div>
-            </div>
-            <div class="days" id="daysContainer"></div>
+        <div class="control">
+          <label>طريقة التحميل</label>
+          <select id="sourceMode">
+            <option value="auto" selected>محاولة قراءة manifest.json ثم المدى</option>
+            <option value="range">المدى فقط</option>
+            <option value="manifest">manifest.json فقط</option>
+          </select>
         </div>
-
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-number" id="totalEvents">0</div>
-                <div class="stat-label">إجمالي الأحداث</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="monthEvents">0</div>
-                <div class="stat-label">أحداث هذا الشهر</div>
-            </div>
+        <div class="control">
+          <label>إخفاء أسماء الصور</label>
+          <button class="btn" id="toggleNames" aria-pressed="false">إظهار/إخفاء</button>
         </div>
-
-        <div class="footer">
-            Made with ❤️ by Ibn Sina Elementary School
+        <div class="control">
+          <label>عرض شرائح (السرعة بالثواني)</label>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button class="btn" id="playPause" aria-pressed="false">تشغيل</button>
+            <input id="speed" type="range" min="1" max="10" value="4" />
+          </div>
         </div>
+      </div>
+      <div class="toolbar" style="margin-top:8px">
+        <button class="btn primary" id="reload">تحديث الألبوم</button>
+        <button class="btn" id="gridTight">تصغير الهوامش</button>
+        <button class="btn" id="gridLoose">تكبير الهوامش</button>
+      </div>
     </div>
+  </header>
 
-    <script>
-        let currentDate = new Date();
-        let events = {};
+  <main class="grid" id="grid" aria-live="polite"></main>
 
-        const monthNames = [
-            'يناير', 'فبراير', 'مارس', 'إبريل', 'مايو', 'يونيو',
-            'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
-        ];
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="عارض الصور">
+    <div class="lb-top">
+      <button id="lbClose" class="btn">إغلاق</button>
+      <button id="lbPlay" class="btn" aria-pressed="false">تشغيل العرض</button>
+    </div>
+    <div class="lb-nav">
+      <button id="lbPrev" aria-label="السابق">⟨</button>
+      <button id="lbNext" aria-label="التالي">⟩</button>
+    </div>
+    <img id="lbImg" alt="صورة" />
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
 
-        window.onload = function() {
-            loadEvents();
-        };
+  <script>
+    // ===== إعدادات قابلة للتعديل بسرعة =====
+    const CONFIG = {
+      start: 1,     // رقم البداية الافتراضي عند التحميل الأول
+      end: 60,      // رقم النهاية الافتراضي
+      pad: 0,       // عدد الأصفار اليسار (مثلاً 0001)
+      ext: 'jpg',   // الامتداد الافتراضي
+      sourceMode: 'auto', // 'auto' | 'range' | 'manifest'
+      filenamePrefix: '', // في حال تريد بادئة قبل الرقم
+      filenameSuffix: ''  // في حال تريد لاحقة بعد الرقم
+    };
 
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            
-            document.getElementById('monthDisplay').textContent = 
-                `${monthNames[month]} ${year}`;
+    const grid = document.getElementById('grid');
+    const toggleNamesBtn = document.getElementById('toggleNames');
+    const playPauseBtn = document.getElementById('playPause');
+    const speedRange = document.getElementById('speed');
+    const reloadBtn = document.getElementById('reload');
+    const sourceModeSel = document.getElementById('sourceMode');
+    const startNumInp = document.getElementById('startNum');
+    const endNumInp = document.getElementById('endNum');
+    const padInp = document.getElementById('pad');
+    const extSel = document.getElementById('ext');
 
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const daysInPrevMonth = new Date(year, month, 0).getDate();
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbCaption = document.getElementById('lbCaption');
+    const lbClose = document.getElementById('lbClose');
+    const lbPrev = document.getElementById('lbPrev');
+    const lbNext = document.getElementById('lbNext');
+    const lbPlay = document.getElementById('lbPlay');
 
-            const daysContainer = document.getElementById('daysContainer');
-            daysContainer.innerHTML = '';
+    const gridTight = document.getElementById('gridTight');
+    const gridLoose = document.getElementById('gridLoose');
 
-            const today = new Date();
-            const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
-            const todayDate = today.getDate();
+    let items = [];      // [{src, name}]
+    let current = 0;     // مؤشر الصورة في العارض
+    let timer = null;    // مؤقت العرض التلقائي
 
-            // أيام الشهر السابق
-            for (let i = firstDay - 1; i >= 0; i--) {
-                const dayDiv = createDayElement(
-                    daysInPrevMonth - i,
-                    year,
-                    month - 1,
-                    true
-                );
-                daysContainer.appendChild(dayDiv);
-            }
+    // حفظ/قراءة تفضيلات بسيطة في localStorage (مفيد للأهل أيضاً على جهازهم)
+    try {
+      const saved = JSON.parse(localStorage.getItem('albumPrefs')||'{}');
+      Object.assign(CONFIG, saved);
+    } catch {}
 
-            // أيام الشهر الحالي
-            for (let day = 1; day <= daysInMonth; day++) {
-                const isToday = isCurrentMonth && day === todayDate;
-                const dayDiv = createDayElement(day, year, month, false, isToday);
-                daysContainer.appendChild(dayDiv);
-            }
+    // مزامنة عناصر التحكم مع الإعدادات
+    startNumInp.value = CONFIG.start;
+    endNumInp.value = CONFIG.end;
+    padInp.value = CONFIG.pad;
+    extSel.value = CONFIG.ext;
+    sourceModeSel.value = CONFIG.sourceMode;
 
-            // أيام الشهر التالي
-            const totalCells = daysContainer.children.length;
-            const remainingCells = 42 - totalCells;
-            
-            for (let day = 1; day <= remainingCells; day++) {
-                const dayDiv = createDayElement(day, year, month + 1, true);
-                daysContainer.appendChild(dayDiv);
-            }
+    // أدوات مساعدة
+    const padNum = (n, w)=> String(n).padStart(+w||0,'0');
+    const makeName = (n)=> `${CONFIG.filenamePrefix}${padNum(n, CONFIG.pad)}${CONFIG.filenameSuffix}.${CONFIG.ext}`;
 
-            updateStats();
+    function setGap(px){
+      document.documentElement.style.setProperty('--gap', px+'px');
+    }
+
+    gridTight.addEventListener('click', ()=> setGap(4));
+    gridLoose.addEventListener('click', ()=> setGap(14));
+
+    toggleNamesBtn.addEventListener('click', ()=>{
+      const pressed = toggleNamesBtn.getAttribute('aria-pressed') === 'true';
+      toggleNamesBtn.setAttribute('aria-pressed', String(!pressed));
+      document.body.classList.toggle('hide-names');
+    });
+
+    playPauseBtn.addEventListener('click', ()=>{
+      const on = playPauseBtn.getAttribute('aria-pressed') === 'true';
+      if(on){ stopAuto(); }
+      else { startAuto(); }
+    });
+
+    lbPlay.addEventListener('click', ()=>{
+      const on = lbPlay.getAttribute('aria-pressed') === 'true';
+      if(on){ stopAuto(); }
+      else { startAuto(); }
+    });
+
+    reloadBtn.addEventListener('click', ()=>{
+      CONFIG.start = +startNumInp.value||1;
+      CONFIG.end   = +endNumInp.value||CONFIG.start;
+      CONFIG.pad   = +padInp.value||0;
+      CONFIG.ext   = extSel.value||'jpg';
+      CONFIG.sourceMode = sourceModeSel.value;
+      localStorage.setItem('albumPrefs', JSON.stringify({start:CONFIG.start,end:CONFIG.end,pad:CONFIG.pad,ext:CONFIG.ext,sourceMode:CONFIG.sourceMode}));
+      build();
+    });
+
+    // تحميل آمن لصورة ونتحقق إن كانت 404 لتجاوزها
+    function loadImageChecked(src){
+      return new Promise(resolve=>{
+        const img = new Image();
+        let done=false;
+        const finish = (ok)=>{ if(!done){ done=true; resolve(ok); } };
+        img.onload = ()=> finish(true);
+        img.onerror = ()=> finish(false);
+        img.src = src;
+      });
+    }
+
+    async function getListFromManifest(){
+      try{
+        const res = await fetch('manifest.json',{cache:'no-store'});
+        if(!res.ok) return null;
+        const arr = await res.json();
+        if(!Array.isArray(arr)) return null;
+        // تقييد الأسماء لنصوص فقط
+        return arr.filter(x=>typeof x==='string');
+      }catch{ return null; }
+    }
+
+    async function build(){
+      stopAuto();
+      grid.innerHTML = '';
+      items = [];
+
+      let names = null;
+      if(CONFIG.sourceMode !== 'range'){
+        names = await getListFromManifest();
+      }
+
+      if(!names){
+        // fallback: المدى الرقمي
+        const list = [];
+        for(let n=CONFIG.start; n<=CONFIG.end; n++){
+          list.push(makeName(n));
         }
+        // تحقّق من الملفات الموجودة فعلاً (نتجاهل 404)
+        const checks = await Promise.all(list.map(name=> loadImageChecked(name).then(ok=> ok?name:null)));
+        names = checks.filter(Boolean);
+      }
 
-        function createDayElement(day, year, month, isOtherMonth, isToday = false) {
-            const dayDiv = document.createElement('div');
-            dayDiv.className = 'day';
-            
-            if (isOtherMonth) {
-                dayDiv.classList.add('other-month');
-            }
-            
-            if (isToday) {
-                dayDiv.classList.add('today');
-            }
+      // بناء الشبكة مع Lazy Loading
+      const frag = document.createDocumentFragment();
+      names.forEach((name, idx)=>{
+        const fig = document.createElement('figure');
+        const box = document.createElement('div');
+        box.className = 'imgbox';
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.alt = `صورة ${idx+1}`;
+        // نؤخر ضبط src حتى يدخل ضمن المنظار
+        img.dataset.src = name;
 
-            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        box.appendChild(img);
+        const cap = document.createElement('figcaption');
+        const capSpan = document.createElement('span');
+        capSpan.textContent = name;
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.textContent = String(idx+1);
+        cap.appendChild(capSpan); cap.appendChild(badge);
 
-            const dayNumber = document.createElement('span');
-            dayNumber.className = 'day-number';
-            dayNumber.textContent = day;
+        fig.appendChild(box); fig.appendChild(cap);
+        fig.addEventListener('click', ()=> openLightbox(idx));
+        frag.appendChild(fig);
+        items.push({src:name, name});
+      });
+      grid.appendChild(frag);
 
-            const eventDisplay = document.createElement('div');
-            eventDisplay.className = 'event-display';
-            const eventText = events[dateKey] || '';
-            
-            if (eventText) {
-                eventDisplay.textContent = eventText;
-                dayDiv.classList.add('has-event');
-            } else {
-                eventDisplay.classList.add('empty');
-            }
+      // Lazy via IntersectionObserver
+      const io = new IntersectionObserver((entries, obs)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            const img = e.target.querySelector('img');
+            if(img && !img.src){ img.src = img.dataset.src; }
+            obs.unobserve(e.target);
+          }
+        });
+      }, {rootMargin:'200px'});
+      grid.querySelectorAll('figure').forEach(f=> io.observe(f));
+    }
 
-            dayDiv.appendChild(dayNumber);
-            dayDiv.appendChild(eventDisplay);
+    function openLightbox(i){
+      current = i;
+      lb.classList.add('open');
+      renderLB();
+    }
 
-            return dayDiv;
-        }
+    function closeLightbox(){ lb.classList.remove('open'); stopAuto(); }
 
-        function previousMonth() {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
-        }
+    function renderLB(){
+      const it = items[current];
+      if(!it) return;
+      lbImg.src = it.src;
+      lbCaption.textContent = it.name + ` — (${current+1}/${items.length})`;
+      // حفظ آخر صورة شاهدها المستخدم على هذا المتصفح
+      try { localStorage.setItem('albumLast', String(current)); } catch {}
+    }
 
-        function nextMonth() {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
-        }
+    function next(){ current = (current+1) % items.length; renderLB(); }
+    function prev(){ current = (current-1+items.length) % items.length; renderLB(); }
 
-        function goToToday() {
-            currentDate = new Date();
-            renderCalendar();
-        }
+    function startAuto(){
+      const ms = (+speedRange.value||4)*1000;
+      stopAuto();
+      timer = setInterval(next, ms);
+      playPauseBtn.setAttribute('aria-pressed','true');
+      lbPlay.setAttribute('aria-pressed','true');
+      playPauseBtn.textContent = 'إيقاف';
+      lbPlay.textContent = 'إيقاف العرض';
+    }
+    function stopAuto(){
+      if(timer){ clearInterval(timer); timer=null; }
+      playPauseBtn.setAttribute('aria-pressed','false');
+      lbPlay.setAttribute('aria-pressed','false');
+      playPauseBtn.textContent = 'تشغيل';
+      lbPlay.textContent = 'تشغيل العرض';
+    }
 
-        async function loadEvents() {
-            showStatus('جاري تحميل الأحداث...', 'info');
+    // أحداث العارض
+    lbClose.addEventListener('click', closeLightbox);
+    lbNext.addEventListener('click', next);
+    lbPrev.addEventListener('click', prev);
 
-            try {
-                // محاولة تحميل من events.json في نفس المجلد
-                const response = await fetch('events.json?t=' + new Date().getTime());
-                
-                if (response.ok) {
-                    events = await response.json();
-                    showStatus('✅ تم تحميل الأحداث بنجاح!', 'success');
-                } else {
-                    showStatus('⚠️ لم يتم العثور على أحداث', 'error');
-                    events = {};
-                }
-            } catch (error) {
-                showStatus('⚠️ لم يتم العثور على ملف الأحداث', 'error');
-                console.error('خطأ في التحميل:', error);
-                events = {};
-            }
+    // إغلاق بالkeyboard و الأسهم
+    window.addEventListener('keydown', (e)=>{
+      if(!lb.classList.contains('open')) return;
+      if(e.key==='Escape') closeLightbox();
+      if(e.key==='ArrowLeft') prev();
+      if(e.key==='ArrowRight') next();
+    });
 
-            renderCalendar();
-        }
+    // سحب بالإصبع
+    let touchX=null;
+    lb.addEventListener('touchstart', (e)=> touchX = e.touches[0].clientX, {passive:true});
+    lb.addEventListener('touchend', (e)=>{
+      if(touchX==null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      if(Math.abs(dx)>40){ dx>0 ? prev() : next(); }
+      touchX=null;
+    });
 
-        function updateStats() {
-            const totalEvents = Object.keys(events).length;
-            document.getElementById('totalEvents').textContent = totalEvents;
-
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const monthPrefix = `${year}-${String(month + 1).padStart(2, '0')}`;
-            
-            const monthEvents = Object.keys(events).filter(key => 
-                key.startsWith(monthPrefix)
-            ).length;
-            
-            document.getElementById('monthEvents').textContent = monthEvents;
-        }
-
-        function showStatus(message, type) {
-            const statusDiv = document.getElementById('status');
-            statusDiv.textContent = message;
-            statusDiv.className = 'status ' + type;
-            
-            setTimeout(() => {
-                statusDiv.style.display = 'none';
-            }, 3000);
-        }
-    </script>
+    // بدء التشغيل
+    build().then(()=>{
+      // استعادة آخر صورة إن وُجدت
+      try{
+        const last = +localStorage.getItem('albumLast');
+        if(!isNaN(last) && last>=0 && last<items.length){ current=last; }
+      }catch{}
+    });
+  </script>
 </body>
 </html>
