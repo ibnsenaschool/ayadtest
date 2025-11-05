@@ -3,59 +3,62 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ألبوم الصور</title>
+  <title>ألبوم الصور — عرض تلقائي</title>
   <meta name="color-scheme" content="light dark" />
   <style>
     :root{
-      --bg:#0b0b0c; --fg:#f5f7fb; --muted:#9aa3af; --card:#141519; --accent:#3b82f6; --accent-2:#22c55e;
-      --gap:10px; --radius:16px; --shadow:0 6px 30px rgba(0,0,0,.25);
+      --bg:#0b0b0c; --fg:#f5f7fb; --muted:#9aa3af; --card:#141519; --accent:#3b82f6; --ok:#22c55e; --danger:#ef4444;
+      --radius:16px; --shadow:0 6px 30px rgba(0,0,0,.25);
+      --controls-h: 152px;
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg)}
-    .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(20,21,25,.95),rgba(20,21,25,.8));backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
+
+    /* الشريط العلوي */
+    .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(20,21,25,.95),rgba(20,21,25,.85));backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
     .wrap{max-width:1080px;margin:auto;padding:12px}
     .title{display:flex;align-items:center;gap:10px;font-weight:700}
     .title .dot{width:10px;height:10px;background:var(--accent);border-radius:50%}
+
     .controls{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:8px}
     .control{display:flex;flex-direction:column;gap:6px;background:var(--card);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.06)}
     .control label{font-size:.85rem;color:var(--muted)}
-    .control input[type="range"]{width:100%}
     .control input[type="text"], .control select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:#0f1115;color:var(--fg)}
-    .grid{max-width:1080px;margin:16px auto;padding:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap)}
-    @media(min-width:520px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-    @media(min-width:840px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-    figure{margin:0;background:var(--card);border-radius:var(--radius);overflow:hidden;border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow);display:flex;flex-direction:column}
-    .imgbox{position:relative;aspect-ratio:1/1;overflow:hidden}
-    img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.02);transition:transform .3s ease}
-    figure:hover img{transform:scale(1.03)}
-    figcaption{padding:8px 10px;font-size:.9rem;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .badge{font-variant-numeric:tabular-nums;background:rgba(255,255,255,.06);color:var(--fg);padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.08)}
-    .hide-names figcaption{display:none}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+    .control input[type="range"]{width:100%}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
     .btn{appearance:none;border:none;border-radius:10px;padding:10px 12px;background:#1b1d23;color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.06)}
-    .btn[aria-pressed="true"], .btn.primary{background:var(--accent);color:white;border-color:transparent}
+    .btn.primary{background:var(--accent);color:white;border-color:transparent}
     .btn:disabled{opacity:.5;cursor:not-allowed}
-    .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    /* Lightbox */
-    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}
-    .lightbox.open{display:flex}
-    .lightbox img{max-width:100%;max-height:90vh;object-fit:contain}
-    .lb-caption{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(20,21,25,.9);border:1px solid rgba(255,255,255,.08);color:var(--fg);padding:8px 12px;border-radius:10px;font-size:.95rem}
-    .lb-nav{position:absolute;top:50%;left:0;right:0;display:flex;justify-content:space-between;transform:translateY(-50%);padding:0 8px}
-    .lb-nav button{background:rgba(20,21,25,.8);border:1px solid rgba(255,255,255,.1);color:var(--fg);padding:10px 12px;border-radius:12px}
-    .lb-top{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
+
+    /* المسرح (صورة واحدة كبيرة فقط) */
+    .stage{height:calc(100vh - var(--controls-h));display:flex;align-items:center;justify-content:center;padding:10px}
+    .stage-inner{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f1115;border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .stage img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+
+    /* التسمية */
+    .caption{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:rgba(20,21,25,.88);border:1px solid rgba(255,255,255,.08);color:var(--fg);padding:8px 12px;border-radius:10px;font-size:.95rem;white-space:nowrap}
+    .hide-names .caption{display:none}
+
+    /* شريط التقدم */
+    .progress{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.08)}
+    .bar{height:100%;width:0;background:var(--accent)}
+
+    @media (max-width:720px){
+      :root{ --controls-h: 200px; }
+      .controls{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="wrap">
-      <div class="title"><span class="dot" aria-hidden="true"></span><span>ألبوم الصور</span></div>
+      <div class="title"><span class="dot" aria-hidden="true"></span><span>ألبوم الصور — عرض تلقائي</span></div>
       <div class="controls" id="controls">
         <div class="control">
           <label>المدى الرقمي (من → إلى)</label>
           <div style="display:flex;gap:6px">
             <input id="startNum" type="text" inputmode="numeric" placeholder="1" value="1" />
-            <input id="endNum" type="text" inputmode="numeric" placeholder="100" value="60" />
+            <input id="endNum" type="text" inputmode="numeric" placeholder="60" value="60" />
           </div>
         </div>
         <div class="control">
@@ -74,291 +77,206 @@
         <div class="control">
           <label>طريقة التحميل</label>
           <select id="sourceMode">
-            <option value="auto" selected>محاولة قراءة manifest.json ثم المدى</option>
+            <option value="auto" selected>manifest.json ثم المدى</option>
             <option value="range">المدى فقط</option>
             <option value="manifest">manifest.json فقط</option>
           </select>
         </div>
         <div class="control">
-          <label>إخفاء أسماء الصور</label>
+          <label>إخفاء اسم الصورة</label>
           <button class="btn" id="toggleNames" aria-pressed="false">إظهار/إخفاء</button>
         </div>
         <div class="control">
-          <label>عرض شرائح (السرعة بالثواني)</label>
-          <div style="display:flex;gap:6px;align-items:center">
-            <button class="btn" id="playPause" aria-pressed="false">تشغيل</button>
-            <input id="speed" type="range" min="1" max="10" value="4" />
-          </div>
+          <label>سرعة التنقل (ثوانٍ)</label>
+          <input id="speed" type="range" min="1" max="12" value="5" />
         </div>
       </div>
-      <div class="toolbar" style="margin-top:8px">
-        <button class="btn primary" id="reload">تحديث الألبوم</button>
-        <button class="btn" id="gridTight">تصغير الهوامش</button>
-        <button class="btn" id="gridLoose">تكبير الهوامش</button>
+      <div class="toolbar">
+        <button class="btn primary" id="reload">تحديث القائمة</button>
+        <button class="btn" id="prev">السابق</button>
+        <button class="btn" id="next">التالي</button>
+        <button class="btn" id="playPause" aria-pressed="true">إيقاف</button>
       </div>
     </div>
   </header>
 
-  <main class="grid" id="grid" aria-live="polite"></main>
-
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="عارض الصور">
-    <div class="lb-top">
-      <button id="lbClose" class="btn">إغلاق</button>
-      <button id="lbPlay" class="btn" aria-pressed="false">تشغيل العرض</button>
+  <main class="stage">
+    <div class="stage-inner">
+      <img id="big" alt="صورة" />
+      <div class="caption" id="caption">—</div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
     </div>
-    <div class="lb-nav">
-      <button id="lbPrev" aria-label="السابق">⟨</button>
-      <button id="lbNext" aria-label="التالي">⟩</button>
-    </div>
-    <img id="lbImg" alt="صورة" />
-    <div class="lb-caption" id="lbCaption"></div>
-  </div>
+  </main>
 
   <script>
-    // ===== إعدادات قابلة للتعديل بسرعة =====
+    // ===== الإعدادات =====
     const CONFIG = {
-      start: 1,     // رقم البداية الافتراضي عند التحميل الأول
-      end: 60,      // رقم النهاية الافتراضي
-      pad: 0,       // عدد الأصفار اليسار (مثلاً 0001)
-      ext: 'jpg',   // الامتداد الافتراضي
+      start: 1,
+      end: 60,
+      pad: 0,
+      ext: 'jpg',
       sourceMode: 'auto', // 'auto' | 'range' | 'manifest'
-      filenamePrefix: '', // في حال تريد بادئة قبل الرقم
-      filenameSuffix: ''  // في حال تريد لاحقة بعد الرقم
+      filenamePrefix: '',
+      filenameSuffix: ''
     };
 
-    const grid = document.getElementById('grid');
+    // عناصر DOM
+    const big = document.getElementById('big');
+    const caption = document.getElementById('caption');
+    const bar = document.getElementById('bar');
+
+    const startNumInp = document.getElementById('startNum');
+    const endNumInp   = document.getElementById('endNum');
+    const padInp      = document.getElementById('pad');
+    const extSel      = document.getElementById('ext');
+    const sourceModeSel = document.getElementById('sourceMode');
+
     const toggleNamesBtn = document.getElementById('toggleNames');
+    const reloadBtn = document.getElementById('reload');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
     const playPauseBtn = document.getElementById('playPause');
     const speedRange = document.getElementById('speed');
-    const reloadBtn = document.getElementById('reload');
-    const sourceModeSel = document.getElementById('sourceMode');
-    const startNumInp = document.getElementById('startNum');
-    const endNumInp = document.getElementById('endNum');
-    const padInp = document.getElementById('pad');
-    const extSel = document.getElementById('ext');
 
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lbImg');
-    const lbCaption = document.getElementById('lbCaption');
-    const lbClose = document.getElementById('lbClose');
-    const lbPrev = document.getElementById('lbPrev');
-    const lbNext = document.getElementById('lbNext');
-    const lbPlay = document.getElementById('lbPlay');
-
-    const gridTight = document.getElementById('gridTight');
-    const gridLoose = document.getElementById('gridLoose');
-
+    // حالة التشغيل
     let items = [];      // [{src, name}]
-    let current = 0;     // مؤشر الصورة في العارض
-    let timer = null;    // مؤقت العرض التلقائي
+    let current = 0;
+    let timer = null;
+    let intervalMs = (+speedRange.value||5)*1000;
+    let barTimer = null;
 
-    // حفظ/قراءة تفضيلات بسيطة في localStorage (مفيد للأهل أيضاً على جهازهم)
-    try {
-      const saved = JSON.parse(localStorage.getItem('albumPrefs')||'{}');
-      Object.assign(CONFIG, saved);
-    } catch {}
-
-    // مزامنة عناصر التحكم مع الإعدادات
-    startNumInp.value = CONFIG.start;
-    endNumInp.value = CONFIG.end;
-    padInp.value = CONFIG.pad;
-    extSel.value = CONFIG.ext;
-    sourceModeSel.value = CONFIG.sourceMode;
+    // تفضيلات محفوظة
+    try { Object.assign(CONFIG, JSON.parse(localStorage.getItem('albumPrefs2')||'{}')); } catch{}
+    startNumInp.value = CONFIG.start; endNumInp.value = CONFIG.end; padInp.value = CONFIG.pad; extSel.value = CONFIG.ext; sourceModeSel.value = CONFIG.sourceMode;
 
     // أدوات مساعدة
-    const padNum = (n, w)=> String(n).padStart(+w||0,'0');
+    const padNum = (n,w)=> String(n).padStart(+w||0,'0');
     const makeName = (n)=> `${CONFIG.filenamePrefix}${padNum(n, CONFIG.pad)}${CONFIG.filenameSuffix}.${CONFIG.ext}`;
 
-    function setGap(px){
-      document.documentElement.style.setProperty('--gap', px+'px');
+    function savePrefs(){
+      localStorage.setItem('albumPrefs2', JSON.stringify({start:CONFIG.start,end:CONFIG.end,pad:CONFIG.pad,ext:CONFIG.ext,sourceMode:CONFIG.sourceMode}));
     }
 
-    gridTight.addEventListener('click', ()=> setGap(4));
-    gridLoose.addEventListener('click', ()=> setGap(14));
-
-    toggleNamesBtn.addEventListener('click', ()=>{
-      const pressed = toggleNamesBtn.getAttribute('aria-pressed') === 'true';
-      toggleNamesBtn.setAttribute('aria-pressed', String(!pressed));
-      document.body.classList.toggle('hide-names');
-    });
-
-    playPauseBtn.addEventListener('click', ()=>{
-      const on = playPauseBtn.getAttribute('aria-pressed') === 'true';
-      if(on){ stopAuto(); }
-      else { startAuto(); }
-    });
-
-    lbPlay.addEventListener('click', ()=>{
-      const on = lbPlay.getAttribute('aria-pressed') === 'true';
-      if(on){ stopAuto(); }
-      else { startAuto(); }
-    });
-
-    reloadBtn.addEventListener('click', ()=>{
-      CONFIG.start = +startNumInp.value||1;
-      CONFIG.end   = +endNumInp.value||CONFIG.start;
-      CONFIG.pad   = +padInp.value||0;
-      CONFIG.ext   = extSel.value||'jpg';
-      CONFIG.sourceMode = sourceModeSel.value;
-      localStorage.setItem('albumPrefs', JSON.stringify({start:CONFIG.start,end:CONFIG.end,pad:CONFIG.pad,ext:CONFIG.ext,sourceMode:CONFIG.sourceMode}));
-      build();
-    });
-
-    // تحميل آمن لصورة ونتحقق إن كانت 404 لتجاوزها
-    function loadImageChecked(src){
+    // تحميل آمن لصورة (نستخدمه للتحقق من وجود الملف)
+    function check(src){
       return new Promise(resolve=>{
         const img = new Image();
-        let done=false;
-        const finish = (ok)=>{ if(!done){ done=true; resolve(ok); } };
-        img.onload = ()=> finish(true);
-        img.onerror = ()=> finish(false);
-        img.src = src;
+        let done=false; const finish=x=>{ if(!done){done=true; resolve(x);} };
+        img.onload=()=>finish(true); img.onerror=()=>finish(false); img.src=src;
       });
     }
 
     async function getListFromManifest(){
       try{
         const res = await fetch('manifest.json',{cache:'no-store'});
-        if(!res.ok) return null;
-        const arr = await res.json();
-        if(!Array.isArray(arr)) return null;
-        // تقييد الأسماء لنصوص فقط
-        return arr.filter(x=>typeof x==='string');
+        if(!res.ok) return null; const arr = await res.json();
+        if(!Array.isArray(arr)) return null; return arr.filter(x=>typeof x==='string');
       }catch{ return null; }
     }
 
     async function build(){
-      stopAuto();
-      grid.innerHTML = '';
+      stop();
       items = [];
-
       let names = null;
-      if(CONFIG.sourceMode !== 'range'){
-        names = await getListFromManifest();
-      }
+      if(CONFIG.sourceMode !== 'range') names = await getListFromManifest();
 
       if(!names){
-        // fallback: المدى الرقمي
-        const list = [];
-        for(let n=CONFIG.start; n<=CONFIG.end; n++){
-          list.push(makeName(n));
-        }
-        // تحقّق من الملفات الموجودة فعلاً (نتجاهل 404)
-        const checks = await Promise.all(list.map(name=> loadImageChecked(name).then(ok=> ok?name:null)));
+        const list=[]; for(let n=CONFIG.start;n<=CONFIG.end;n++) list.push(makeName(n));
+        const checks = await Promise.all(list.map(name=> check(name).then(ok=> ok?name:null)));
         names = checks.filter(Boolean);
       }
 
-      // بناء الشبكة مع Lazy Loading
-      const frag = document.createDocumentFragment();
-      names.forEach((name, idx)=>{
-        const fig = document.createElement('figure');
-        const box = document.createElement('div');
-        box.className = 'imgbox';
-        const img = document.createElement('img');
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        img.alt = `صورة ${idx+1}`;
-        // نؤخر ضبط src حتى يدخل ضمن المنظار
-        img.dataset.src = name;
+      if(!names.length){
+        big.removeAttribute('src'); caption.textContent = 'لا توجد صور.'; return;
+      }
 
-        box.appendChild(img);
-        const cap = document.createElement('figcaption');
-        const capSpan = document.createElement('span');
-        capSpan.textContent = name;
-        const badge = document.createElement('span');
-        badge.className = 'badge';
-        badge.textContent = String(idx+1);
-        cap.appendChild(capSpan); cap.appendChild(badge);
-
-        fig.appendChild(box); fig.appendChild(cap);
-        fig.addEventListener('click', ()=> openLightbox(idx));
-        frag.appendChild(fig);
-        items.push({src:name, name});
-      });
-      grid.appendChild(frag);
-
-      // Lazy via IntersectionObserver
-      const io = new IntersectionObserver((entries, obs)=>{
-        entries.forEach(e=>{
-          if(e.isIntersecting){
-            const img = e.target.querySelector('img');
-            if(img && !img.src){ img.src = img.dataset.src; }
-            obs.unobserve(e.target);
-          }
-        });
-      }, {rootMargin:'200px'});
-      grid.querySelectorAll('figure').forEach(f=> io.observe(f));
+      items = names.map((n)=>({src:n,name:n}));
+      current = 0;
+      render();
+      play(); // يبدأ تلقائياً
     }
 
-    function openLightbox(i){
-      current = i;
-      lb.classList.add('open');
-      renderLB();
+    function render(){
+      const it = items[current]; if(!it) return;
+      big.src = it.src; caption.textContent = it.name + ` — (${current+1}/${items.length})`;
+      // تهيئة شريط التقدم
+      resetBar();
+      // تهيئة تحميل مسبق للصورة التالية لتنعيم الانتقال
+      const nextIndex = (current+1)%items.length; const pre = new Image(); pre.src = items[nextIndex].src;
+      try { localStorage.setItem('albumLast2', String(current)); } catch{}
     }
 
-    function closeLightbox(){ lb.classList.remove('open'); stopAuto(); }
+    function next(){ current = (current+1)%items.length; render(); }
+    function prev(){ current = (current-1+items.length)%items.length; render(); }
 
-    function renderLB(){
-      const it = items[current];
-      if(!it) return;
-      lbImg.src = it.src;
-      lbCaption.textContent = it.name + ` — (${current+1}/${items.length})`;
-      // حفظ آخر صورة شاهدها المستخدم على هذا المتصفح
-      try { localStorage.setItem('albumLast', String(current)); } catch {}
-    }
-
-    function next(){ current = (current+1) % items.length; renderLB(); }
-    function prev(){ current = (current-1+items.length) % items.length; renderLB(); }
-
-    function startAuto(){
-      const ms = (+speedRange.value||4)*1000;
-      stopAuto();
-      timer = setInterval(next, ms);
+    function play(){
+      intervalMs = (+speedRange.value||5)*1000;
+      stop();
+      timer = setInterval(next, intervalMs);
       playPauseBtn.setAttribute('aria-pressed','true');
-      lbPlay.setAttribute('aria-pressed','true');
       playPauseBtn.textContent = 'إيقاف';
-      lbPlay.textContent = 'إيقاف العرض';
+      animateBar();
     }
-    function stopAuto(){
+    function stop(){
       if(timer){ clearInterval(timer); timer=null; }
+      if(barTimer){ cancelAnimationFrame(barTimer); barTimer=null; }
+      bar.style.width = '0%';
       playPauseBtn.setAttribute('aria-pressed','false');
-      lbPlay.setAttribute('aria-pressed','false');
       playPauseBtn.textContent = 'تشغيل';
-      lbPlay.textContent = 'تشغيل العرض';
     }
 
-    // أحداث العارض
-    lbClose.addEventListener('click', closeLightbox);
-    lbNext.addEventListener('click', next);
-    lbPrev.addEventListener('click', prev);
+    function togglePlay(){
+      const on = playPauseBtn.getAttribute('aria-pressed')==='true';
+      if(on) stop(); else play();
+    }
 
-    // إغلاق بالkeyboard و الأسهم
-    window.addEventListener('keydown', (e)=>{
-      if(!lb.classList.contains('open')) return;
-      if(e.key==='Escape') closeLightbox();
-      if(e.key==='ArrowLeft') prev();
-      if(e.key==='ArrowRight') next();
+    function resetBar(){ bar.style.width='0%'; }
+    function animateBar(){
+      const start = performance.now();
+      function frame(t){
+        const p = Math.min(1,(t-start)/intervalMs); bar.style.width = (p*100)+'%';
+        if(p<1 && timer) { barTimer = requestAnimationFrame(frame); }
+      }
+      barTimer = requestAnimationFrame(frame);
+    }
+
+    // أحداث الواجهة
+    reloadBtn.addEventListener('click', ()=>{
+      CONFIG.start = +startNumInp.value||1; CONFIG.end = +endNumInp.value||CONFIG.start; CONFIG.pad = +padInp.value||0; CONFIG.ext = extSel.value||'jpg'; CONFIG.sourceMode = sourceModeSel.value; savePrefs(); build();
+    });
+    playPauseBtn.addEventListener('click', togglePlay);
+    nextBtn.addEventListener('click', ()=>{ next(); if(timer){ animateBar(); } });
+    prevBtn.addEventListener('click', ()=>{ prev(); if(timer){ animateBar(); } });
+
+    // إظهار/إخفاء اسم الصورة
+    toggleNamesBtn.addEventListener('click', ()=>{
+      const pressed = toggleNamesBtn.getAttribute('aria-pressed')==='true';
+      toggleNamesBtn.setAttribute('aria-pressed', String(!pressed));
+      document.body.classList.toggle('hide-names');
     });
 
-    // سحب بالإصبع
-    let touchX=null;
-    lb.addEventListener('touchstart', (e)=> touchX = e.touches[0].clientX, {passive:true});
-    lb.addEventListener('touchend', (e)=>{
-      if(touchX==null) return;
-      const dx = e.changedTouches[0].clientX - touchX;
-      if(Math.abs(dx)>40){ dx>0 ? prev() : next(); }
-      touchX=null;
+    // تنقّل بالأسهم ولوحة المفاتيح
+    window.addEventListener('keydown', (e)=>{
+      if(e.key==='ArrowLeft') { prev(); if(timer){ animateBar(); } }
+      if(e.key==='ArrowRight'){ next(); if(timer){ animateBar(); } }
+      if(e.key===' ') { e.preventDefault(); togglePlay(); }
+    });
+
+    // سحب بالإصبع للتالي/السابق
+    let touchX=null; const stage = document.querySelector('.stage-inner');
+    stage.addEventListener('touchstart', (e)=> touchX = e.touches[0].clientX, {passive:true});
+    stage.addEventListener('touchend', (e)=>{
+      if(touchX==null) return; const dx = e.changedTouches[0].clientX - touchX; if(Math.abs(dx)>40){ dx>0? prev(): next(); if(timer){ animateBar(); } } touchX=null;
     });
 
     // بدء التشغيل
-    build().then(()=>{
-      // استعادة آخر صورة إن وُجدت
+    (async function init(){
+      // استعادة آخر صورة إن وجدت
       try{
-        const last = +localStorage.getItem('albumLast');
-        if(!isNaN(last) && last>=0 && last<items.length){ current=last; }
+        const last = +localStorage.getItem('albumLast2'); if(!isNaN(last)) current = last;
       }catch{}
-    });
+      await build();
+    })();
   </script>
 </body>
 </html>
