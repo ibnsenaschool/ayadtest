@@ -13,7 +13,7 @@
     .slideshow-container{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}
     .slide{display:none;position:absolute;inset:0;animation:fadeIn 1s}
     .slide.active{display:block}
-    .slide img,.slide video{width:100%;height:100%;object-fit:contain}
+    .slide img,.slide video{width:100%;height:100%;object-fit:cover} /* ملء الشاشة */
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
     .center-title{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);backdrop-filter:blur(6px);padding:10px 16px;border-radius:12px;font-weight:700;letter-spacing:.3px;z-index:5;pointer-events:none;box-shadow:0 6px 30px rgba(0,0,0,.25);transition:opacity 1s ease}
@@ -73,9 +73,10 @@
 
   <script>
     const PREFIX = '';
-    const MAX_INDEX = 100;
+    const MAX_INDEX = 999;
     const IMAGE_EXTS = ['.jpg','.jpeg','.png','.webp'];
     const VIDEO_EXTS = ['.mp4','.webm','.mov'];
+    const PAD_WIDTH = 0;
 
     let items = [];
     let current = 0;
@@ -98,8 +99,17 @@
     try{ const saved = +localStorage.getItem('olive_album_speed'); if(!isNaN(saved)) { speedInput.value=String(saved); slideMs=saved*1000; speedValue.textContent=String(saved);} }catch{}
 
     function setPlaying(on){ playing=on; playBtn.textContent=on?'⏸️ إيقاف':'▶️ تشغيل'; if(on) startAuto(); else stopAuto(); }
-    function startAuto(){ stopAuto(); slideTimer=setInterval(()=>changeSlide(1),slideMs); }
+    function startAuto(){ stopAuto(); slideTimer=setInterval(()=>autoAdvance(),slideMs); }
     function stopAuto(){ if(slideTimer){clearInterval(slideTimer);slideTimer=null;} }
+
+    function autoAdvance(){
+      const currentItem = items[current];
+      const activeSlide = document.querySelector('.slide.active');
+      const video = activeSlide ? activeSlide.querySelector('video') : null;
+      if(video && !video.ended && !video.paused) return; // لا يتجاوز الفيديو حتى ينتهي
+      changeSlide(1);
+    }
+
     function togglePlay(){ setPlaying(!playing); }
     function toggleSettings(){ settings.classList.toggle('show'); }
 
@@ -122,12 +132,30 @@
     }
 
     async function discover(){
-      const found=[];let anySeen=false;
+      const found=[]; let misses=0;
+      const MAX_CONSECUTIVE_MISSES = 50;
+      const extVariants=(ext)=>[ext,ext.toUpperCase()];
+
       for(let i=1;i<=MAX_INDEX;i++){
-        let addedForIndex=false;
-        for(const ex of VIDEO_EXTS){const url=`${PREFIX}${i}${ex}`;if(await checkExists(url)){found.push({type:'video',src:url,name:`فيديو ${i}`});anySeen=true;addedForIndex=true;break;}}
-        if(!addedForIndex){for(const ex of IMAGE_EXTS){const url=`${PREFIX}${i}${ex}`;if(await checkExists(url)){found.push({type:'img',src:url,name:`صورة ${i}`});anySeen=true;addedForIndex=true;break;}}}
-        if(!addedForIndex&&anySeen)break;
+        const n=String(i).padStart(PAD_WIDTH,'0');
+        let added=false;
+        for(const ex of VIDEO_EXTS){
+          for(const v of extVariants(ex)){
+            const url=`${PREFIX}${n}${v}`;
+            if(await checkExists(url)){found.push({type:'video',src:url,name:`فيديو ${i}`});added=true;break;}
+          }
+          if(added)break;
+        }
+        if(!added){
+          for(const ex of IMAGE_EXTS){
+            for(const v of extVariants(ex)){
+              const url=`${PREFIX}${n}${v}`;
+              if(await checkExists(url)){found.push({type:'img',src:url,name:`صورة ${i}`});added=true;break;}
+            }
+            if(added)break;
+          }
+        }
+        if(added){misses=0;}else{misses++;if(misses>=50&&found.length)break;}
       }
       return found;
     }
