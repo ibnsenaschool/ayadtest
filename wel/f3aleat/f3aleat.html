@@ -3,280 +3,163 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ألبوم الصور — عرض تلقائي</title>
+  <title>ألبوم الصور والفيديو</title>
   <meta name="color-scheme" content="light dark" />
   <style>
     :root{
-      --bg:#0b0b0c; --fg:#f5f7fb; --muted:#9aa3af; --card:#141519; --accent:#3b82f6; --ok:#22c55e; --danger:#ef4444;
+      --bg:#0b0b0c; --fg:#f5f7fb; --accent:#3b82f6; --pill:#1b1d23;
       --radius:16px; --shadow:0 6px 30px rgba(0,0,0,.25);
-      --controls-h: 152px;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg)}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg);overflow:hidden}
+    .stage{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:#0f1115;position:relative;overflow:hidden}
+    img,video{max-width:100%;max-height:100%;object-fit:contain;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .caption{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);padding:6px 10px;border-radius:8px;font-size:.9rem}
+    .center-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:10px 16px;border-radius:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);font-weight:700;letter-spacing:.3px;text-align:center;box-shadow:var(--shadow)}
+    .center-title span{display:block;font-size:clamp(16px,3.5vw,28px)}
 
-    /* الشريط العلوي */
-    .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(20,21,25,.95),rgba(20,21,25,.85));backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
-    .wrap{max-width:1080px;margin:auto;padding:12px}
-    .title{display:flex;align-items:center;gap:10px;font-weight:700}
-    .title .dot{width:10px;height:10px;background:var(--accent);border-radius:50%}
-
-    .controls{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:8px}
-    .control{display:flex;flex-direction:column;gap:6px;background:var(--card);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.06)}
-    .control label{font-size:.85rem;color:var(--muted)}
-    .control input[type="text"], .control select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:#0f1115;color:var(--fg)}
-    .control input[type="range"]{width:100%}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .btn{appearance:none;border:none;border-radius:10px;padding:10px 12px;background:#1b1d23;color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.06)}
-    .btn.primary{background:var(--accent);color:white;border-color:transparent}
-    .btn:disabled{opacity:.5;cursor:not-allowed}
-
-    /* المسرح (صورة واحدة كبيرة فقط) */
-    .stage{height:calc(100vh - var(--controls-h));display:flex;align-items:center;justify-content:center;padding:10px}
-    .stage-inner{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f1115;border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-    .stage img{max-width:100%;max-height:100%;object-fit:contain;display:block}
-
-    /* التسمية */
-    .caption{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:rgba(20,21,25,.88);border:1px solid rgba(255,255,255,.08);color:var(--fg);padding:8px 12px;border-radius:10px;font-size:.95rem;white-space:nowrap}
-    .hide-names .caption{display:none}
-
-    /* شريط التقدم */
-    .progress{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.08)}
-    .bar{height:100%;width:0;background:var(--accent)}
-
-    @media (max-width:720px){
-      :root{ --controls-h: 200px; }
-      .controls{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
+    /* عناصر تحكم خفيفة للسرعة */
+    .controls{position:absolute;right:12px;bottom:12px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:8px 10px;display:flex;align-items:center;gap:8px}
+    .controls label{font-size:.85rem;opacity:.9}
+    .controls input[type=range]{width:140px}
+    .btn{appearance:none;border:none;border-radius:10px;padding:8px 10px;background:var(--pill);color:var(--fg);cursor:pointer;border:1px solid rgba(255,255,255,.08)}
+    .btn.toggle{min-width:74px;text-align:center}
+    @media(max-width:600px){.controls{left:50%;right:auto;transform:translateX(-50%);bottom:10px}.controls input[type=range]{width:120px}}
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="wrap">
-      <div class="title"><span class="dot" aria-hidden="true"></span><span>ألبوم الصور — عرض تلقائي</span></div>
-      <div class="controls" id="controls">
-        <div class="control">
-          <label>المدى الرقمي (من → إلى)</label>
-          <div style="display:flex;gap:6px">
-            <input id="startNum" type="text" inputmode="numeric" placeholder="1" value="1" />
-            <input id="endNum" type="text" inputmode="numeric" placeholder="60" value="60" />
-          </div>
-        </div>
-        <div class="control">
-          <label>عدد الأصفار اليسار</label>
-          <input id="pad" type="text" inputmode="numeric" placeholder="0" value="0" />
-        </div>
-        <div class="control">
-          <label>الامتداد</label>
-          <select id="ext">
-            <option value="jpg" selected>jpg</option>
-            <option value="jpeg">jpeg</option>
-            <option value="png">png</option>
-            <option value="webp">webp</option>
-          </select>
-        </div>
-        <div class="control">
-          <label>طريقة التحميل</label>
-          <select id="sourceMode">
-            <option value="auto" selected>manifest.json ثم المدى</option>
-            <option value="range">المدى فقط</option>
-            <option value="manifest">manifest.json فقط</option>
-          </select>
-        </div>
-        <div class="control">
-          <label>إخفاء اسم الصورة</label>
-          <button class="btn" id="toggleNames" aria-pressed="false">إظهار/إخفاء</button>
-        </div>
-        <div class="control">
-          <label>سرعة التنقل (ثوانٍ)</label>
-          <input id="speed" type="range" min="1" max="12" value="5" />
-        </div>
-      </div>
-      <div class="toolbar">
-        <button class="btn primary" id="reload">تحديث القائمة</button>
-        <button class="btn" id="prev">السابق</button>
-        <button class="btn" id="next">التالي</button>
-        <button class="btn" id="playPause" aria-pressed="true">إيقاف</button>
-      </div>
-    </div>
-  </header>
+  <div class="stage" id="stage">
+    <img id="mediaImage" alt="صورة" style="display:none;" />
+    <video id="mediaVideo" controls style="display:none;"></video>
+    <div class="center-title"><span>يوم الزيت والزيتون - مدرسة ابن سينا</span></div>
+    <div class="caption" id="caption"></div>
 
-  <main class="stage">
-    <div class="stage-inner">
-      <img id="big" alt="صورة" />
-      <div class="caption" id="caption">—</div>
-      <div class="progress"><div class="bar" id="bar"></div></div>
+    <!-- عناصر تحكم بسيطة: سرعة + تشغيل/إيقاف -->
+    <div class="controls">
+      <button class="btn toggle" id="playPause" aria-pressed="true">إيقاف</button>
+      <label for="speed">السرعة</label>
+      <input id="speed" type="range" min="1" max="12" value="5" />
+      <span id="speedVal" aria-hidden="true">5s</span>
     </div>
-  </main>
+  </div>
 
   <script>
-    // ===== الإعدادات =====
-    const CONFIG = {
-      start: 1,
-      end: 60,
-      pad: 0,
-      ext: 'jpg',
-      sourceMode: 'auto', // 'auto' | 'range' | 'manifest'
-      filenamePrefix: '',
-      filenameSuffix: ''
-    };
+    // يدعم صور JPG/PNG/WEBP وفيديوهات MP4/WEBM/MOV
+    const CONFIG={interval:5000};
+    let items=[];
 
-    // عناصر DOM
-    const big = document.getElementById('big');
-    const caption = document.getElementById('caption');
-    const bar = document.getElementById('bar');
-
-    const startNumInp = document.getElementById('startNum');
-    const endNumInp   = document.getElementById('endNum');
-    const padInp      = document.getElementById('pad');
-    const extSel      = document.getElementById('ext');
-    const sourceModeSel = document.getElementById('sourceMode');
-
-    const toggleNamesBtn = document.getElementById('toggleNames');
-    const reloadBtn = document.getElementById('reload');
-    const prevBtn = document.getElementById('prev');
-    const nextBtn = document.getElementById('next');
-    const playPauseBtn = document.getElementById('playPause');
-    const speedRange = document.getElementById('speed');
-
-    // حالة التشغيل
-    let items = [];      // [{src, name}]
-    let current = 0;
-    let timer = null;
-    let intervalMs = (+speedRange.value||5)*1000;
-    let barTimer = null;
-
-    // تفضيلات محفوظة
-    try { Object.assign(CONFIG, JSON.parse(localStorage.getItem('albumPrefs2')||'{}')); } catch{}
-    startNumInp.value = CONFIG.start; endNumInp.value = CONFIG.end; padInp.value = CONFIG.pad; extSel.value = CONFIG.ext; sourceModeSel.value = CONFIG.sourceMode;
-
-    // أدوات مساعدة
-    const padNum = (n,w)=> String(n).padStart(+w||0,'0');
-    const makeName = (n)=> `${CONFIG.filenamePrefix}${padNum(n, CONFIG.pad)}${CONFIG.filenameSuffix}.${CONFIG.ext}`;
-
-    function savePrefs(){
-      localStorage.setItem('albumPrefs2', JSON.stringify({start:CONFIG.start,end:CONFIG.end,pad:CONFIG.pad,ext:CONFIG.ext,sourceMode:CONFIG.sourceMode}));
-    }
-
-    // تحميل آمن لصورة (نستخدمه للتحقق من وجود الملف)
-    function check(src){
-      return new Promise(resolve=>{
-        const img = new Image();
-        let done=false; const finish=x=>{ if(!done){done=true; resolve(x);} };
-        img.onload=()=>finish(true); img.onerror=()=>finish(false); img.src=src;
-      });
-    }
-
-    async function getListFromManifest(){
+    async function loadList(){
       try{
-        const res = await fetch('manifest.json',{cache:'no-store'});
-        if(!res.ok) return null; const arr = await res.json();
-        if(!Array.isArray(arr)) return null; return arr.filter(x=>typeof x==='string');
-      }catch{ return null; }
+        const res=await fetch('manifest.json',{cache:'no-store'});
+        if(res.ok){
+          const arr=await res.json();
+          if(Array.isArray(arr)) return arr.filter(x=>typeof x==='string');
+        }
+      }catch{}
+      // fallback: 1..20 صور jpg
+      return Array.from({length:20},(_,i)=>`${i+1}.jpg`);
     }
 
-    async function build(){
-      stop();
-      items = [];
-      let names = null;
-      if(CONFIG.sourceMode !== 'range') names = await getListFromManifest();
+    const img=document.getElementById('mediaImage');
+    const vid=document.getElementById('mediaVideo');
+    const caption=document.getElementById('caption');
+    const stage=document.getElementById('stage');
+    const playPause=document.getElementById('playPause');
+    const speedRange=document.getElementById('speed');
+    const speedVal=document.getElementById('speedVal');
 
-      if(!names){
-        const list=[]; for(let n=CONFIG.start;n<=CONFIG.end;n++) list.push(makeName(n));
-        const checks = await Promise.all(list.map(name=> check(name).then(ok=> ok?name:null)));
-        names = checks.filter(Boolean);
+    let idx=0, timer=null, intervalMs=CONFIG.interval;
+
+    function isVideo(src){
+      const ext=src.split('.').pop().toLowerCase();
+      return ['mp4','webm','mov'].includes(ext);
+    }
+
+    function showItem(i){
+      const src=items[i];
+      if(!src) return;
+      if(isVideo(src)){
+        img.style.display='none';
+        vid.style.display='block';
+        if(vid.src!==src){ vid.src=src; }
+        vid.play().catch(()=>{});
+      }else{
+        try{ vid.pause(); }catch{}
+        vid.style.display='none';
+        img.style.display='block';
+        if(img.src!==src){ img.src=src; }
       }
-
-      if(!names.length){
-        big.removeAttribute('src'); caption.textContent = 'لا توجد صور.'; return;
-      }
-
-      items = names.map((n)=>({src:n,name:n}));
-      current = 0;
-      render();
-      play(); // يبدأ تلقائياً
+      caption.textContent=src + ` — (${i+1}/${items.length})`;
+      // تحميل مسبق للآتي
+      const nextIndex=(i+1)%items.length; const pre=new Image(); if(!isVideo(items[nextIndex])) pre.src=items[nextIndex];
     }
 
-    function render(){
-      const it = items[current]; if(!it) return;
-      big.src = it.src; caption.textContent = it.name + ` — (${current+1}/${items.length})`;
-      // تهيئة شريط التقدم
-      resetBar();
-      // تهيئة تحميل مسبق للصورة التالية لتنعيم الانتقال
-      const nextIndex = (current+1)%items.length; const pre = new Image(); pre.src = items[nextIndex].src;
-      try { localStorage.setItem('albumLast2', String(current)); } catch{}
-    }
+    function next(){ idx=(idx+1)%items.length; showItem(idx); }
+    function prev(){ idx=(idx-1+items.length)%items.length; showItem(idx); }
 
-    function next(){ current = (current+1)%items.length; render(); }
-    function prev(){ current = (current-1+items.length)%items.length; render(); }
-
-    function play(){
-      intervalMs = (+speedRange.value||5)*1000;
-      stop();
-      timer = setInterval(next, intervalMs);
-      playPauseBtn.setAttribute('aria-pressed','true');
-      playPauseBtn.textContent = 'إيقاف';
-      animateBar();
-    }
-    function stop(){
-      if(timer){ clearInterval(timer); timer=null; }
-      if(barTimer){ cancelAnimationFrame(barTimer); barTimer=null; }
-      bar.style.width = '0%';
-      playPauseBtn.setAttribute('aria-pressed','false');
-      playPauseBtn.textContent = 'تشغيل';
-    }
+    function startTimer(){ stopTimer(); timer=setInterval(()=>{
+      if(vid.style.display==='block' && !vid.ended && !vid.paused) return; // لا تتقدم أثناء تشغيل الفيديو
+      next();
+    }, intervalMs); }
+    function stopTimer(){ if(timer){ clearInterval(timer); timer=null; } }
 
     function togglePlay(){
-      const on = playPauseBtn.getAttribute('aria-pressed')==='true';
-      if(on) stop(); else play();
-    }
-
-    function resetBar(){ bar.style.width='0%'; }
-    function animateBar(){
-      const start = performance.now();
-      function frame(t){
-        const p = Math.min(1,(t-start)/intervalMs); bar.style.width = (p*100)+'%';
-        if(p<1 && timer) { barTimer = requestAnimationFrame(frame); }
+      const on = playPause.getAttribute('aria-pressed')==='true';
+      if(on){ // إيقاف
+        playPause.setAttribute('aria-pressed','false'); playPause.textContent='تشغيل'; stopTimer(); try{ vid.pause(); }catch{}
+      }else{ // تشغيل
+        playPause.setAttribute('aria-pressed','true'); playPause.textContent='إيقاف'; startTimer(); if(vid.style.display==='block'){ vid.play().catch(()=>{}); }
       }
-      barTimer = requestAnimationFrame(frame);
     }
 
-    // أحداث الواجهة
-    reloadBtn.addEventListener('click', ()=>{
-      CONFIG.start = +startNumInp.value||1; CONFIG.end = +endNumInp.value||CONFIG.start; CONFIG.pad = +padInp.value||0; CONFIG.ext = extSel.value||'jpg'; CONFIG.sourceMode = sourceModeSel.value; savePrefs(); build();
-    });
-    playPauseBtn.addEventListener('click', togglePlay);
-    nextBtn.addEventListener('click', ()=>{ next(); if(timer){ animateBar(); } });
-    prevBtn.addEventListener('click', ()=>{ prev(); if(timer){ animateBar(); } });
+    // سرعة الانتقال
+    function updateSpeed(){
+      const s = Math.max(1, Math.min(12, +speedRange.value||5));
+      speedVal.textContent = s+'s';
+      intervalMs = s*1000;
+      if(playPause.getAttribute('aria-pressed')==='true'){ startTimer(); }
+      localStorage.setItem('albumSpeed', String(s));
+    }
 
-    // إظهار/إخفاء اسم الصورة
-    toggleNamesBtn.addEventListener('click', ()=>{
-      const pressed = toggleNamesBtn.getAttribute('aria-pressed')==='true';
-      toggleNamesBtn.setAttribute('aria-pressed', String(!pressed));
-      document.body.classList.toggle('hide-names');
-    });
-
-    // تنقّل بالأسهم ولوحة المفاتيح
+    // تفاعل لوحة المفاتيح
     window.addEventListener('keydown', (e)=>{
-      if(e.key==='ArrowLeft') { prev(); if(timer){ animateBar(); } }
-      if(e.key==='ArrowRight'){ next(); if(timer){ animateBar(); } }
-      if(e.key===' ') { e.preventDefault(); togglePlay(); }
+      if(e.key==='ArrowLeft'){ prev(); }
+      if(e.key==='ArrowRight'){ next(); }
+      if(e.key===' '){ e.preventDefault(); togglePlay(); }
     });
 
-    // سحب بالإصبع للتالي/السابق
-    let touchX=null; const stage = document.querySelector('.stage-inner');
-    stage.addEventListener('touchstart', (e)=> touchX = e.touches[0].clientX, {passive:true});
+    // سحب باللمس للتالي/السابق
+    let touchX=null; let touchY=null;
+    stage.addEventListener('touchstart', (e)=>{ touchX=e.touches[0].clientX; touchY=e.touches[0].clientY; }, {passive:true});
     stage.addEventListener('touchend', (e)=>{
-      if(touchX==null) return; const dx = e.changedTouches[0].clientX - touchX; if(Math.abs(dx)>40){ dx>0? prev(): next(); if(timer){ animateBar(); } } touchX=null;
-    });
+      if(touchX==null) return;
+      const dx=e.changedTouches[0].clientX - touchX;
+      const dy=e.changedTouches[0].clientY - touchY;
+      if(Math.abs(dx)>40 && Math.abs(dx)>Math.abs(dy)){
+        dx>0 ? prev() : next();
+      }
+      touchX=touchY=null;
+    }, {passive:true});
 
-    // بدء التشغيل
-    (async function init(){
-      // استعادة آخر صورة إن وجدت
-      try{
-        const last = +localStorage.getItem('albumLast2'); if(!isNaN(last)) current = last;
-      }catch{}
-      await build();
-    })();
+    playPause.addEventListener('click', togglePlay);
+    speedRange.addEventListener('input', updateSpeed);
+
+    async function start(){
+      // استعادة السرعة
+      const saved = +localStorage.getItem('albumSpeed');
+      if(!isNaN(saved) && saved>=1 && saved<=12){ speedRange.value=String(saved); }
+      updateSpeed();
+
+      items = await loadList();
+      if(!items.length){ caption.textContent='لا توجد ملفات.'; return; }
+      showItem(idx);
+      // تشغيل تلقائي افتراضيًا
+      playPause.setAttribute('aria-pressed','true');
+      playPause.textContent='إيقاف';
+      startTimer();
+    }
+
+    start();
   </script>
 </body>
 </html>
