@@ -142,7 +142,7 @@
 
     async function discover(){
       const found=[]; let misses=0;
-      const MAX_CONSECUTIVE_MISSES=50;
+      const MAX_CONSECUTIVE_MISSES=5000;
       const extVariants=(ext)=>[ext,ext.toUpperCase()];
 
       for(let i=1;i<=MAX_INDEX;i++){
