@@ -1,0 +1,32 @@
+{
+    "الثالث 1": {
+        "name": "أحمد محمد علي",
+        "average": "95",
+        "photo": "https://i.pravatar.cc/150?img=12"
+    },
+    "الثالث 2": {
+        "name": "فاطمة حسن",
+        "average": "98",
+        "photo": "https://i.pravatar.cc/150?img=5"
+    },
+    "الرابع 1": {
+        "name": "محمود عبدالله",
+        "average": "92",
+        "photo": "https://i.pravatar.cc/150?img=33"
+    },
+    "الرابع 2": {
+        "name": "سارة إبراهيم",
+        "average": "97",
+        "photo": "https://i.pravatar.cc/150?img=9"
+    },
+    "الخامس 1": {
+        "name": "خالد يوسف",
+        "average": "94",
+        "photo": "https://i.pravatar.cc/150?img=15"
+    },
+    "الخامس 2": {
+        "name": "نور الدين",
+        "average": "96",
+        "photo": "https://i.pravatar.cc/150?img=20"
+    }
+}
