@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عرض بيانات الطلاب المتميزين</title>
+    <title>عرض الطلاب المتميزين - العرض التتابعي</title>
     <style>
         * {
             margin: 0;
@@ -16,11 +16,15 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 800px;
         }
 
         header {
@@ -33,122 +37,196 @@
             font-size: 2.5em;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease-in;
         }
 
-        .upload-section {
+        .slideshow-container {
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .student-display {
             text-align: center;
-        }
-
-        .upload-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: transform 0.3s;
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        .upload-btn:hover {
-            transform: scale(1.05);
-        }
-
-        #fileInput {
-            display: none;
-        }
-
-        .students-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        .student-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-align: center;
-        }
-
-        .student-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            animation: fadeInScale 0.8s ease-out forwards;
         }
 
         .student-image {
-            width: 150px;
-            height: 150px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 auto 15px;
-            border: 5px solid #667eea;
+            margin: 0 auto 30px;
+            border: 8px solid #667eea;
             display: block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         .student-name {
-            font-size: 1.5em;
+            font-size: 2.5em;
             font-weight: bold;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .student-class {
-            font-size: 1.1em;
+            font-size: 1.5em;
             color: #666;
-            margin-bottom: 10px;
-            padding: 5px 15px;
+            margin-bottom: 20px;
+            padding: 10px 30px;
             background: #f0f0f0;
-            border-radius: 20px;
+            border-radius: 30px;
             display: inline-block;
         }
 
         .student-grade {
-            font-size: 2em;
+            font-size: 4em;
             font-weight: bold;
             color: #667eea;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         .grade-label {
-            font-size: 0.9em;
+            font-size: 1.2em;
             color: #999;
-            margin-top: 5px;
+            margin-top: 10px;
         }
 
-        .no-data {
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .control-btn:active {
+            transform: scale(0.98);
+        }
+
+        .speed-control {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .speed-control label {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .speed-control input[type="range"] {
+            width: 150px;
+        }
+
+        .speed-value {
+            font-weight: bold;
+            color: #764ba2;
+            min-width: 40px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s linear;
+            border-radius: 10px;
+        }
+
+        .counter {
+            text-align: center;
+            color: #666;
+            font-size: 1.2em;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .loading {
             text-align: center;
             color: white;
             font-size: 1.5em;
-            margin-top: 50px;
         }
 
-        .error-message {
+        .error {
             background: #ff4444;
             color: white;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
-            margin-top: 20px;
             text-align: center;
+            margin-top: 20px;
         }
 
-        .success-message {
-            background: #00C851;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         @media (max-width: 768px) {
@@ -156,12 +234,33 @@
                 font-size: 1.8em;
             }
 
-            .students-grid {
-                grid-template-columns: 1fr;
+            .slideshow-container {
+                padding: 30px 20px;
             }
 
-            .upload-section {
-                padding: 20px;
+            .student-image {
+                width: 180px;
+                height: 180px;
+            }
+
+            .student-name {
+                font-size: 1.8em;
+            }
+
+            .student-class {
+                font-size: 1.2em;
+            }
+
+            .student-grade {
+                font-size: 3em;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .speed-control {
+                flex-direction: column;
             }
         }
     </style>
@@ -169,72 +268,56 @@
 <body>
     <div class="container">
         <header>
-            <h1>🌟 عرض بيانات الطلاب المتميزين 🌟</h1>
-            <p>قم بتحميل ملف students-data.json لعرض بيانات الطلاب</p>
+            <h1>🌟 عرض الطلاب المتميزين 🌟</h1>
         </header>
 
-        <div class="upload-section">
-            <h2>📁 تحميل ملف البيانات</h2>
-            <p style="margin: 15px 0; color: #666;">اختر ملف JSON يحتوي على بيانات الطلاب</p>
-            <label for="fileInput" class="upload-btn">
-                اختر ملف JSON
-            </label>
-            <input type="file" id="fileInput" accept=".json">
-            <div id="message"></div>
+        <div class="slideshow-container" id="slideshowContainer">
+            <div class="loading" id="loading">جاري تحميل البيانات...</div>
         </div>
-
-        <div id="studentsContainer"></div>
     </div>
 
     <script>
-        const fileInput = document.getElementById('fileInput');
-        const studentsContainer = document.getElementById('studentsContainer');
-        const messageDiv = document.getElementById('message');
+        let students = [];
+        let currentIndex = 0;
+        let intervalId = null;
+        let speed = 10; // بالثواني
+        let isPaused = false;
+        let progressIntervalId = null;
 
-        fileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            
-            if (!file) {
-                return;
-            }
-
-            if (!file.name.endsWith('.json')) {
-                showMessage('يرجى اختيار ملف JSON فقط', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    displayStudents(data);
-                    showMessage('تم تحميل البيانات بنجاح! ✓', 'success');
-                } catch (error) {
-                    showMessage('خطأ في قراءة الملف. تأكد من صحة تنسيق JSON', 'error');
-                    console.error('Error parsing JSON:', error);
+        // تحميل البيانات من ملف JSON على GitHub أو محلياً
+        async function loadData() {
+            try {
+                // استبدل هذا الرابط برابط ملف students-data.json على GitHub الخاص بك
+                // مثال: 'https://raw.githubusercontent.com/username/repo/main/students-data.json'
+                const jsonUrl = 'students-data.json'; // أو رابط GitHub
+                
+                const response = await fetch(jsonUrl);
+                if (!response.ok) throw new Error('فشل تحميل البيانات');
+                
+                const data = await response.json();
+                parseData(data);
+                
+                if (students.length > 0) {
+                    initSlideshow();
+                } else {
+                    showError('لا توجد بيانات للعرض');
                 }
-            };
+            } catch (error) {
+                console.error('خطأ في تحميل البيانات:', error);
+                showError('حدث خطأ في تحميل البيانات. يرجى التحقق من الملف.');
+            }
+        }
 
-            reader.onerror = function() {
-                showMessage('حدث خطأ أثناء قراءة الملف', 'error');
-            };
-
-            reader.readAsText(file);
-        });
-
-        function displayStudents(data) {
-            // التحقق من نوع البيانات
-            let studentsArray = [];
+        // تحويل البيانات إلى مصفوفة
+        function parseData(data) {
+            students = [];
             
             if (Array.isArray(data)) {
-                // إذا كانت البيانات مصفوفة (التنسيق القديم)
-                studentsArray = data;
+                students = data;
             } else if (typeof data === 'object' && data !== null) {
-                // إذا كانت البيانات كائن (التنسيق الجديد)
                 for (let key in data) {
                     if (data.hasOwnProperty(key)) {
-                        studentsArray.push({
+                        students.push({
                             class: key,
                             name: data[key].name,
                             grade: data[key].average,
@@ -243,42 +326,163 @@
                     }
                 }
             }
+        }
 
-            if (studentsArray.length === 0) {
-                studentsContainer.innerHTML = '<div class="no-data">لا توجد بيانات لعرضها</div>';
-                return;
-            }
+        // عرض رسالة خطأ
+        function showError(message) {
+            document.getElementById('slideshowContainer').innerHTML = `
+                <div class="error">${message}</div>
+            `;
+        }
 
-            let html = '<div class="students-grid">';
+        // بدء العرض التتابعي
+        function initSlideshow() {
+            displayStudent(currentIndex);
+            startAutoPlay();
+        }
+
+        // عرض طالب معين
+        function displayStudent(index) {
+            if (students.length === 0) return;
+
+            const student = students[index];
+            const container = document.getElementById('slideshowContainer');
             
-            studentsArray.forEach(student => {
-                html += `
-                    <div class="student-card">
-                        <img src="${student.image || 'https://via.placeholder.com/150'}" 
-                             alt="${student.name}" 
-                             class="student-image"
-                             onerror="this.src='https://via.placeholder.com/150?text=صورة'">
-                        <div class="student-name">${student.name || 'غير متوفر'}</div>
-                        <div class="student-class">📚 ${student.class || 'غير محدد'}</div>
-                        <div class="student-grade">${student.grade || '0'}</div>
-                        <div class="grade-label">المعدل</div>
+            container.innerHTML = `
+                <div class="student-display">
+                    <img src="${student.image || 'https://via.placeholder.com/250'}" 
+                         alt="${student.name}" 
+                         class="student-image"
+                         onerror="this.src='https://via.placeholder.com/250?text=صورة'">
+                    <div class="student-name">${student.name || 'غير متوفر'}</div>
+                    <div class="student-class">📚 ${student.class || 'غير محدد'}</div>
+                    <div class="student-grade">${student.grade || '0'}</div>
+                    <div class="grade-label">المعدل</div>
+                </div>
+
+                <div class="controls">
+                    <button class="control-btn" onclick="previousStudent()">⏮ السابق</button>
+                    <button class="control-btn" onclick="togglePlayPause()" id="playPauseBtn">⏸ إيقاف</button>
+                    <button class="control-btn" onclick="nextStudent()">التالي ⏭</button>
+                </div>
+
+                <div class="controls">
+                    <div class="speed-control">
+                        <label>السرعة:</label>
+                        <input type="range" min="3" max="30" value="${speed}" 
+                               oninput="updateSpeed(this.value)" id="speedSlider">
+                        <span class="speed-value" id="speedValue">${speed} ث</span>
                     </div>
-                `;
-            });
-            
-            html += '</div>';
-            studentsContainer.innerHTML = html;
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div class="counter">
+                    ${index + 1} من ${students.length}
+                </div>
+            `;
+
+            resetProgress();
         }
 
-        function showMessage(text, type) {
-            messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
-            messageDiv.textContent = text;
-            
-            setTimeout(() => {
-                messageDiv.textContent = '';
-                messageDiv.className = '';
-            }, 3000);
+        // الانتقال للطالب التالي
+        function nextStudent() {
+            currentIndex = (currentIndex + 1) % students.length;
+            displayStudent(currentIndex);
+            resetAutoPlay();
         }
+
+        // الانتقال للطالب السابق
+        function previousStudent() {
+            currentIndex = (currentIndex - 1 + students.length) % students.length;
+            displayStudent(currentIndex);
+            resetAutoPlay();
+        }
+
+        // بدء التشغيل التلقائي
+        function startAutoPlay() {
+            if (intervalId) clearInterval(intervalId);
+            isPaused = false;
+            
+            intervalId = setInterval(() => {
+                if (!isPaused) {
+                    nextStudent();
+                }
+            }, speed * 1000);
+
+            startProgress();
+        }
+
+        // إيقاف/تشغيل العرض
+        function togglePlayPause() {
+            isPaused = !isPaused;
+            const btn = document.getElementById('playPauseBtn');
+            
+            if (isPaused) {
+                btn.textContent = '▶ تشغيل';
+                stopProgress();
+            } else {
+                btn.textContent = '⏸ إيقاف';
+                startProgress();
+            }
+        }
+
+        // إعادة تشغيل العرض التلقائي
+        function resetAutoPlay() {
+            if (intervalId) clearInterval(intervalId);
+            if (!isPaused) {
+                startAutoPlay();
+            }
+        }
+
+        // تحديث السرعة
+        function updateSpeed(value) {
+            speed = parseInt(value);
+            document.getElementById('speedValue').textContent = speed + ' ث';
+            resetAutoPlay();
+        }
+
+        // بدء شريط التقدم
+        function startProgress() {
+            if (progressIntervalId) clearInterval(progressIntervalId);
+            
+            const progressFill = document.getElementById('progressFill');
+            if (!progressFill) return;
+            
+            let progress = 0;
+            const increment = 100 / (speed * 10); // تحديث كل 100ms
+            
+            progressIntervalId = setInterval(() => {
+                if (!isPaused) {
+                    progress += increment;
+                    if (progress >= 100) {
+                        progress = 0;
+                    }
+                    progressFill.style.width = progress + '%';
+                }
+            }, 100);
+        }
+
+        // إيقاف شريط التقدم
+        function stopProgress() {
+            if (progressIntervalId) {
+                clearInterval(progressIntervalId);
+            }
+        }
+
+        // إعادة تعيين شريط التقدم
+        function resetProgress() {
+            const progressFill = document.getElementById('progressFill');
+            if (progressFill) {
+                progressFill.style.width = '0%';
+            }
+            startProgress();
+        }
+
+        // بدء التحميل عند فتح الصفحة
+        window.onload = loadData;
     </script>
 </body>
 </html>
