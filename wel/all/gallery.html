@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معرض الوسائط - مدرسة ابن سينا</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .gallery-container {
+            width: 95vw;
+            height: 95vh;
+            max-width: 1920px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .media-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 60px 20px 120px;
+        }
+
+        .media-item {
+            display: none;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            animation: fadeIn 0.8s ease-in-out;
+            border-radius: 10px;
+        }
+
+        .media-item.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* أزرار التحكم */
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* مؤشر التقدم */
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%);
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+        }
+
+        /* عداد الصور */
+        .counter {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .counter-icon {
+            font-size: 22px;
+        }
+
+        /* أزرار السهام */
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .arrow:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .arrow.left {
+            left: 30px;
+        }
+
+        .arrow.right {
+            right: 30px;
+        }
+
+        /* مؤشر التشغيل */
+        .play-indicator {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(220, 38, 38, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-size: 18px;
+            display: none;
+            z-index: 100;
+            font-weight: bold;
+        }
+
+        .play-indicator.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        /* تحسينات للشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .gallery-container {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .media-wrapper {
+                padding: 50px 15px 110px;
+            }
+
+            .control-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .arrow {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+
+            .arrow.left {
+                left: 15px;
+            }
+
+            .arrow.right {
+                right: 15px;
+            }
+
+            .counter, .play-indicator {
+                font-size: 14px;
+                padding: 10px 20px;
+                top: 15px;
+            }
+
+            .counter {
+                left: 15px;
+            }
+
+            .play-indicator {
+                right: 15px;
+            }
+        }
+
+        /* تحسينات للشاشات الكبيرة جداً */
+        @media (min-width: 1920px) {
+            .gallery-container {
+                max-width: 95vw;
+            }
+
+            .control-btn {
+                width: 80px;
+                height: 80px;
+                font-size: 32px;
+            }
+
+            .arrow {
+                width: 90px;
+                height: 90px;
+                font-size: 40px;
+            }
+
+            .counter, .play-indicator {
+                font-size: 22px;
+                padding: 20px 35px;
+            }
+        }
+
+        /* شاشة التحميل */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 5px solid white;
+            width: 70px;
+            height: 70px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .loading-details {
+            font-size: 16px;
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* زر ملء الشاشة */
+        .fullscreen-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* رسالة الخطأ */
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(220, 38, 38, 0.9);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            z-index: 300;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .error-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .error-details {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container" id="galleryContainer">
+        <!-- شاشة التحميل -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <div class="loading-text">جاري تحميل المعرض...</div>
+                <div class="loading-details" id="loadingDetails">يتم قراءة قائمة الوسائط</div>
+            </div>
+        </div>
+
+        <!-- رسالة الخطأ -->
+        <div class="error-message" id="errorMessage">
+            <div class="error-title">⚠️ خطأ في التحميل</div>
+            <div class="error-details" id="errorDetails"></div>
+        </div>
+
+        <!-- شريط التقدم -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- العداد -->
+        <div class="counter" id="counter">
+            <span class="counter-icon">📊</span>
+            <span>0 / 0</span>
+        </div>
+
+        <!-- مؤشر التشغيل -->
+        <div class="play-indicator" id="playIndicator">
+            <span>🔴</span>
+            <span>فيديو قيد التشغيل</span>
+        </div>
+
+        <!-- زر ملء الشاشة -->
+        <button class="fullscreen-btn" onclick="toggleFullscreen()" title="ملء الشاشة">
+            ⛶
+        </button>
+
+        <!-- حاوية الوسائط -->
+        <div class="media-wrapper" id="mediaWrapper">
+            <!-- سيتم إضافة الصور والفيديوهات هنا تلقائياً -->
+        </div>
+
+        <!-- أزرار السهام -->
+        <button class="arrow left" onclick="previousMedia()">‹</button>
+        <button class="arrow right" onclick="nextMedia()">›</button>
+
+        <!-- أزرار التحكم -->
+        <div class="controls">
+            <button class="control-btn" onclick="previousMedia()" title="السابق">⏮️</button>
+            <button class="control-btn" id="playPauseBtn" onclick="togglePlayPause()" title="إيقاف/تشغيل">⏸️</button>
+            <button class="control-btn" onclick="nextMedia()" title="التالي">⏭️</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // الإعدادات - يمكن تعديلها حسب الحاجة
+        // ============================================
+        
+        const CONFIG = {
+            // مسار ملف JSON (إذا كان في نفس المجلد)
+            jsonPath: 'images.json',
+            
+            // مسار مجلد الصور (إذا كانت الصور في مجلد فرعي، ضع 'images/' مثلاً)
+            // اتركه فارغاً '' إذا كانت الصور في نفس المجلد
+            imagesFolder: '',
+            
+            // مدة عرض كل صورة بالميلي ثانية
+            slideDuration: 5000, // 5 ثواني
+            
+            // أنواع ملفات الفيديو المدعومة
+            videoExtensions: ['.mp4', '.webm', '.ogg', '.mov'],
+        };
+
+        // ============================================
+        // المتغيرات العامة
+        // ============================================
+        
+        let mediaFiles = [];
+        let currentIndex = 0;
+        let isPlaying = true;
+        let slideInterval;
+        let progressInterval;
+        let currentProgress = 0;
+
+        // ============================================
+        // تحميل قائمة الوسائط من ملف JSON
+        // ============================================
+        
+        async function loadMediaList() {
+            const loadingDetails = document.getElementById('loadingDetails');
+            
+            try {
+                loadingDetails.textContent = 'جاري قراءة ملف images.json...';
+                
+                const response = await fetch(CONFIG.jsonPath);
+                
+                if (!response.ok) {
+                    throw new Error(`لم يتم العثور على ملف ${CONFIG.jsonPath}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.images || !Array.isArray(data.images)) {
+                    throw new Error('ملف JSON غير صحيح - يجب أن يحتوي على مصفوفة "images"');
+                }
+                
+                loadingDetails.textContent = `تم العثور على ${data.images.length} ملف`;
+                
+                // تحويل أسماء الملفات إلى كائنات وسائط
+                mediaFiles = data.images.map(filename => {
+                    const fullPath = CONFIG.imagesFolder + filename;
+                    const extension = filename.substring(filename.lastIndexOf('.')).toLowerCase();
+                    const isVideo = CONFIG.videoExtensions.includes(extension);
+                    
+                    return {
+                        type: isVideo ? 'video' : 'image',
+                        src: fullPath,
+                        name: filename
+                    };
+                });
+                
+                if (mediaFiles.length === 0) {
+                    throw new Error('لم يتم العثور على أي ملفات في القائمة');
+                }
+                
+                loadingDetails.textContent = `جاري تحميل ${mediaFiles.length} ملف...`;
+                
+                // إنشاء عناصر الوسائط
+                await createMediaElements();
+                
+                // بدء العرض
+                showMedia(0);
+                
+                if (isPlaying && mediaFiles[0].type === 'image') {
+                    startSlideshow();
+                }
+                
+                // إخفاء شاشة التحميل
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').classList.add('hide');
+                }, 500);
+                
+            } catch (error) {
+                console.error('خطأ في تحميل الوسائط:', error);
+                showError(error.message);
+            }
+        }
+
+        // ============================================
+        // عرض رسالة خطأ
+        // ============================================
+        
+        function showError(message) {
+            document.getElementById('loadingOverlay').classList.add('hide');
+            const errorMsg = document.getElementById('errorMessage');
+            const errorDetails = document.getElementById('errorDetails');
+            
+            errorDetails.innerHTML = `
+                ${message}<br><br>
+                <strong>تأكد من:</strong><br>
+                • وجود ملف images.json في نفس المجلد<br>
+                • صحة تنسيق ملف JSON<br>
+                • رفع جميع الصور المذكورة في الملف
+            `;
+            
+            errorMsg.classList.add('show');
+        }
+
+        // ============================================
+        // إنشاء عناصر الوسائط
+        // ============================================
+        
+        async function createMediaElements() {
+            const wrapper = document.getElementById('mediaWrapper');
+            
+            for (let index = 0; index < mediaFiles.length; index++) {
+                const media = mediaFiles[index];
+                
+                if (media.type === 'image') {
+                    const img = document.createElement('img');
+                    img.src = media.src;
+                    img.className = 'media-item';
+                    img.alt = media.name;
+                    if (index === 0) img.classList.add('active');
+                    
+                    // معالجة خطأ التحميل
+                    img.onerror = () => {
+                        console.warn(`فشل تحميل الصورة: ${media.name}`);
+                    };
+                    
+                    wrapper.appendChild(img);
+                    
+                } else if (media.type === 'video') {
+                    const video = document.createElement('video');
+                    video.src = media.src;
+                    video.className = 'media-item';
+                    video.controls = false;
+                    video.muted = false;
+                    if (index === 0) video.classList.add('active');
+                    
+                    // عند انتهاء الفيديو
+                    video.addEventListener('ended', () => {
+                        if (isPlaying) {
+                            nextMedia();
+                        }
+                    });
+                    
+                    // معالجة خطأ التحميل
+                    video.onerror = () => {
+                        console.warn(`فشل تحميل الفيديو: ${media.name}`);
+                    };
+                    
+                    wrapper.appendChild(video);
+                }
+            }
+            
+            updateCounter();
+        }
+
+        // ============================================
+        // عرض الوسيط الحالي
+        // ============================================
+        
+        function showMedia(index) {
+            const items = document.querySelectorAll('.media-item');
+            const playIndicator = document.getElementById('playIndicator');
+            
+            items.forEach((item, i) => {
+                item.classList.remove('active');
+                if (item.tagName === 'VIDEO') {
+                    item.pause();
+                    item.currentTime = 0;
+                }
+            });
+
+            const currentItem = items[index];
+            currentItem.classList.add('active');
+
+            // إذا كان فيديو
+            if (currentItem.tagName === 'VIDEO') {
+                playIndicator.classList.add('show');
+                if (isPlaying) {
+                    currentItem.play();
+                    stopSlideshow();
+                }
+            } else {
+                playIndicator.classList.remove('show');
+                if (isPlaying) {
+                    startSlideshow();
+                }
+            }
+
+            currentProgress = 0;
+            updateProgress();
+            updateCounter();
+        }
+
+        // ============================================
+        // التنقل بين الوسائط
+        // ============================================
+        
+        function nextMedia() {
+            currentIndex = (currentIndex + 1) % mediaFiles.length;
+            showMedia(currentIndex);
+        }
+
+        function previousMedia() {
+            currentIndex = (currentIndex - 1 + mediaFiles.length) % mediaFiles.length;
+            showMedia(currentIndex);
+        }
+
+        // ============================================
+        // تشغيل/إيقاف
+        // ============================================
+        
+        function togglePlayPause() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('playPauseBtn');
+            const currentItem = document.querySelectorAll('.media-item')[currentIndex];
+
+            if (isPlaying) {
+                btn.textContent = '⏸️';
+                if (currentItem.tagName === 'VIDEO') {
+                    currentItem.play();
+                    stopSlideshow();
+                } else {
+                    startSlideshow();
+                }
+            } else {
+                btn.textContent = '▶️';
+                if (currentItem.tagName === 'VIDEO') {
+                    currentItem.pause();
+                }
+                stopSlideshow();
+            }
+        }
+
+        // ============================================
+        // ملء الشاشة
+        // ============================================
+        
+        function toggleFullscreen() {
+            const container = document.getElementById('galleryContainer');
+            
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    console.log('خطأ في ملء الشاشة:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // ============================================
+        // العرض التلقائي
+        // ============================================
+        
+        function startSlideshow() {
+            stopSlideshow();
+            slideInterval = setTimeout(() => {
+                nextMedia();
+            }, CONFIG.slideDuration);
+            startProgress();
+        }
+
+        function stopSlideshow() {
+            if (slideInterval) {
+                clearTimeout(slideInterval);
+            }
+            stopProgress();
+        }
+
+        // ============================================
+        // شريط التقدم
+        // ============================================
+        
+        function startProgress() {
+            stopProgress();
+            currentProgress = 0;
+            progressInterval = setInterval(() => {
+                currentProgress += 100;
+                updateProgress();
+            }, 100);
+        }
+
+        function stopProgress() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const currentItem = document.querySelectorAll('.media-item')[currentIndex];
+            
+            if (currentItem && currentItem.tagName === 'VIDEO') {
+                const video = currentItem;
+                if (video.duration) {
+                    const percent = (video.currentTime / video.duration) * 100;
+                    progressFill.style.width = percent + '%';
+                }
+            } else {
+                const percent = (currentProgress / CONFIG.slideDuration) * 100;
+                progressFill.style.width = Math.min(percent, 100) + '%';
+            }
+        }
+
+        // ============================================
+        // تحديث العداد
+        // ============================================
+        
+        function updateCounter() {
+            const counter = document.getElementById('counter');
+            const span = counter.querySelector('span:last-child');
+            span.textContent = `${currentIndex + 1} / ${mediaFiles.length}`;
+        }
+
+        // ============================================
+        // تحديث شريط التقدم للفيديو
+        // ============================================
+        
+        function updateVideoProgress() {
+            const items = document.querySelectorAll('.media-item');
+            items.forEach(item => {
+                if (item.tagName === 'VIDEO') {
+                    item.addEventListener('timeupdate', updateProgress);
+                }
+            });
+        }
+
+        // ============================================
+        // التحكم بلوحة المفاتيح
+        // ============================================
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                previousMedia();
+            } else if (e.key === 'ArrowRight') {
+                nextMedia();
+            } else if (e.key === ' ') {
+                e.preventDefault();
+                togglePlayPause();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+
+        // ============================================
+        // بدء التطبيق
+        // ============================================
+        
+        // تحميل الوسائط عند تحميل الصفحة
+        window.addEventListener('load', () => {
+            loadMediaList();
+        });
+    </script>
+</body>
+</html>
