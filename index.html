@@ -2,243 +2,286 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>معرض الصور - PhotoSwipe</title>
+  <title>معرض الصور التلقائي (صور + فيديو)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- ستايل PhotoSwipe الأصلي -->
-  <link rel="stylesheet" href="dist/photoswipe.css" />
- 
+  <!-- PhotoSwipe CSS من CDN -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/photoswipe@5.3.8/dist/photoswipe.css"
+  />
+
   <style>
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
       background: #111;
       color: #f5f5f5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
     header {
-      padding: 16px 20px;
       text-align: center;
-      background: #181818;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      padding: 12px 10px 4px;
+      background: #000;
       position: sticky;
       top: 0;
       z-index: 10;
     }
 
-    header h1 {
+    h1 {
       margin: 0;
-      font-size: clamp(20px, 2.5vw, 28px);
+      font-size: 24px;
     }
 
-    header p {
-      margin: 4px 0 0;
-      font-size: 14px;
-      opacity: 0.8;
+    .subtitle {
+      font-size: 13px;
+      color: #ccc;
+      margin-top: 4px;
     }
 
-    main {
-      flex: 1;
-      padding: 16px;
-      max-width: 1600px;
-      margin: 0 auto;
-      width: 100%;
+    .info {
+      text-align: center;
+      font-size: 13px;
+      color: #aaa;
+      margin: 6px 0;
     }
 
-    /* شبكة المعرض – تعمل على الهاتف و الشاشات الكبيرة */
-    .gallery-grid {
+    /* شبكة المصغرات */
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
       gap: 10px;
-    }
-
-    @media (min-width: 768px) {
-      .gallery-grid {
-        gap: 14px;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      }
-    }
-
-    @media (min-width: 1400px) {
-      .gallery-grid {
-        gap: 16px;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      }
+      padding: 14px;
     }
 
     .thumb {
       position: relative;
-      overflow: hidden;
-      border-radius: 10px;
       background: #222;
+      border-radius: 8px;
+      overflow: hidden;
       cursor: pointer;
-      aspect-ratio: 4 / 3; /* يجعل كل الصور متناسقة على 94 إنش و الموبايل */
+      min-height: 150px;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
     }
 
-    .thumb img {
+    .thumb img,
+    .thumb video {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-
-    .thumb:hover img {
-      transform: scale(1.05);
-      opacity: 0.9;
     }
 
     .thumb-label {
       position: absolute;
-      left: 6px;
       bottom: 4px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.6);
+      left: 8px;
       font-size: 11px;
-      color: #f5f5f5;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 2px 6px;
+      border-radius: 12px;
     }
 
-    .status {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 14px;
-      opacity: 0.8;
+    .thumb-label.video {
+      background: rgba(0, 120, 255, 0.85);
     }
 
-    .status.error {
-      color: #ff8080;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
+    .thumb-index {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      font-size: 11px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 2px 6px;
+      border-radius: 12px;
     }
   </style>
 </head>
 <body>
-
   <header>
     <h1>معرض الصور التلقائي</h1>
-    <p>يقرأ جميع الصور من ملف <code>images.json</code> ويستخدم PhotoSwipe للعرض.</p>
+    <div class="subtitle">
+      يدعم الصور + الفيديوهات، ويستخدم PhotoSwipe مع تشغيل تلقائي للصور
+    </div>
   </header>
 
-  <main>
-    <div id="pswp-gallery" class="gallery-grid"></div>
-    <div id="status" class="status">جاري تحميل قائمة الصور...</div>
-  </main>
+  <div class="info">
+    يتم تحميل الملفات من <code>images.json</code> داخل المجلد <code>images/</code>
+  </div>
 
-  <!-- PhotoSwipe scripts (من مجلد dist داخل مشروعك) -->
+  <!-- شبكة المصغرات -->
+  <div id="gallery-grid" class="grid"></div>
+
+  <!-- حاوية PhotoSwipe (لا تلمسها) -->
+  <div class="pswp" id="pswp"></div>
+
   <script type="module">
-    import PhotoSwipeLightbox from './dist/photoswipe-lightbox.esm.js';
-    import PhotoSwipe from './dist/photoswipe.esm.js';
+    // استيراد PhotoSwipe و Lightbox من CDN
+    import PhotoSwipeLightbox from "https://unpkg.com/photoswipe@5.3.8/dist/photoswipe-lightbox.esm.min.js";
+    import PhotoSwipe from "https://unpkg.com/photoswipe@5.3.8/dist/photoswipe.esm.min.js";
 
-    const galleryElement = document.getElementById('pswp-gallery');
-    const statusElement = document.getElementById('status');
+    const IMAGES_BASE = "images/"; // هنا اسم مجلد الصور كما طلبت
 
-    // دالة تساعدنا على إنشاء عنصر صورة في الشبكة
-    function createThumbAnchor(item, index) {
-      // item يمكن أن يكون:
-      // 1) نص: "photo1.jpg"
-      // 2) كائن: { src, thumb, w, h, title }
-      let src = '';
-      let thumb = '';
-      let w = 1600;
-      let h = 900;
-      let title = '';
+    const VIDEO_EXTENSIONS = [".mp4", ".webm", ".ogg"];
 
-      if (typeof item === 'string') {
-        src = 'images/' + item;
-        thumb = src;
-      } else if (typeof item === 'object' && item !== null) {
-        src   = item.src   || ('images/' + item.file);
-        thumb = item.thumb || src;
-        w     = item.w     || item.width  || 1600;
-        h     = item.h     || item.height || 900;
-        title = item.title || '';
-      }
+    const gridEl = document.getElementById("gallery-grid");
+    const pswpItems = []; // البيانات التي يستخدمها PhotoSwipe
 
-      const a = document.createElement('a');
-      a.href = src;
-      a.className = 'thumb';
-      a.dataset.pswpWidth  = w;
-      a.dataset.pswpHeight = h;
-      if (title) {
-        a.dataset.pswpTitle = title;
-      }
-
-      const img = document.createElement('img');
-      img.src = thumb;
-      img.loading = 'lazy';
-      img.alt = title || ('صورة رقم ' + (index + 1));
-
-      const label = document.createElement('div');
-      label.className = 'thumb-label';
-      label.textContent = (index + 1).toString();
-
-      a.appendChild(img);
-      a.appendChild(label);
-
-      return a;
-    }
-
-    // قراءة قائمة الصور من images.json
-    fetch('./images.json?v=' + Date.now())
-      .then((res) => {
-        if (!res.ok) throw new Error('تعذر تحميل images.json');
-        return res.json();
-      })
+    // قراءة قائمة الملفات من images.json
+    fetch("images.json")
+      .then((res) => res.json())
       .then((data) => {
-        const items = Array.isArray(data.images) ? data.images : [];
-        if (!items.length) {
-          statusElement.textContent = 'لم يتم العثور على أي صور في images.json';
-          statusElement.classList.add('error');
-          return;
-        }
+        const files = data.images || [];
 
-        // بناء الشبكة
-        items.forEach((item, index) => {
-          const anchor = createThumbAnchor(item, index);
-          galleryElement.appendChild(anchor);
-        });
+        files.forEach((fileName, index) => {
+          const lower = fileName.toLowerCase();
+          const isVideo = VIDEO_EXTENSIONS.some((ext) =>
+            lower.endsWith(ext)
+          );
+          const fileUrl = IMAGES_BASE + fileName;
+          const itemIndex = index + 1;
 
-        statusElement.textContent = `تم تحميل ${items.length} صورة. اضغط على أي صورة للتكبير.`;
+          // --------- إنشاء مربع المصغّر ---------
+          const thumbLink = document.createElement("a");
+          thumbLink.href = "#";
+          thumbLink.className = "thumb";
 
-        // تفعيل PhotoSwipe بعد بناء العناصر
-        const lightbox = new PhotoSwipeLightbox({
-          gallery: '#pswp-gallery',
-          children: 'a',
-          pswpModule: () => PhotoSwipe
-        });
+          const label = document.createElement("span");
+          label.className = "thumb-label" + (isVideo ? " video" : "");
+          label.textContent =
+            (isVideo ? "فيديو رقم " : "صورة رقم ") + itemIndex;
+          thumbLink.appendChild(label);
 
-        // مثال على إظهار العنوان إن وُجد
-        lightbox.on('uiRegister', function() {
-          lightbox.pswp?.ui?.registerElement({
-            name: 'custom-caption',
-            order: 9,
-            isButton: false,
-            appendTo: 'root',
-            onInit: (el, pswp) => {
-              pswp.on('change', () => {
-                const curr = pswp.currSlide;
-                el.textContent = curr?.data?.title || '';
-              });
-            },
-            html: '',
-            className: 'pswp__custom-caption'
+          const indexBadge = document.createElement("span");
+          indexBadge.className = "thumb-index";
+          indexBadge.textContent = itemIndex;
+          thumbLink.appendChild(indexBadge);
+
+          if (isVideo) {
+            const videoEl = document.createElement("video");
+            videoEl.src = fileUrl + "#t=0.5";
+            videoEl.preload = "metadata";
+            videoEl.muted = true;
+            videoEl.playsInline = true;
+            thumbLink.appendChild(videoEl);
+          } else {
+            const imgEl = document.createElement("img");
+            imgEl.src = fileUrl;
+            imgEl.alt = "صورة رقم " + itemIndex;
+            thumbLink.appendChild(imgEl);
+          }
+
+          // عند الضغط نفتح السلايد المناسب
+          thumbLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            lightbox.loadAndOpen(index);
+          });
+
+          gridEl.appendChild(thumbLink);
+
+          // --------- عنصر PhotoSwipe ---------
+          pswpItems.push({
+            src: fileUrl,
+            isVideo,
+            width: isVideo ? 1280 : 1600,
+            height: isVideo ? 720 : 1067,
           });
         });
 
-        lightbox.init();
+        initLightbox();
       })
       .catch((err) => {
-        console.error(err);
-        statusElement.textContent = 'حدث خطأ أثناء تحميل قائمة الصور. تأكد من وجود ملف images.json.';
-        statusElement.classList.add('error');
+        console.error("خطأ في قراءة images.json", err);
       });
-  </script>
 
+    let lightbox;
+    let autoplayTimer = null;
+    const AUTOPLAY_DELAY = 4000; // 4 ثواني بين كل صورة وصورة
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    function startAutoplay(pswp) {
+      stopAutoplay();
+      autoplayTimer = setInterval(() => {
+        const curr = pswp.currSlide;
+        if (!curr) return;
+        const data = curr.data;
+
+        // إذا الحالي فيديو لا ننتقل تلقائياً – ننتظر حدث ended
+        if (data.isVideo) {
+          return;
+        }
+        pswp.next();
+      }, AUTOPLAY_DELAY);
+    }
+
+    function initLightbox() {
+      lightbox = new PhotoSwipeLightbox({
+        dataSource: pswpItems,
+        pswpModule: PhotoSwipe,
+      });
+
+      // هنا ننشئ محتوى الشرائح، ونعمل تهيئة خاصة للفيديو
+      lightbox.on("contentAppend", (e) => {
+        const { content, slide } = e;
+        const item = slide.data;
+
+        if (!item.isVideo) {
+          // صورة عادية: PhotoSwipe يتكفّل بها
+          return;
+        }
+
+        // فيديو: نضع عنصر فيديو داخل السلايد
+        const video = document.createElement("video");
+        video.src = item.src;
+        video.controls = true;
+        video.autoplay = true;
+        video.style.maxWidth = "100%";
+        video.style.maxHeight = "100%";
+
+        // نفرغ محتوى السلايد ونضيف الفيديو
+        content.element.innerHTML = "";
+        content.element.appendChild(video);
+
+        // عند انتهاء الفيديو ننتقل تلقائياً للشرحة التالية
+        video.addEventListener("ended", () => {
+          const pswp = slide.pswp;
+          if (!pswp) return;
+          const nextIndex = (pswp.currIndex + 1) % pswp.getNumItems();
+          pswp.goTo(nextIndex);
+        });
+      });
+
+      lightbox.on("afterInit", (e) => {
+        const pswp = e.target;
+
+        // نبدأ السلايد شو بعد فتح المعرض
+        startAutoplay(pswp);
+
+        // أي تفاعل من المستخدم يوقف السلايد شو
+        pswp.on("pointerDown", () => stopAutoplay());
+        pswp.on("close", () => stopAutoplay());
+
+        // عند تغيير الشريحة: إذا عدنا لصورة (ليست فيديو) نعيد تشغيل السلايد شو
+        pswp.on("change", () => {
+          const curr = pswp.currSlide;
+          if (!curr) return;
+          const data = curr.data;
+          if (!data.isVideo && !autoplayTimer) {
+            startAutoplay(pswp);
+          }
+        });
+      });
+
+      lightbox.init();
+    }
+  </script>
 </body>
 </html>
