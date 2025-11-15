@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="dist/photoswipe.css">
+
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    img { width: 200px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<h2>Test PhotoSwipe Gallery</h2>
+
+<div class="pswp-gallery" id="gallery">
+  <a href="https://picsum.photos/1600/900" 
+     data-pswp-width="1600" 
+     data-pswp-height="900">
+    <img src="https://picsum.photos/300/200">
+  </a>
+
+  <a href="https://picsum.photos/1800/1200" 
+     data-pswp-width="1800" 
+     data-pswp-height="1200">
+    <img src="https://picsum.photos/310/210">
+  </a>
+</div>
+
+<script type="module">
+  import PhotoSwipeLightbox from './dist/photoswipe-lightbox.esm.js';
+  import PhotoSwipe from './dist/photoswipe.esm.js';
+
+  const lightbox = new PhotoSwipeLightbox({
+    gallery: '#gallery',
+    children: 'a',
+    pswpModule: () => PhotoSwipe
+  });
+  lightbox.init();
+</script>
+
+</body>
+</html>
+
