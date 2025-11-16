@@ -2,286 +2,175 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>معرض الصور التلقائي (صور + فيديو)</title>
+  <title>عرض تلقائي لصورة واحدة في كل مرة</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- PhotoSwipe CSS من CDN -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/photoswipe@5.3.8/dist/photoswipe.css"
-  />
-
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: #111;
-      color: #f5f5f5;
+      background: #000;
+      color: #fff;
+      height: 100vh;
+      overflow: hidden; /* لا نريد سكرول */
+      display: flex;
+      flex-direction: column;
     }
 
     header {
       text-align: center;
-      padding: 12px 10px 4px;
-      background: #000;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      padding: 8px 10px;
+      background: #111;
+      font-size: 16px;
     }
 
-    h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-
-    .subtitle {
-      font-size: 13px;
-      color: #ccc;
-      margin-top: 4px;
-    }
-
-    .info {
-      text-align: center;
-      font-size: 13px;
-      color: #aaa;
-      margin: 6px 0;
-    }
-
-    /* شبكة المصغرات */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 10px;
-      padding: 14px;
-    }
-
-    .thumb {
-      position: relative;
-      background: #222;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      min-height: 150px;
+    main {
+      flex: 1;
       display: flex;
-      align-items: stretch;
+      align-items: center;
       justify-content: center;
+      background: #000;
+      position: relative;
     }
 
-    .thumb img,
-    .thumb video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    #imagePlayer,
+    #videoPlayer {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain; /* يناسب شاشات 94 إنش والموبايل */
+      display: none;       /* نظهر واحد فقط */
     }
 
-    .thumb-label {
+    #counter {
       position: absolute;
-      bottom: 4px;
-      left: 8px;
-      font-size: 11px;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 2px 6px;
-      border-radius: 12px;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(0,0,0,0.6);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 13px;
     }
 
-    .thumb-label.video {
-      background: rgba(0, 120, 255, 0.85);
-    }
-
-    .thumb-index {
-      position: absolute;
-      top: 4px;
-      right: 8px;
-      font-size: 11px;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 2px 6px;
-      border-radius: 12px;
+    #titleBar {
+      font-size: 14px;
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
+
   <header>
-    <h1>معرض الصور التلقائي</h1>
-    <div class="subtitle">
-      يدعم الصور + الفيديوهات، ويستخدم PhotoSwipe مع تشغيل تلقائي للصور
-    </div>
+    <div id="titleBar">عرض تلقائي – صورة واحدة / فيديو واحد في كل مرة</div>
   </header>
 
-  <div class="info">
-    يتم تحميل الملفات من <code>images.json</code> داخل المجلد <code>images/</code>
-  </div>
+  <main>
+    <img id="imagePlayer" src="" alt="" />
+    <video id="videoPlayer" src="" controls></video>
+    <div id="counter"></div>
+  </main>
 
-  <!-- شبكة المصغرات -->
-  <div id="gallery-grid" class="grid"></div>
-
-  <!-- حاوية PhotoSwipe (لا تلمسها) -->
-  <div class="pswp" id="pswp"></div>
-
-  <script type="module">
-    // استيراد PhotoSwipe و Lightbox من CDN
-    import PhotoSwipeLightbox from "https://unpkg.com/photoswipe@5.3.8/dist/photoswipe-lightbox.esm.min.js";
-    import PhotoSwipe from "https://unpkg.com/photoswipe@5.3.8/dist/photoswipe.esm.min.js";
-
-    const IMAGES_BASE = "images/"; // هنا اسم مجلد الصور كما طلبت
-
+  <script>
+    const IMAGES_BASE = "images/";   // اسم مجلد الصور كما طلبت
+    const IMAGE_DURATION = 5000;     // مدة عرض كل صورة بالملّي ثانية (هنا 5 ثوانٍ)
     const VIDEO_EXTENSIONS = [".mp4", ".webm", ".ogg"];
 
-    const gridEl = document.getElementById("gallery-grid");
-    const pswpItems = []; // البيانات التي يستخدمها PhotoSwipe
+    const imgEl = document.getElementById("imagePlayer");
+    const videoEl = document.getElementById("videoPlayer");
+    const counterEl = document.getElementById("counter");
+    const titleBar = document.getElementById("titleBar");
 
-    // قراءة قائمة الملفات من images.json
-    fetch("images.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const files = data.images || [];
+    let playlist = [];
+    let currentIndex = 0;
+    let imageTimer = null;
 
-        files.forEach((fileName, index) => {
-          const lower = fileName.toLowerCase();
-          const isVideo = VIDEO_EXTENSIONS.some((ext) =>
-            lower.endsWith(ext)
-          );
-          const fileUrl = IMAGES_BASE + fileName;
-          const itemIndex = index + 1;
+    function isVideoFile(name) {
+      const lower = name.toLowerCase();
+      return VIDEO_EXTENSIONS.some(ext => lower.endsWith(ext));
+    }
 
-          // --------- إنشاء مربع المصغّر ---------
-          const thumbLink = document.createElement("a");
-          thumbLink.href = "#";
-          thumbLink.className = "thumb";
+    function clearTimers() {
+      if (imageTimer) {
+        clearTimeout(imageTimer);
+        imageTimer = null;
+      }
+      videoEl.pause();
+      videoEl.currentTime = 0;
+    }
 
-          const label = document.createElement("span");
-          label.className = "thumb-label" + (isVideo ? " video" : "");
-          label.textContent =
-            (isVideo ? "فيديو رقم " : "صورة رقم ") + itemIndex;
-          thumbLink.appendChild(label);
+    function showItem(index) {
+      if (!playlist.length) return;
 
-          const indexBadge = document.createElement("span");
-          indexBadge.className = "thumb-index";
-          indexBadge.textContent = itemIndex;
-          thumbLink.appendChild(indexBadge);
+      clearTimers();
 
-          if (isVideo) {
-            const videoEl = document.createElement("video");
-            videoEl.src = fileUrl + "#t=0.5";
-            videoEl.preload = "metadata";
-            videoEl.muted = true;
-            videoEl.playsInline = true;
-            thumbLink.appendChild(videoEl);
-          } else {
-            const imgEl = document.createElement("img");
-            imgEl.src = fileUrl;
-            imgEl.alt = "صورة رقم " + itemIndex;
-            thumbLink.appendChild(imgEl);
-          }
+      currentIndex = (index + playlist.length) % playlist.length;
+      const fileName = playlist[currentIndex];
+      const fileUrl = IMAGES_BASE + fileName;
+      const total = playlist.length;
 
-          // عند الضغط نفتح السلايد المناسب
-          thumbLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            lightbox.loadAndOpen(index);
-          });
+      counterEl.textContent = `عنصر ${currentIndex + 1} من ${total}`;
+      titleBar.textContent = fileName;
 
-          gridEl.appendChild(thumbLink);
+      const isVideo = isVideoFile(fileName);
 
-          // --------- عنصر PhotoSwipe ---------
-          pswpItems.push({
-            src: fileUrl,
-            isVideo,
-            width: isVideo ? 1280 : 1600,
-            height: isVideo ? 720 : 1067,
-          });
+      if (isVideo) {
+        // عرض فيديو واحد
+        imgEl.style.display = "none";
+        videoEl.style.display = "block";
+        videoEl.src = fileUrl;
+
+        // قد يمنع المتصفح التشغيل التلقائي بالصوت، يمكنك إضافة videoEl.muted = true;
+        videoEl.play().catch(() => {
+          // لو المتصفح منع التشغيل التلقائي، يبقى الفيديو جاهز حتى يضغط المستخدم
         });
 
-        initLightbox();
-      })
-      .catch((err) => {
-        console.error("خطأ في قراءة images.json", err);
-      });
+        // عندما ينتهي الفيديو ننتقل تلقائيًا للذي بعده
+        videoEl.onended = () => {
+          showItem(currentIndex + 1);
+        };
+      } else {
+        // عرض صورة واحدة
+        videoEl.style.display = "none";
+        imgEl.style.display = "block";
+        imgEl.src = fileUrl;
 
-    let lightbox;
-    let autoplayTimer = null;
-    const AUTOPLAY_DELAY = 4000; // 4 ثواني بين كل صورة وصورة
-
-    function stopAutoplay() {
-      if (autoplayTimer) {
-        clearInterval(autoplayTimer);
-        autoplayTimer = null;
+        // بعد مدة ثابتة ننتقل للصورة التالية
+        imageTimer = setTimeout(() => {
+          showItem(currentIndex + 1);
+        }, IMAGE_DURATION);
       }
     }
 
-    function startAutoplay(pswp) {
-      stopAutoplay();
-      autoplayTimer = setInterval(() => {
-        const curr = pswp.currSlide;
-        if (!curr) return;
-        const data = curr.data;
-
-        // إذا الحالي فيديو لا ننتقل تلقائياً – ننتظر حدث ended
-        if (data.isVideo) {
+    // تحميل قائمة الملفات من images.json
+    fetch("images.json")
+      .then(res => {
+        if (!res.ok) throw new Error("تعذر تحميل images.json");
+        return res.json();
+      })
+      .then(data => {
+        playlist = Array.isArray(data.images) ? data.images : [];
+        if (!playlist.length) {
+          titleBar.textContent = "لا توجد عناصر في images.json";
           return;
         }
-        pswp.next();
-      }, AUTOPLAY_DELAY);
-    }
-
-    function initLightbox() {
-      lightbox = new PhotoSwipeLightbox({
-        dataSource: pswpItems,
-        pswpModule: PhotoSwipe,
+        showItem(0);
+      })
+      .catch(err => {
+        console.error(err);
+        titleBar.textContent = "حدث خطأ في قراءة images.json – تأكد من مكان الملف.";
       });
 
-      // هنا ننشئ محتوى الشرائح، ونعمل تهيئة خاصة للفيديو
-      lightbox.on("contentAppend", (e) => {
-        const { content, slide } = e;
-        const item = slide.data;
-
-        if (!item.isVideo) {
-          // صورة عادية: PhotoSwipe يتكفّل بها
-          return;
-        }
-
-        // فيديو: نضع عنصر فيديو داخل السلايد
-        const video = document.createElement("video");
-        video.src = item.src;
-        video.controls = true;
-        video.autoplay = true;
-        video.style.maxWidth = "100%";
-        video.style.maxHeight = "100%";
-
-        // نفرغ محتوى السلايد ونضيف الفيديو
-        content.element.innerHTML = "";
-        content.element.appendChild(video);
-
-        // عند انتهاء الفيديو ننتقل تلقائياً للشرحة التالية
-        video.addEventListener("ended", () => {
-          const pswp = slide.pswp;
-          if (!pswp) return;
-          const nextIndex = (pswp.currIndex + 1) % pswp.getNumItems();
-          pswp.goTo(nextIndex);
-        });
-      });
-
-      lightbox.on("afterInit", (e) => {
-        const pswp = e.target;
-
-        // نبدأ السلايد شو بعد فتح المعرض
-        startAutoplay(pswp);
-
-        // أي تفاعل من المستخدم يوقف السلايد شو
-        pswp.on("pointerDown", () => stopAutoplay());
-        pswp.on("close", () => stopAutoplay());
-
-        // عند تغيير الشريحة: إذا عدنا لصورة (ليست فيديو) نعيد تشغيل السلايد شو
-        pswp.on("change", () => {
-          const curr = pswp.currSlide;
-          if (!curr) return;
-          const data = curr.data;
-          if (!data.isVideo && !autoplayTimer) {
-            startAutoplay(pswp);
-          }
-        });
-      });
-
-      lightbox.init();
-    }
+    // إذا أردت إمكانية الانتقال بالكيبورد:
+    window.addEventListener("keydown", (e) => {
+      if (!playlist.length) return;
+      if (e.key === "ArrowRight") {
+        showItem(currentIndex + 1);
+      } else if (e.key === "ArrowLeft") {
+        showItem(currentIndex - 1);
+      }
+    });
   </script>
 </body>
 </html>
