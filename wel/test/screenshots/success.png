@@ -1,0 +1,43 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="#f0fdf4"/>
+  
+  <!-- Success Card -->
+  <rect x="50" y="50" width="700" height="300" rx="20" fill="white" filter="url(#shadow)"/>
+  
+  <!-- Green Border -->
+  <rect x="50" y="50" width="700" height="300" rx="20" fill="none" stroke="#86efac" stroke-width="4"/>
+  
+  <!-- Title Area -->
+  <rect x="70" y="70" width="660" height="80" rx="12" fill="#dcfce7"/>
+  
+  <!-- Success Icon -->
+  <circle cx="120" cy="110" r="25" fill="#22c55e"/>
+  <path d="M 108 110 L 116 118 L 132 102" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Success Message -->
+  <text x="170" y="120" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#166534">
+    ممتاز! ✓ قرأت الكلمة بشكل صحيح
+  </text>
+  
+  <!-- Word Display -->
+  <text x="400" y="210" font-family="Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" fill="#6b7280">
+    الكلمة:
+  </text>
+  
+  <text x="400" y="260" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="#22c55e">
+    مدرسة
+  </text>
+  
+  <!-- Celebration Stars -->
+  <text x="150" y="220" font-size="36">⭐</text>
+  <text x="650" y="220" font-size="36">⭐</text>
+  <text x="200" y="300" font-size="30">✨</text>
+  <text x="600" y="300" font-size="30">✨</text>
+</svg>
