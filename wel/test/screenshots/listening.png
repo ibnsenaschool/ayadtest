@@ -1,0 +1,68 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.2"/>
+    </filter>
+    
+    <linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Pulse Animation -->
+    <radialGradient id="pulseGradient">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#ef4444;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="#fef2f2"/>
+  
+  <!-- Main Card -->
+  <rect x="50" y="50" width="700" height="300" rx="20" fill="white" filter="url(#shadow)"/>
+  
+  <!-- Title -->
+  <text x="400" y="100" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1f2937">
+    جاري الاستماع... 🎤
+  </text>
+  
+  <!-- Word to Read -->
+  <text x="400" y="150" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#6b7280">
+    اقرأ:
+  </text>
+  
+  <text x="400" y="200" font-family="Arial, sans-serif" font-size="56" font-weight="bold" text-anchor="middle" fill="#3b82f6">
+    كتاب
+  </text>
+  
+  <!-- Pulse Circles (representing sound waves) -->
+  <circle cx="400" cy="280" r="40" fill="url(#pulseGradient)" opacity="0.6">
+    <animate attributeName="r" from="40" to="80" dur="1.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" from="0.6" to="0" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <circle cx="400" cy="280" r="40" fill="url(#pulseGradient)" opacity="0.4">
+    <animate attributeName="r" from="40" to="80" dur="1.5s" begin="0.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" from="0.4" to="0" dur="1.5s" begin="0.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Microphone Button (Active State) -->
+  <circle cx="400" cy="280" r="50" fill="url(#redGradient)" filter="url(#shadow)"/>
+  
+  <!-- Microphone Off Icon -->
+  <g transform="translate(400, 280)">
+    <!-- Mic Body -->
+    <rect x="-12" y="-25" width="24" height="35" rx="12" fill="white"/>
+    <!-- Mic Stand -->
+    <path d="M -25 0 Q -25 15 0 15 Q 25 15 25 0" stroke="white" stroke-width="3" fill="none"/>
+    <line x1="0" y1="15" x2="0" y2="25" stroke="white" stroke-width="3"/>
+    <!-- X Line -->
+    <line x1="-30" y1="-30" x2="30" y2="30" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Status Text -->
+  <text x="400" y="320" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#ef4444">
+    ● جاري التسجيل...
+  </text>
+</svg>
