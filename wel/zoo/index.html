@@ -168,8 +168,8 @@
       slides.forEach(s => s.classList.remove('active'));
       slides[index]?.classList.add('active');
       current = index;
-      titleEl.textContent = items[index].name;
-      countEl.textContent = `${index + 1} / ${items.length}`;
+      titleEl.textContent = ""; 
+      countEl.textContent = "";
     }
 
     function changeSlide(dir) {
