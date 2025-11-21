@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>إدارة بيانات الطلاب المتفوقين</title>
+  <title>إدارة الطلاب المتفوقين</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -20,23 +20,24 @@
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1150px;
       margin: 0 auto;
     }
 
-    /* Header */
+    /* ===== HEADER ===== */
     .header {
-      background: #fff;
-      padding: 20px 25px;
+      background: #ffffff;
+      padding: 20px 25px 15px;
       border-radius: 18px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
       margin-bottom: 20px;
     }
 
     .header-title {
-      font-size: 1.8em;
+      font-size: 1.9em;
       color: #4f46e5;
       margin-bottom: 5px;
+      font-weight: 800;
     }
 
     .header-sub {
@@ -54,11 +55,14 @@
     }
 
     .github-status {
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-weight: bold;
-      color: #fff;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 600;
       font-size: 0.9em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
     }
 
     .github-status.off {
@@ -66,36 +70,50 @@
     }
 
     .github-status.on {
-      background: #15803d;
+      background: #16a34a;
     }
 
     .btn {
       border: none;
       border-radius: 10px;
-      padding: 8px 14px;
+      padding: 8px 15px;
       font-size: 0.9em;
-      font-weight: bold;
+      font-weight: 700;
       cursor: pointer;
       transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
     }
 
-    .btn-primary {
+    .btn-settings {
+      background: #4338ca;
+      color: #fff;
+    }
+
+    .btn-settings:hover {
+      background: #3730a3;
+      transform: translateY(-1px);
+    }
+
+    .btn-save {
       background: #22c55e;
       color: #fff;
     }
 
-    .btn-primary:hover {
+    .btn-save:hover {
       background: #16a34a;
       transform: translateY(-1px);
     }
 
-    .btn-secondary {
-      background: #4f46e5;
+    .btn-load {
+      background: #22c55e;
       color: #fff;
     }
 
-    .btn-secondary:hover {
-      background: #4338ca;
+    .btn-load:hover {
+      background: #16a34a;
       transform: translateY(-1px);
     }
 
@@ -105,10 +123,9 @@
       transform: none;
     }
 
-    /* Message */
     .message {
       margin-top: 10px;
-      padding: 10px;
+      padding: 10px 12px;
       border-radius: 10px;
       font-size: 0.9em;
       display: none;
@@ -133,22 +150,22 @@
       color: #166534;
     }
 
-    /* Main box */
+    /* ===== MAIN BOX ===== */
     .main-box {
-      margin-top: 20px;
-      background: #fff;
+      margin-top: 15px;
+      background: #ffffff;
       padding: 20px;
       border-radius: 18px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
     }
 
     .field-group {
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .label {
       display: block;
-      font-weight: bold;
+      font-weight: 700;
       margin-bottom: 6px;
       color: #374151;
       font-size: 0.95em;
@@ -161,10 +178,12 @@
       border: 2px solid #e5e7eb;
       font-size: 0.95em;
       outline: none;
+      background: #f9fafb;
     }
 
     .select:focus {
       border-color: #4f46e5;
+      background: #ffffff;
     }
 
     .students-header-row {
@@ -177,24 +196,26 @@
     }
 
     .students-header-row h2 {
-      font-size: 1.1em;
-      color: #374151;
+      font-size: 1.05em;
+      color: #111827;
     }
 
     .btn-add {
       background: #22c55e;
       color: #fff;
+      padding-inline: 16px;
     }
 
     .btn-add:hover {
       background: #16a34a;
+      transform: translateY(-1px);
     }
 
-    /* Student cards */
+    /* ===== STUDENT CARDS ===== */
     .students-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 15px;
+      gap: 16px;
       margin-top: 10px;
     }
 
@@ -202,7 +223,7 @@
       border-radius: 18px;
       padding: 14px;
       background: linear-gradient(145deg, #ffffff, #f5f3ff);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.16);
       border: 2px solid #e5e7eb;
       position: relative;
     }
@@ -217,7 +238,7 @@
     .photo-frame {
       width: 70px;
       height: 70px;
-      border-radius: 16px;
+      border-radius: 18px;
       border: 3px solid #a855f7;
       overflow: hidden;
       background: #f3e8ff;
@@ -251,14 +272,16 @@
       border: 1.8px solid #e5e7eb;
       font-size: 0.9em;
       outline: none;
+      background: #f9fafb;
     }
 
     .student-basic-info input:focus {
       border-color: #4f46e5;
+      background: #ffffff;
     }
 
     .field-row {
-      margin-bottom: 7px;
+      margin-bottom: 6px;
     }
 
     .student-card-footer {
@@ -276,8 +299,12 @@
       font-size: 0.85em;
       border: none;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 700;
       transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
     }
 
     .btn-photo {
@@ -299,13 +326,13 @@
     }
 
     .no-students {
-      margin-top: 10px;
+      margin-top: 12px;
       font-size: 0.9em;
       color: #6b7280;
       text-align: center;
     }
 
-    /* Cropper modal */
+    /* ===== CROP MODAL ===== */
     .modal {
       position: fixed;
       inset: 0;
@@ -372,39 +399,46 @@
       margin-bottom: 10px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
       .students-list {
         grid-template-columns: 1fr;
       }
+      .header-title {
+        font-size: 1.5em;
+      }
     }
-
   </style>
 </head>
 <body>
 
 <div class="container">
 
-  <!-- Header -->
+  <!-- ===== HEADER ===== -->
   <div class="header">
     <div class="header-title">⚙️ إدارة الطلاب المتفوقين</div>
-    <div class="header-sub">اختَر الصف من القائمة، ثم أضِف الطلاب وعدّل أسماءهم وصورهم ومعدلاتهم.</div>
+    <div class="header-sub">
+      اختر الصف من القائمة، ثم أضف أسماء الطلاب وصورهم ومعدلاتهم. يمكنك الحفظ إلى GitHub على مراحل بدون أن تُمسح البيانات السابقة.
+    </div>
 
     <div class="top-row">
       <div id="githubStatus" class="github-status off">
-        غير متصل بـ GitHub
+        🔴 غير متصل بـ GitHub
       </div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn btn-secondary" onclick="openSettings()">إعدادات GitHub</button>
-        <button class="btn btn-primary" id="btnLoad" onclick="loadFromGitHub()" disabled>📥 تحميل</button>
-        <button class="btn btn-primary" id="btnSave" onclick="saveToGitHub()" disabled>💾 حفظ</button>
+        <button class="btn btn-settings" onclick="openSettings()">⚙️ إعدادات GitHub</button>
+        <button class="btn btn-load" id="btnLoad" onclick="loadFromGitHub()" disabled>📥 تحميل</button>
+        <button class="btn btn-save" id="btnSave" onclick="saveToGitHub()" disabled>💾 حفظ</button>
       </div>
     </div>
 
-    <div id="messageBox" class="message info">يمكنك البدء بإدخال البيانات حتى قبل الاتصال بـ GitHub.</div>
+    <div id="messageBox" class="message info">
+      يمكنك البدء بإدخال البيانات ثم الاتصال بـ GitHub لاحقاً.
+    </div>
   </div>
 
-  <!-- Main Box -->
+  <!-- ===== MAIN BOX ===== -->
   <div class="main-box">
+
     <!-- اختيار الصف -->
     <div class="field-group">
       <label class="label">اختيار الصف / الشعبة:</label>
@@ -418,12 +452,15 @@
 
     <!-- قائمة الطلاب -->
     <div id="studentsContainer" class="students-list"></div>
-    <div id="noStudentsMsg" class="no-students" style="display:none;">لا يوجد طلاب بعد في هذا الصف.</div>
+    <div id="noStudentsMsg" class="no-students" style="display:none;">
+      لا يوجد طلاب بعد في هذا الصف. اضغط على "إضافة طالب".
+    </div>
+
   </div>
 
 </div>
 
-<!-- Cropper Modal -->
+<!-- ===== CROP MODAL ===== -->
 <div id="cropperModal" class="modal">
   <div class="modal-content">
     <div class="modal-title">✂️ قص الصورة وتعديلها</div>
@@ -431,16 +468,15 @@
       <img id="cropImage" class="crop-image" src="">
     </div>
     <input type="range" id="zoomSlider" min="50" max="200" value="100">
-
     <div class="modal-footer">
-      <button class="btn btn-primary" onclick="applyCrop()">تطبيق</button>
-      <button class="btn btn-secondary" onclick="closeCropper()">إلغاء</button>
+      <button class="btn btn-save" onclick="applyCrop()">✅ تطبيق</button>
+      <button class="btn btn-settings" onclick="closeCropper()">❌ إلغاء</button>
     </div>
   </div>
 </div>
 
 <script>
-  // تقسيم الصفوف
+  // ===== تقسيم الصفوف =====
   const gradeGroups = {
     "الصف الثالث": ["الثالث 1", "الثالث 2", "الثالث 3", "الثالث 4", "الثالث 5"],
     "الصف الرابع": ["الرابع 1", "الرابع 2", "الرابع 3", "الرابع 4", "الرابع 5"],
@@ -451,14 +487,14 @@
   const allClasses = Object.values(gradeGroups).flat();
 
   let currentData = {};           // { "الرابع 1": [ {name, average, photo}, ... ] }
-  let currentClass = allClasses[0];
+  let currentClass = allClasses[0] || "";
 
   // GitHub settings
   let githubSettings = {
     token: "",
     repo: "",
     branch: "main",
-    filePath: "students-data.json"
+    filePath: "wel/motfokon/students-data.json"   // عدّل هنا إذا أردت مساراً آخر
   };
 
   // cropper globals
@@ -469,7 +505,7 @@
   let dragStart = { x: 0, y: 0 };
   let isDragging = false;
 
-  /* ===================== UI helpers ====================== */
+  /* ===== UI helpers ===== */
 
   function showMessage(text, type = "info") {
     const box = document.getElementById('messageBox');
@@ -484,7 +520,7 @@
 
     if (githubSettings.token && githubSettings.repo) {
       st.className = "github-status on";
-      st.textContent = "🟢 متصل بـ GitHub: " + githubSettings.repo;
+      st.innerHTML = "🟢 متصل بـ <b>" + githubSettings.repo + "</b>";
       loadBtn.disabled = false;
       saveBtn.disabled = false;
     } else {
@@ -495,21 +531,22 @@
     }
   }
 
-  /* ===================== Settings ====================== */
+  /* ===== Settings ===== */
 
   function openSettings() {
     const token = prompt("GitHub Token:", githubSettings.token || "");
     if (token === null) return;
 
-    const repo = prompt('Repository (مثال: username/repo):', githubSettings.repo || "");
+    const repo = prompt('Repository (مثال: ibnsenaschool/ayadtest):', githubSettings.repo || "");
     if (repo === null) return;
 
-    const filePath = prompt('اسم ملف البيانات (students-data.json):', githubSettings.filePath || "students-data.json");
+    const filePath = prompt('اسم ملف البيانات مع المسار (مثال: wel/motfokon/students-data.json):',
+                            githubSettings.filePath || "wel/motfokon/students-data.json");
     if (filePath === null) return;
 
     githubSettings.token = token.trim();
     githubSettings.repo = repo.trim();
-    githubSettings.filePath = filePath.trim() || "students-data.json";
+    githubSettings.filePath = filePath.trim() || "wel/motfokon/students-data.json";
 
     localStorage.setItem('githubSettingsStudents', JSON.stringify(githubSettings));
     updateGitHubStatus();
@@ -526,7 +563,7 @@
     updateGitHubStatus();
   }
 
-  /* ===================== GitHub load/save ====================== */
+  /* ===== GitHub load/save ===== */
 
   async function loadFromGitHub() {
     try {
@@ -555,7 +592,6 @@
       const content = atob(json.content);
       const data = JSON.parse(content);
 
-      // نطبع البيانات في currentData مع تحويل القيم المفردة إلى مصفوفة
       currentData = {};
       allClasses.forEach(cls => {
         if (data[cls]) {
@@ -577,19 +613,16 @@
     }
   }
 
+  // ===== الحفظ مع دمج البيانات القديمة من GitHub =====
   async function saveToGitHub() {
     try {
       showMessage("جاري حفظ البيانات إلى GitHub...", "info");
 
-      // نقرأ البيانات الحالية كما هي في currentData
-      const dataToSave = { ...currentData };
-
-      // نُعدّ المحتوى
-      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(dataToSave, null, 2))));
-
-      // نتحقق هل الملف موجود للحصول على SHA
+      // 1) تحميل الملف الحالي من GitHub (إن وُجد) للحصول على البيانات + الـ SHA
       const getUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
       let sha = null;
+      let baseData = {};
+
       try {
         const getRes = await fetch(getUrl, {
           headers: {
@@ -597,13 +630,25 @@
             "Accept": "application/vnd.github.v3+json"
           }
         });
+
         if (getRes.ok) {
           const existing = await getRes.json();
           sha = existing.sha;
+          const content = atob(existing.content);
+          baseData = JSON.parse(content);
         }
       } catch (e) {
-        // لا بأس إذا لم يوجد
+        baseData = {};
       }
+
+      // 2) دمج بيانات currentData مع البيانات القديمة baseData
+      const mergedData = { ...baseData };
+      Object.keys(currentData).forEach(cls => {
+        mergedData[cls] = currentData[cls];
+      });
+
+      // 3) تجهيز المحتوى للحفظ
+      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(mergedData, null, 2))));
 
       const putUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}`;
       const body = {
@@ -635,7 +680,7 @@
     }
   }
 
-  /* ===================== بناء الواجهة ====================== */
+  /* ===== بناء الواجهة ===== */
 
   function renderClassSelect() {
     const sel = document.getElementById('classSelect');
@@ -649,7 +694,7 @@
     });
 
     if (!currentClass || !allClasses.includes(currentClass)) {
-      currentClass = allClasses[0];
+      currentClass = allClasses[0] || "";
     }
     sel.value = currentClass;
 
@@ -693,12 +738,12 @@
           <div class="student-basic-info">
             <div class="field-row">
               <div class="small-label">اسم الطالب</div>
-              <input type="text" value="${st.name || ''}" 
+              <input type="text" value="${st.name || ''}"
                      oninput="updateStudentField('${className}', ${index}, 'name', this.value)">
             </div>
             <div class="field-row">
               <div class="small-label">المعدل (%)</div>
-              <input type="number" min="0" max="100" value="${st.average || ''}" 
+              <input type="number" min="0" max="100" value="${st.average || ''}"
                      oninput="updateStudentField('${className}', ${index}, 'average', this.value)">
             </div>
           </div>
@@ -740,7 +785,7 @@
     currentData[className][index][field] = value;
   }
 
-  /* ===================== الصور والقص ====================== */
+  /* ===== الصور والقص ===== */
 
   function changePhoto(className, index) {
     cropClassName = className;
@@ -825,7 +870,6 @@
       updateTransform();
     };
 
-    // أول تحديث
     updateTransform();
   }
 
@@ -846,10 +890,6 @@
     ctx.closePath();
     ctx.clip();
 
-    // نحسب أبعاد الصورة داخل الدائرة بحسب التحويل الحالي
-    const rect = img.getBoundingClientRect(); // لاستخدام scale/translate بصريًا أصعب
-    // سنستخدم طريقة أبسط: نرسم الصورة مكبّرة في وسط الكانفس مباشرة
-    // (دقّة عالية ليست حرجة هنا، المهم الشكل العام)
     ctx.drawImage(img, 0, 0, size, size);
 
     const dataUrl = canvas.toDataURL('image/png');
@@ -864,15 +904,14 @@
     renderStudentsForClass(cropClassName);
   }
 
-  /* ===================== init ====================== */
+  /* ===== init ===== */
 
   window.onload = function() {
     loadSettingsFromLocal();
     renderClassSelect();
     renderStudentsForClass(currentClass);
-    showMessage("يمكنك اختيار الصف من القائمة ثم إضافة الطلاب.", "info");
+    showMessage("اختر الصف من القائمة، ثم اضغط \"إضافة طالب\" وابدأ بالإدخال.", "info");
   };
-
 </script>
 
 </body>
