@@ -55,29 +55,31 @@
       font-size: 0.9em;
     }
 
-    /* CARD */
+    /* SLIDER / CARD */
     .slider-wrapper {
       margin-top: 10px;
     }
 
     .student-card {
       background: linear-gradient(135deg, #ffffff, #fdf2ff);
-      border-radius: 24px;
+      border-radius: 30px;
       padding: 25px 20px 30px;
       box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
       text-align: center;
       border: 3px solid #e5d5ff;
-      min-height: 320px;
+      min-height: 380px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
+      align-items: center;
     }
 
+    /* الصورة مكبّرة لتملأ الإطار */
     .student-photo {
-      width: 160px;
-      height: 160px;
+      width: 260px;
+      height: 260px;
       border-radius: 50%;
-      border: 6px solid #a855f7;
+      border: 8px solid #a855f7;
       overflow: hidden;
       margin: 0 auto 15px;
       background: #f3e8ff;
@@ -86,25 +88,25 @@
     .student-photo img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: cover; /* تملأ الإطار تمامًا */
     }
 
     .student-name {
-      font-size: 1.7em;
+      font-size: 1.9em;
       font-weight: bold;
       color: #6b21a8;
       margin-bottom: 6px;
     }
 
     .student-average {
-      font-size: 1.2em;
+      font-size: 1.3em;
       color: #4c1d95;
       margin-bottom: 4px;
     }
 
     .student-class,
     .student-grade {
-      font-size: 0.95em;
+      font-size: 1em;
       color: #4b5563;
     }
 
@@ -199,8 +201,13 @@
       .student-card {
         padding-inline: 15px;
       }
+      .student-photo {
+        width: 210px;
+        height: 210px;
+        border-width: 6px;
+      }
       .student-name {
-        font-size: 1.5em;
+        font-size: 1.6em;
       }
     }
   </style>
@@ -251,10 +258,10 @@
       "الصف السادس": ["السادس 1", "السادس 2", "السادس 3", "السادس 4"]
     };
 
-    let studentsList = [];     // مصفوفة مسطّحة لكل الطلاب
+    let studentsList = [];
     let currentIndex = 0;
     let isPlaying = true;
-    let intervalMs = 8000;     // الافتراضي 8 ثوانٍ
+    let intervalMs = 8000;
     let sliderTimer = null;
 
     const msgBox = document.getElementById("message");
@@ -285,10 +292,8 @@
     function buildStudentsList(data) {
       studentsList = [];
 
-      // نمرّ على المجموعات بالترتيب (ثالث، رابع، خامس، سادس)
       Object.keys(gradeGroups).forEach(gradeName => {
         const classes = gradeGroups[gradeName];
-
         classes.forEach(cls => {
           const arr = data[cls];
           if (Array.isArray(arr)) {
@@ -343,7 +348,7 @@
       cardContainer.innerHTML = "";
       cardContainer.appendChild(card);
 
-      counterText.textContent = `طالب ${currentIndex + 1} من ${studentsList.length}`;
+      counterText.textContent = \`طالب \${currentIndex + 1} من \${studentsList.length}\`;
     }
 
     function nextStudent() {
@@ -370,15 +375,11 @@
     function togglePlayPause() {
       isPlaying = !isPlaying;
       playPauseBtn.textContent = isPlaying ? "⏸ إيقاف" : "▶️ تشغيل";
-
-      // إعادة تشغيل الـ interval دائماً لضمان التحديث بالسرعة الجديدة
       startAutoPlay();
     }
 
-    // ===== Events =====
     nextBtn.addEventListener("click", () => {
       nextStudent();
-      // إعادة ضبط المؤقت حتى لا ينتقل فوراً بعد الضغط
       if (isPlaying) startAutoPlay();
     });
 
@@ -393,11 +394,9 @@
       const seconds = Number(speedRange.value);
       intervalMs = seconds * 1000;
       speedValue.textContent = seconds + "s";
-      // تطبيق السرعة الجديدة
       startAutoPlay();
     });
 
-    // بداية التحميل
     loadStudents();
   </script>
 </body>
