@@ -1,429 +1,333 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>إدارة بيانات الطلاب المتفوقين</title>
+  <meta charset="UTF-8">
+  <title>إدارة بيانات الطلاب المتفوقين</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-/* ——————————————————————————————— */
-/* RESET */
-*{margin:0;padding:0;box-sizing:border-box;font-family: 'Segoe UI', Tahoma}
-
-/* الخلفية */
-body{
-    background:linear-gradient(135deg,#667eea,#764ba2);
-    padding:20px;
-    min-height:100vh;
-}
-
-.container{
-    max-width:1200px;
-    margin:auto;
-}
-
-/* ——————————————————————————————— */
-/* العنوان */
-.header{
-    background:white;
-    padding:25px;
-    border-radius:20px;
-    text-align:center;
-    margin-bottom:25px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.2);
-}
-.header h1{
-    font-size:2em;color:#5b5de5;margin-bottom:10px;
-}
-
-/* ——————————————————————————————— */
-/* أزرار */
-.actions{
-    display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px;
-}
-.btn{
-    padding:10px 22px;border:none;border-radius:10px;font-weight:bold;font-size:1em;
-    cursor:pointer;transition:0.3s;
-}
-.btn-primary{background:#28a745;color:#fff}
-.btn-secondary{background:#667eea;color:#fff}
-.btn-warning{background:#ffc107}
-.btn-danger{background:#dc3545;color:#fff}
-.btn:hover{transform:translateY(-3px)}
-
-/* ——————————————————————————————— */
-/* صندوق المحتوى */
-.content{
-    background:white;
-    padding:25px;
-    border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
-}
-
-/* ——————————————————————————————— */
-/* عناوين الصفوف */
-.grade-header{
-    background:#5b5de5;color:#fff;padding:12px 18px;border-radius:10px;
-    margin-bottom:15px;font-size:1.3em;font-weight:bold;
-}
-
-/* ——————————————————————————————— */
-/* Grid */
-.classes-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:20px;
-}
-
-/* ——————————————————————————————— */
-/* بطاقة شهادة الطالب */
-.student-card{
-    background:linear-gradient(135deg,#ffffff,#faf5ff);
-    border:3px solid #d3c3ff;
-    border-radius:20px;
-    padding:20px;
-    text-align:center;
-    box-shadow:0 6px 30px rgba(0,0,0,0.15);
-    transition:0.3s;
-}
-.student-card:hover{
-    transform:scale(1.03);
-    box-shadow:0 12px 40px rgba(0,0,0,0.25);
-}
-
-.student-photo{
-    width:120px;height:120px;margin:auto;margin-bottom:15px;
-    border-radius:50%;overflow:hidden;border:4px solid #a78bfa;
-    background:#f3f0ff;
-}
-.student-photo img{width:100%;height:100%;object-fit:cover}
-
-.student-name{
-    font-size:1.4em;color:#5b21b6;font-weight:bold;margin-bottom:5px;
-}
-
-.student-average{
-    font-size:1.2em;color:#4c1d95;margin-bottom:12px;
-}
-
-/* أزرار البطاقة */
-.card-buttons{
-    display:flex;justify-content:center;gap:10px;
-}
-.card-btn{
-    padding:8px 15px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;
-}
-.btn-edit{background:#6366f1;color:white}
-.btn-delete{background:#ef4444;color:white}
-
-/* زر إضافة طالب */
-.add-student-btn{
-    display:block;margin:15px auto;
-    padding:12px 20px;background:#34d399;color:white;
-    border:none;border-radius:10px;cursor:pointer;font-weight:bold;
-}
-.add-student-btn:hover{background:#059669;transform:translateY(-2px)}
-
-/* ——————————————————————————————— */
-/* نافذة قص الصورة */
-.modal{
-    display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,0.8);justify-content:center;align-items:center;
-    z-index:2000;
-}
-.modal.show{display:flex}
-
-.modal-content{
-    background:white;padding:25px;border-radius:20px;width:90%;max-width:500px;
-}
-.crop-container{
-    width:260px;height:260px;margin:auto;margin-bottom:15px;
-    border-radius:50%;overflow:hidden;position:relative;border:3px solid #764ba2;
-}
-.crop-image{
-    position:absolute;top:50%;left:50%;
-    transform:translate(-50%,-50%);cursor:move;user-select:none;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<!-- ————————————————————— Header ————————————————————— -->
-<div class="header">
-    <h1>⚙️ إدارة بيانات الطلاب المتفوقين</h1>
-    <p>إضافة — تعديل — حذف — تخزين GitHub</p>
-    <div id="githubStatus" style="margin-top:10px;font-weight:bold;color:#fff;background:#333;border-radius:10px;padding:8px">
-        غير متصل بـ GitHub
-    </div>
-
-    <div class="actions">
-        <button class="btn btn-warning" onclick="openSettings()">إعدادات GitHub</button>
-        <button class="btn btn-primary" id="saveBtn" onclick="saveToGitHub()" disabled>💾 حفظ</button>
-        <button class="btn btn-secondary" id="loadBtn" onclick="loadFromGitHub()" disabled>📥 تحميل</button>
-    </div>
-</div>
-
-<!-- ————————————————————— Main Content ————————————————————— -->
-<div class="content" id="formsContainer">
-    <p style="text-align:center;font-size:1.3em;color:#555">جارٍ التحميل…</p>
-</div>
-
-<!-- ————————————————————— Crop Modal ————————————————————— -->
-<div id="cropperModal" class="modal">
-    <div class="modal-content">
-        <h3 style="text-align:center;color:#764ba2;margin-bottom:10px">✂️ قص الصورة</h3>
-
-        <div class="crop-container">
-            <img id="cropImage" class="crop-image">
-        </div>
-
-        <input type="range" id="zoomSlider" min="50" max="200" value="100" style="width:100%;margin-bottom:15px">
-
-        <div style="display:flex;gap:10px">
-            <button class="btn btn-primary" style="flex:1" onclick="applyCrop()">تطبيق</button>
-            <button class="btn btn-danger" style="flex:1" onclick="closeCropper()">إلغاء</button>
-        </div>
-    </div>
-</div>
-
-</div>
-
-<!-- ————————————————————— SCRIPTS ————————————————————— -->
-<script>
-
-/* مجموعات الصفوف */
-const gradeGroups = {
-    "الصف الثالث":["الثالث 1","الثالث 2","الثالث 3","الثالث 4","الثالث 5"],
-    "الصف الرابع":["الرابع 1","الرابع 2","الرابع 3","الرابع 4","الرابع 5"],
-    "الصف الخامس":["الخامس 1","الخامس 2","الخامس 3","الخامس 4"],
-    "الصف السادس":["السادس 1","السادس 2","السادس 3","السادس 4"]
-};
-
-let currentData = {};
-let currentCropClass = null;
-let currentCropIndex = null;
-let currentImageData = null;
-
-/* ————————————————————— GitHub Settings ————————————————————— */
-let githubSettings = {
-    token:"",
-    repo:"",
-    branch:"main",
-    filePath:"students-data.json"
-};
-
-function openSettings(){
-    const t = prompt("GitHub Token:", githubSettings.token);
-    const r = prompt("Repository: (مثال username/repo)", githubSettings.repo);
-    if(!t || !r) return;
-
-    githubSettings.token = t;
-    githubSettings.repo  = r;
-
-    document.getElementById("saveBtn").disabled = false;
-    document.getElementById("loadBtn").disabled = false;
-
-    document.getElementById("githubStatus").innerHTML = "🟢 متصل بـ GitHub";
-}
-
-async function loadFromGitHub(){
-    try{
-        const url = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
-        const res = await fetch(url,{
-            headers:{
-                "Authorization":"token "+githubSettings.token
-            }
-        });
-
-        if(!res.ok){ initForms(); return; }
-
-        const data = await res.json();
-        const content = atob(data.content);
-        currentData = JSON.parse(content);
-
-        initForms();
-    }catch{
-        initForms();
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
     }
-}
 
-async function saveToGitHub(){
-    collectFormData();
-
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(currentData,null,2))));
-
-    const url = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}`;
-
-    await fetch(url,{
-        method:"PUT",
-        headers:{
-            "Authorization":"token "+githubSettings.token,
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-            message:"update",
-            content:content,
-            branch:githubSettings.branch
-        })
-    });
-
-    alert("تم الحفظ بنجاح ✔️");
-}
-
-/* ————————————————————— بناء الصفحة ————————————————————— */
-
-function initForms(){
-    const container = document.getElementById("formsContainer");
-    container.innerHTML = "";
-
-    for(const gradeTitle in gradeGroups){
-        const section = document.createElement("div");
-        section.innerHTML = `<div class="grade-header">${gradeTitle}</div>`;
-
-        const addBtn = document.createElement("button");
-        addBtn.className = "add-student-btn";
-        addBtn.textContent = "➕ إضافة طالب جديد";
-        addBtn.onclick = ()=> addStudentToClass(gradeTitle);
-        section.appendChild(addBtn);
-
-        const grid = document.createElement("div");
-        grid.className = "classes-grid";
-
-        gradeGroups[gradeTitle].forEach(className=>{
-            const students = currentData[className] || [];
-
-            students.forEach((student,index)=>{
-                const card = document.createElement("div");
-                card.className = "student-card";
-
-                card.innerHTML = `
-                    <div class="student-photo">
-                        ${student.photo ? `<img src="${student.photo}">` : ""}
-                    </div>
-                    <div class="student-name">${student.name}</div>
-                    <div class="student-average">المعدل: ${student.average}%</div>
-
-                    <div class="card-buttons">
-                        <button class="card-btn btn-edit" onclick="editStudentPhoto('${className}',${index})">✏️ صورة</button>
-                        <button class="card-btn btn-delete" onclick="deleteStudent('${className}',${index})">🗑️ حذف</button>
-                    </div>
-                `;
-
-                grid.appendChild(card);
-            });
-        });
-
-        section.appendChild(grid);
-        container.appendChild(section);
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      min-height: 100vh;
+      padding: 20px;
     }
-}
 
-
-
-
-/* ————————————————————— إضافة طالب ————————————————————— */
-
-function addStudentToClass(className){
-    const name = prompt("اسم الطالب:");
-    if(!name) return;
-
-    const avg = prompt("معدل الطالب:");
-    if(!avg) return;
-
-    if(!currentData[className]) currentData[className] = [];
-
-    currentData[className].push({
-        name:name,
-        average:avg,
-        photo:""
-    });
-
-    initForms();
-}
-
-/* ————————————————————— حذف طالب ————————————————————— */
-
-function deleteStudent(className,index){
-    if(confirm("هل تريد حذف هذا الطالب؟")){
-        currentData[className].splice(index,1);
-        initForms();
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
     }
-}
 
-/* ————————————————————— تعديل صورة ————————————————————— */
+    /* Header */
+    .header {
+      background: #fff;
+      padding: 20px 25px;
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      margin-bottom: 20px;
+    }
 
-function editStudentPhoto(className,index){
-    currentCropClass = className;
-    currentCropIndex = index;
+    .header-title {
+      font-size: 1.8em;
+      color: #4f46e5;
+      margin-bottom: 5px;
+    }
 
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
+    .header-sub {
+      color: #555;
+      font-size: 0.95em;
+    }
 
-    input.onchange = function(){
-        const file = input.files[0];
-        const reader = new FileReader();
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
 
-        reader.onload = e=>{
-            currentImageData = e.target.result;
-            openCropper(e.target.result);
-        };
+    .github-status {
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      color: #fff;
+      font-size: 0.9em;
+    }
 
-        reader.readAsDataURL(file);
-    };
+    .github-status.off {
+      background: #b91c1c;
+    }
 
-    input.click();
-}
+    .github-status.on {
+      background: #15803d;
+    }
 
-/* ————————————————————— القص ————————————————————— */
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 0.9em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-function openCropper(photo){
-    document.getElementById("cropImage").src = photo;
-    document.getElementById("zoomSlider").value = 100;
-    document.getElementById("cropperModal").classList.add("show");
-}
+    .btn-primary {
+      background: #22c55e;
+      color: #fff;
+    }
 
-function closeCropper(){
-    document.getElementById("cropperModal").classList.remove("show");
-}
+    .btn-primary:hover {
+      background: #16a34a;
+      transform: translateY(-1px);
+    }
 
-function applyCrop(){
-    const img = document.getElementById("cropImage");
-    const canvas = document.createElement("canvas");
-    canvas.width = 300;canvas.height = 300;
+    .btn-secondary {
+      background: #4f46e5;
+      color: #fff;
+    }
 
-    const ctx = canvas.getContext("2d");
+    .btn-secondary:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+    }
 
-    ctx.beginPath();
-    ctx.arc(150,150,150,0,Math.PI*2);
-    ctx.closePath();
-    ctx.clip();
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
 
-    ctx.drawImage(img,0,0,300,300);
+    /* Message */
+    .message {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.9em;
+      display: none;
+    }
 
-    const cropped = canvas.toDataURL("image/png");
+    .message.show {
+      display: block;
+    }
 
-    currentData[currentCropClass][currentCropIndex].photo = cropped;
+    .message.info {
+      background: #e0f2fe;
+      color: #1e3a8a;
+    }
 
-    closeCropper();
-    initForms();
-}
+    .message.error {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
 
-/* ————————————————————— جمع البيانات قبل الحفظ ————————————————————— */
-function collectFormData(){
-    // لا حاجة — لأن البيانات تُحدّث مباشرة
-}
+    .message.success {
+      background: #dcfce7;
+      color: #166534;
+    }
 
-/* ————————————————————— تحميل الصفحة ————————————————————— */
-window.onload = function(){
-    initForms();
-};
+    /* Main box */
+    .main-box {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
 
-</script>
+    .field-group {
+      margin-bottom: 15px;
+    }
 
-</body>
-</html>
+    .label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #374151;
+      font-size: 0.95em;
+    }
+
+    .select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #e5e7eb;
+      font-size: 0.95em;
+      outline: none;
+    }
+
+    .select:focus {
+      border-color: #4f46e5;
+    }
+
+    .students-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .students-header-row h2 {
+      font-size: 1.1em;
+      color: #374151;
+    }
+
+    .btn-add {
+      background: #22c55e;
+      color: #fff;
+    }
+
+    .btn-add:hover {
+      background: #16a34a;
+    }
+
+    /* Student cards */
+    .students-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .student-card {
+      border-radius: 18px;
+      padding: 14px;
+      background: linear-gradient(145deg, #ffffff, #f5f3ff);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      border: 2px solid #e5e7eb;
+      position: relative;
+    }
+
+    .student-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .photo-frame {
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      border: 3px solid #a855f7;
+      overflow: hidden;
+      background: #f3e8ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+      color: #a855f7;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .student-basic-info {
+      flex: 1;
+    }
+
+    .student-basic-info .small-label {
+      font-size: 0.8em;
+      color: #6b7280;
+      margin-bottom: 2px;
+    }
+
+    .student-basic-info input {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 8px;
+      border: 1.8px solid #e5e7eb;
+      font-size: 0.9em;
+      outline: none;
+    }
+
+    .student-basic-info input:focus {
+      border-color: #4f46e5;
+    }
+
+    .field-row {
+      margin-bottom: 7px;
+    }
+
+    .student-card-footer {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-small {
+      flex: 1;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 0.85em;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .btn-photo {
+      background: #4f46e5;
+      color: #fff;
+    }
+
+    .btn-photo:hover {
+      background: #4338ca;
+    }
+
+    .btn-delete {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .btn-delete:hover {
+      background: #b91c1c;
+    }
+
+    .no-students {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    /* Cropper modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .modal-title {
+      text-align: center;
