@@ -1,1156 +1,245 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة بيانات الطلاب المتميزين - GitHub</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        } 
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* Header */
-        .header {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .header h1 {
-            color: #667eea;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 1.1em;
-        }
-
-        .github-status {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        .github-status.connected {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .github-status.disconnected {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #218838;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-        }
-
-        .btn-warning {
-            background: #ffc107;
-            color: #333;
-        }
-
-        .btn-warning:hover {
-            background: #e0a800;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #c82333;
-        }
-
-        .btn-info {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .btn-info:hover {
-            background: #138496;
-        }
-
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 0.9em;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Settings Modal */
-        .settings-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .settings-modal.show {
-            display: flex;
-        }
-
-        .settings-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 600px;
-            width: 90%;
-        }
-
-        .settings-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .settings-header h2 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border-color 0.3s;
-        }
-
-        .form-input.mono {
-            font-family: monospace;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .help-text {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .help-link {
-            color: #667eea;
-            text-decoration: none;
-        }
-
-        .help-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Main Content */
-        .content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .grade-section {
-            margin-bottom: 40px;
-        }
-
-        .grade-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .grade-header {
-            background: #667eea;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-size: 1.4em;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .classes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-        }
-
-        .class-card {
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 20px;
-            background: #f9f9f9;
-        }
-
-        .class-name {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 15px;
-            text-align: center;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .students-container {
-            margin-top: 15px;
-        }
-
-        .student-item {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            position: relative;
-        }
-
-        .student-number {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #667eea;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-
-        .delete-student-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
-        }
-
-        .delete-student-btn:hover {
-            background: #c82333;
-        }
-
-        .photo-upload {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .photo-preview {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #667eea;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin-bottom: 10px;
-            font-size: 3em;
-            background: white;
-        }
-
-        .photo-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .file-input-wrapper {
-            margin-top: 10px;
-        }
-
-        .file-input-wrapper input[type="file"] {
-            display: none;
-        }
-
-        .file-input-label {
-            background: #667eea;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s;
-            display: inline-block;
-            font-size: 0.95em;
-        }
-
-        .file-input-label:hover {
-            background: #5568d3;
-        }
-
-        .add-student-btn {
-            width: 100%;
-            margin-top: 10px;
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .add-student-btn:hover {
-            background: #218838;
-        }
-
-        /* Cropper Modal */
-        .cropper-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .cropper-modal.show {
-            display: flex;
-        }
-
-        .cropper-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 90%;
-            max-height: 90%;
-        }
-
-        .cropper-header {
-            margin-bottom: 20px;
-        }
-
-        .cropper-header h2 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .crop-container {
-            position: relative;
-            width: 400px;
-            height: 400px;
-            margin: 0 auto 20px;
-            background: #f0f0f0;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .crop-circle {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            border: 3px solid #667eea;
-            border-radius: 50%;
-            pointer-events: none;
-            box-shadow: 0 0 0 1000px rgba(0,0,0,0.5);
-            z-index: 2;
-        }
-
-        #cropImage {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            cursor: move;
-            user-select: none;
-            max-width: none;
-            z-index: 1;
-        }
-
-        .zoom-control {
-            margin: 20px 0;
-        }
-
-        .zoom-control label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        #zoomSlider {
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .cropper-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        /* Message */
-        .message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-weight: bold;
-            z-index: 4000;
-            animation: slideIn 0.3s;
-            max-width: 400px;
-        }
-
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 2px solid #c3e6cb;
-        }
-
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 2px solid #f5c6cb;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-
-            .classes-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .crop-container {
-                width: 300px;
-                height: 300px;
-            }
-
-            .crop-circle {
-                width: 250px;
-                height: 250px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>عرض الطلاب المتفوقين</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, sans-serif; }
+
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .header {
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .header h1 {
+      color: #4c51bf;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      color: #555;
+    }
+
+    .grade-section {
+      margin-bottom: 30px;
+    }
+
+    .grade-title {
+      background: #4c51bf;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .class-title {
+      margin: 12px 0 8px;
+      font-weight: bold;
+      color: #333;
+      padding: 5px 10px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .students-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .student-card {
+      background: linear-gradient(135deg, #ffffff, #faf5ff);
+      border: 3px solid #d3c3ff;
+      border-radius: 20px;
+      padding: 18px;
+      text-align: center;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+      transition: 0.3s;
+    }
+
+    .student-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+    }
+
+    .student-photo {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 12px;
+      border: 4px solid #a78bfa;
+      background:#f3f0ff;
+    }
+
+    .student-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .student-name {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #5b21b6;
+      margin-bottom: 5px;
+    }
+
+    .student-average {
+      font-size: 1.1em;
+      color: #4c1d95;
+      margin-bottom: 5px;
+    }
+
+    .student-class {
+      font-size: 0.95em;
+      color: #555;
+    }
+
+    .message {
+      text-align: center;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      color: #1a202c;
+      background: rgba(255,255,255,0.9);
+    }
+
+    @media (max-width: 768px) {
+      .grade-title { font-size: 1.05em; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="container">
-        <div class="header">
-            <h1>🌟 إدارة بيانات الطلاب المتميزين</h1>
-            <p>نظام متكامل لإدارة بيانات الطلاب المتفوقين مع التخزين على GitHub</p>
-            <div class="github-status" id="githubStatus">⚠️ لم يتم الاتصال بـ GitHub</div>
-            <div class="actions">
-                <button class="btn btn-secondary" onclick="openSettings()">⚙️ إعدادات GitHub</button>
-                <button class="btn btn-primary" onclick="saveToGitHub()">💾 حفظ إلى GitHub</button>
-                <button class="btn btn-warning" onclick="loadFromGitHub()">🔄 تحديث البيانات</button>
-                <button class="btn btn-info" onclick="openDisplayPage()">👁️ عرض الصفحة</button>
+
+<div class="container">
+  <div class="header">
+    <h1>🏅 لوحة عرض الطلاب المتفوقين</h1>
+    <p>يتم جلب البيانات من ملف <strong>students-data.json</strong> (نفس ملف صفحة الإدارة)</p>
+  </div>
+
+  <div id="message" class="message">جاري تحميل بيانات الطلاب...</div>
+
+  <div id="gradesContainer"></div>
+</div>
+
+<script>
+  // نفس تقسيم الصفوف المستخدم في صفحة الإدارة
+  const gradeGroups = {
+    "الصف الثالث": ["الثالث 1", "الثالث 2", "الثالث 3", "الثالث 4", "الثالث 5"],
+    "الصف الرابع": ["الرابع 1", "الرابع 2", "الرابع 3", "الرابع 4", "الرابع 5"],
+    "الصف الخامس": ["الخامس 1", "الخامس 2", "الخامس 3", "الخامس 4"],
+    "الصف السادس": ["السادس 1", "السادس 2", "السادس 3", "السادس 4"]
+  };
+
+  async function loadStudents() {
+    const msg = document.getElementById('message');
+    try {
+      // ملف البيانات يجب أن يكون في نفس المجلد مع هذه الصفحة
+      const res = await fetch('students-data.json?_=' + Date.now());
+      if (!res.ok) {
+        msg.textContent = 'تعذّر تحميل الملف students-data.json';
+        return;
+      }
+
+      const data = await res.json();
+      msg.style.display = 'none';
+      renderStudents(data);
+    } catch (e) {
+      console.error(e);
+      msg.textContent = 'حدث خطأ أثناء تحميل البيانات.';
+    }
+  }
+
+  function renderStudents(data) {
+    const container = document.getElementById('gradesContainer');
+    container.innerHTML = '';
+
+    Object.keys(gradeGroups).forEach(gradeName => {
+      const classes = gradeGroups[gradeName];
+
+      // نتحقق هل يوجد طلاب في هذا المستوى أصلاً
+      let total = 0;
+      classes.forEach(cls => {
+        const arr = data[cls];
+        if (Array.isArray(arr) && arr.length > 0) total += arr.length;
+      });
+      if (total === 0) return;
+
+      const gradeSection = document.createElement('div');
+      gradeSection.className = 'grade-section';
+
+      const gradeTitle = document.createElement('div');
+      gradeTitle.className = 'grade-title';
+      gradeTitle.textContent = gradeName;
+      gradeSection.appendChild(gradeTitle);
+
+      classes.forEach(cls => {
+        const students = data[cls];
+        if (!Array.isArray(students) || students.length === 0) return;
+
+        const classTitle = document.createElement('div');
+        classTitle.className = 'class-title';
+        classTitle.textContent = cls;
+        gradeSection.appendChild(classTitle);
+
+        const grid = document.createElement('div');
+        grid.className = 'students-grid';
+
+        students.forEach(st => {
+          const card = document.createElement('div');
+          card.className = 'student-card';
+
+          const photoHtml = st.photo
+            ? `<img src="${st.photo}" alt="${st.name || ''}">`
+            : '';
+
+          card.innerHTML = `
+            <div class="student-photo">
+              ${photoHtml}
             </div>
-        </div>
+            <div class="student-name">${st.name || 'طالب'}</div>
+            <div class="student-average">المعدل: ${st.average || '-'}%</div>
+            <div class="student-class">الشعبة: ${cls}</div>
+          `;
 
-        <!-- Main Content -->
-        <div class="content">
-            <div id="formsContainer"></div>
-        </div>
-    </div>
+          grid.appendChild(card);
+        });
 
-    <!-- Settings Modal -->
-    <div class="settings-modal" id="settingsModal">
-        <div class="settings-content">
-            <div class="settings-header">
-                <h2>⚙️ إعدادات GitHub</h2>
-                <p class="help-text">قم بإدخال بيانات مستودع GitHub الخاص بك</p>
-            </div>
+        gradeSection.appendChild(grid);
+      });
 
-            <div class="form-group">
-                <label class="form-label">GitHub Token:</label>
-                <input type="password" class="form-input mono" id="githubToken" placeholder="ghp_xxxxxxxxxxxx">
-                <p class="help-text">
-                    <a href="https://github.com/settings/tokens/new" target="_blank" class="help-link">
-                        🔗 إنشاء Token جديد
-                    </a>
-                    (يتطلب صلاحيات: repo)
-                </p>
-            </div>
+      container.appendChild(gradeSection);
+    });
 
-            <div class="form-group">
-                <label class="form-label">اسم المستودع (Repository):</label>
-                <input type="text" class="form-input mono" id="githubRepo" placeholder="username/repository">
-                <p class="help-text">مثال: ayadsalman/students-data</p>
-            </div>
+    if (!container.innerHTML.trim()) {
+      const msg = document.getElementById('message');
+      msg.style.display = 'block';
+      msg.textContent = 'لا يوجد طلاب متفوقون مسجلون بعد.';
+    }
+  }
 
-            <div class="form-group">
-                <label class="form-label">مسار الملف:</label>
-                <input type="text" class="form-input mono" id="githubFilePath" value="students_data.json">
-                <p class="help-text">المسار داخل المستودع حيث سيتم حفظ البيانات</p>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">اسم الفرع (Branch):</label>
-                <input type="text" class="form-input mono" id="githubBranch" value="main">
-                <p class="help-text">عادة: main أو master</p>
-            </div>
-
-            <div class="actions">
-                <button class="btn btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
-                <button class="btn btn-secondary" onclick="closeSettings()">❌ إلغاء</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Cropper Modal -->
-    <div class="cropper-modal" id="cropperModal">
-        <div class="cropper-content">
-            <div class="cropper-header">
-                <h2>✂️ قص الصورة</h2>
-                <p class="help-text">اسحب الصورة لتحديد الموضع وستخدم شريط التكبير</p>
-            </div>
-
-            <div class="crop-container">
-                <img id="cropImage" src="" alt="Crop">
-                <div class="crop-circle"></div>
-            </div>
-
-            <div class="zoom-control">
-                <label>🔍 التكبير/التصغير:</label>
-                <input type="range" id="zoomSlider" min="50" max="200" value="100">
-            </div>
-
-            <div class="cropper-buttons">
-                <button class="btn btn-primary" onclick="applyCrop()">✅ تطبيق</button>
-                <button class="btn btn-secondary" onclick="closeCropper()">❌ إلغاء</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Grade groups configuration
-        const gradeGroups = {
-            'الصف الثالث': [
-                'الصف الثالث 1', 'الصف الثالث 2', 'الصف الثالث 3', 
-                'الصف الثالث 4', 'الصف الثالث 5'
-            ],
-            'الصف الرابع': [
-                'الصف الرابع 1', 'الصف الرابع 2', 'الصف الرابع 3', 
-                'الصف الرابع 4'
-            ],
-            'الصف الخامس': [
-                'الصف الخامس 1', 'الصف الخامس 2', 'الصف الخامس 3', 
-                'الصف الخامس 4', 'الصف الخامس 5'
-            ],
-            'الصف السادس': [
-                'الصف السادس 1', 'الصف السادس 2', 'الصف السادس 3', 'الصف السادس 4'
-            ]
-        };
-
-        // Current data - now each class has array of students
-        let currentData = {};
-
-        // GitHub settings
-        let githubSettings = {
-            token: '',
-            repo: '',
-            filePath: 'students_data.json',
-            branch: 'main'
-        };
-
-        // Image cropper variables
-        let currentCropClassName = null;
-        let currentCropStudentIndex = null;
-        let currentImageData = null;
-        let imageScale = 1;
-        let imagePosition = { x: 0, y: 0 };
-        let isDragging = false;
-        let dragStart = { x: 0, y: 0 };
-
-        // Show message
-        function showMessage(text, type) {
-            const existingMsg = document.querySelector('.message');
-            if (existingMsg) existingMsg.remove();
-
-            const msg = document.createElement('div');
-            msg.className = `message ${type}`;
-            msg.textContent = text;
-            document.body.appendChild(msg);
-
-            setTimeout(() => msg.remove(), 4000);
-        }
-
-        // Settings Modal Functions
-        function openSettings() {
-            document.getElementById('settingsModal').classList.add('show');
-        }
-
-        function closeSettings() {
-            document.getElementById('settingsModal').classList.remove('show');
-        }
-
-        function saveSettings() {
-            const token = document.getElementById('githubToken').value.trim();
-            const repo = document.getElementById('githubRepo').value.trim();
-            const filePath = document.getElementById('githubFilePath').value.trim();
-            const branch = document.getElementById('githubBranch').value.trim();
-
-            if (!token || !repo || !filePath || !branch) {
-                showMessage('⚠️ يرجى ملء جميع الحقول', 'error');
-                return;
-            }
-
-            githubSettings = { token, repo, filePath, branch };
-            localStorage.setItem('githubSettings', JSON.stringify(githubSettings));
-            
-            updateGitHubStatus(true);
-            closeSettings();
-            showMessage('✅ تم حفظ الإعدادات بنجاح!', 'success');
-        }
-
-        function loadSettings() {
-            const saved = localStorage.getItem('githubSettings');
-            if (saved) {
-                githubSettings = JSON.parse(saved);
-                document.getElementById('githubToken').value = githubSettings.token;
-                document.getElementById('githubRepo').value = githubSettings.repo;
-                document.getElementById('githubFilePath').value = githubSettings.filePath;
-                document.getElementById('githubBranch').value = githubSettings.branch;
-                updateGitHubStatus(true);
-                return true;
-            }
-            updateGitHubStatus(false);
-            return false;
-        }
-
-        function updateGitHubStatus(connected) {
-            const status = document.getElementById('githubStatus');
-            if (connected) {
-                status.className = 'github-status connected';
-                status.textContent = '✅ متصل بـ GitHub';
-            } else {
-                status.className = 'github-status disconnected';
-                status.textContent = '⚠️ لم يتم الاتصال بـ GitHub';
-            }
-        }
-
-        // GitHub Functions
-        async function loadFromGitHub() {
-            if (!githubSettings.token) {
-                showMessage('⚠️ يرجى إعداد اتصال GitHub أولاً', 'error');
-                openSettings();
-                return;
-            }
-
-            try {
-                showMessage('⏳ جاري تحميل البيانات من GitHub...', 'success');
-                
-                const url = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
-                const response = await fetch(url, {
-                    headers: {
-                        'Authorization': `token ${githubSettings.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    const content = JSON.parse(atob(data.content));
-                    currentData = content;
-                    initForms();
-                    showMessage('✅ تم تحميل البيانات من GitHub بنجاح!', 'success');
-                } else {
-                    initForms();
-                    showMessage('ℹ️ لم يتم العثور على بيانات، تم إنشاء نماذج جديدة', 'success');
-                }
-            } catch (error) {
-                console.error('Error loading from GitHub:', error);
-                initForms();
-                showMessage('⚠️ تعذر تحميل البيانات، تم إنشاء نماذج جديدة', 'error');
-            }
-        }
-
-        async function saveToGitHub() {
-            if (!githubSettings.token) {
-                showMessage('⚠️ يرجى إعداد اتصال GitHub أولاً', 'error');
-                openSettings();
-                return;
-            }
-
-            try {
-                collectFormData();
-                showMessage('⏳ جاري حفظ البيانات إلى GitHub...', 'success');
-
-                const content = btoa(unescape(encodeURIComponent(JSON.stringify(currentData, null, 2))));
-                
-                let sha = null;
-                const getUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
-                const getResponse = await fetch(getUrl, {
-                    headers: {
-                        'Authorization': `token ${githubSettings.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-
-                if (getResponse.ok) {
-                    const existingFile = await getResponse.json();
-                    sha = existingFile.sha;
-                }
-
-                const putUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}`;
-                const putResponse = await fetch(putUrl, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${githubSettings.token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: 'Update students data - ' + new Date().toLocaleString('ar-EG'),
-                        content: content,
-                        branch: githubSettings.branch,
-                        ...(sha && { sha: sha })
-                    })
-                });
-
-                if (!putResponse.ok) {
-                    throw new Error('فشل حفظ البيانات إلى GitHub');
-                }
-
-                showMessage('✅ تم حفظ البيانات إلى GitHub بنجاح!', 'success');
-            } catch (error) {
-                console.error('Error saving to GitHub:', error);
-                showMessage('❌ خطأ في حفظ البيانات: ' + error.message, 'error');
-            }
-        }
-
-        // Collect form data
-        function collectFormData() {
-            Object.keys(gradeGroups).forEach(gradeTitle => {
-                gradeGroups[gradeTitle].forEach(className => {
-                    const classKey = className.replace(/\s/g, '-');
-                    const container = document.querySelector(`[data-class="${classKey}"] .students-container`);
-                    const studentItems = container.querySelectorAll('.student-item');
-                    
-                    const students = [];
-                    studentItems.forEach((item, index) => {
-                        const name = item.querySelector('.student-name-input').value.trim();
-                        const average = item.querySelector('.student-average-input').value.trim();
-                        const preview = item.querySelector('.photo-preview');
-                        const img = preview.querySelector('img');
-                        const photo = img ? img.src : '';
-
-                        if (name || average || photo) {
-                            students.push({ name, average, photo });
-                        }
-                    });
-
-                    currentData[className] = students;
-                });
-            });
-        }
-
-        // Initialize forms
-        function initForms() {
-            const container = document.getElementById('formsContainer');
-            container.innerHTML = '';
-
-            Object.keys(gradeGroups).forEach(gradeTitle => {
-                const section = document.createElement('div');
-                section.className = 'grade-section';
-
-                const header = document.createElement('div');
-                header.className = 'grade-header';
-                header.textContent = gradeTitle;
-                section.appendChild(header);
-
-                const grid = document.createElement('div');
-                grid.className = 'classes-grid';
-
-                gradeGroups[gradeTitle].forEach(className => {
-                    const classKey = className.replace(/\s/g, '-');
-                    const students = currentData[className] || [];
-                    
-                    const card = document.createElement('div');
-                    card.className = 'class-card';
-                    card.setAttribute('data-class', classKey);
-                    
-                    card.innerHTML = `
-                        <div class="class-name">${className}</div>
-                        <div class="students-container"></div>
-                        <button class="add-student-btn" onclick="addStudent('${className}')">
-                            ➕ إضافة طالب متفوق
-                        </button>
-                    `;
-                    
-                    grid.appendChild(card);
-
-                    // Add existing students
-                    if (students.length > 0) {
-                        students.forEach((student, index) => {
-                            addStudentToCard(className, student, index);
-                        });
-                    } else {
-                        // Add one empty student by default
-                        addStudentToCard(className, { name: '', photo: '', average: '' }, 0);
-                    }
-                });
-
-                section.appendChild(grid);
-                container.appendChild(section);
-            });
-        }
-
-        // Add student to class card
-        function addStudentToCard(className, studentData, index) {
-            const classKey = className.replace(/\s/g, '-');
-            const container = document.querySelector(`[data-class="${classKey}"] .students-container`);
-            
-            const studentItem = document.createElement('div');
-            studentItem.className = 'student-item';
-            studentItem.setAttribute('data-index', index);
-            
-            const studentId = `${classKey}-student-${index}`;
-            
-            studentItem.innerHTML = `
-                <div class="student-number">${index + 1}</div>
-                ${container.querySelectorAll('.student-item').length > 0 ? 
-                    `<button class="delete-student-btn" onclick="deleteStudent('${className}', ${index})">×</button>` : ''}
-                
-                <div class="form-group photo-upload">
-                    <div class="photo-preview" id="preview-${studentId}">
-                        ${studentData.photo ? `<img src="${studentData.photo}" alt="${studentData.name}">` : '👤'}
-                    </div>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="photo-${studentId}" accept="image/*" 
-                               onchange="handlePhotoUpload('${className}', ${index}, this)">
-                        <label for="photo-${studentId}" class="file-input-label">
-                            📷 اختر صورة
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">اسم الطالب:</label>
-                    <input type="text" class="form-input student-name-input" 
-                           value="${studentData.name}" placeholder="أدخل اسم الطالب">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">المعدل العام (%):</label>
-                    <input type="number" class="form-input student-average-input" 
-                           value="${studentData.average}" placeholder="مثال: 95" min="0" max="100">
-                </div>
-            `;
-            
-            container.appendChild(studentItem);
-            updateStudentNumbers(className);
-        }
-
-        // Add new student
-        function addStudent(className) {
-            const classKey = className.replace(/\s/g, '-');
-            const container = document.querySelector(`[data-class="${classKey}"] .students-container`);
-            const currentCount = container.querySelectorAll('.student-item').length;
-            
-            addStudentToCard(className, { name: '', photo: '', average: '' }, currentCount);
-            
-            // Scroll to new student
-            const newStudent = container.lastElementChild;
-            newStudent.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        // Delete student
-        function deleteStudent(className, index) {
-            const classKey = className.replace(/\s/g, '-');
-            const container = document.querySelector(`[data-class="${classKey}"] .students-container`);
-            const studentItems = container.querySelectorAll('.student-item');
-            
-            // Don't allow deleting if only one student
-            if (studentItems.length <= 1) {
-                showMessage('⚠️ يجب أن يكون هناك طالب واحد على الأقل', 'error');
-                return;
-            }
-            
-            if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
-                studentItems[index].remove();
-                updateStudentNumbers(className);
-                showMessage('✅ تم حذف الطالب', 'success');
-            }
-        }
-
-        // Update student numbers
-        function updateStudentNumbers(className) {
-            const classKey = className.replace(/\s/g, '-');
-            const container = document.querySelector(`[data-class="${classKey}"] .students-container`);
-            const studentItems = container.querySelectorAll('.student-item');
-            
-            studentItems.forEach((item, index) => {
-                item.setAttribute('data-index', index);
-                const numberBadge = item.querySelector('.student-number');
-                if (numberBadge) numberBadge.textContent = index + 1;
-                
-                // Show/hide delete button (keep at least one student)
-                const deleteBtn = item.querySelector('.delete-student-btn');
-                if (deleteBtn) {
-                    if (studentItems.length <= 1) {
-                        deleteBtn.style.display = 'none';
-                    } else {
-                        deleteBtn.style.display = 'flex';
-                    }
-                }
-            });
-        }
-
-        // Handle photo upload - open cropper
-        function handlePhotoUpload(className, index, input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentCropClassName = className;
-                    currentCropStudentIndex = index;
-                    currentImageData = e.target.result;
-                    openCropper(e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Open image cropper
-        function openCropper(imageSrc) {
-            const modal = document.getElementById('cropperModal');
-            const image = document.getElementById('cropImage');
-            const slider = document.getElementById('zoomSlider');
-            
-            image.src = imageSrc;
-            imageScale = 1;
-            imagePosition = { x: 0, y: 0 };
-            slider.value = 100;
-            
-            image.onload = function() {
-                updateImageTransform();
-            };
-            
-            modal.classList.add('show');
-            setupDragging();
-        }
-
-        // Setup image dragging
-        function setupDragging() {
-            const image = document.getElementById('cropImage');
-            const slider = document.getElementById('zoomSlider');
-            
-            image.onmousedown = function(e) {
-                isDragging = true;
-                dragStart = {
-                    x: e.clientX - imagePosition.x,
-                    y: e.clientY - imagePosition.y
-                };
-                e.preventDefault();
-            };
-            
-            document.onmousemove = function(e) {
-                if (isDragging) {
-                    imagePosition.x = e.clientX - dragStart.x;
-                    imagePosition.y = e.clientY - dragStart.y;
-                    updateImageTransform();
-                }
-            };
-            
-            document.onmouseup = function() {
-                isDragging = false;
-            };
-
-            image.ontouchstart = function(e) {
-                isDragging = true;
-                const touch = e.touches[0];
-                dragStart = {
-                    x: touch.clientX - imagePosition.x,
-                    y: touch.clientY - imagePosition.y
-                };
-                e.preventDefault();
-            };
-
-            document.ontouchmove = function(e) {
-                if (isDragging) {
-                    const touch = e.touches[0];
-                    imagePosition.x = touch.clientX - dragStart.x;
-                    imagePosition.y = touch.clientY - dragStart.y;
-                    updateImageTransform();
-                }
-            };
-
-            document.ontouchend = function() {
-                isDragging = false;
-            };
-            
-            slider.oninput = function() {
-                imageScale = this.value / 100;
-                updateImageTransform();
-            };
-        }
-
-        // Update image transform
-        function updateImageTransform() {
-            const image = document.getElementById('cropImage');
-            image.style.transform = `translate(calc(-50% + ${imagePosition.x}px), calc(-50% + ${imagePosition.y}px)) scale(${imageScale})`;
-        }
-
-        // Apply crop and save
-        function applyCrop() {
-            const image = document.getElementById('cropImage');
-            const canvas = document.createElement('canvas');
-            const size = 300;
-            canvas.width = size;
-            canvas.height = size;
-            const ctx = canvas.getContext('2d');
-            
-            ctx.beginPath();
-            ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2);
-            ctx.closePath();
-            ctx.clip();
-            
-            const imgWidth = image.naturalWidth * imageScale;
-            const imgHeight = image.naturalHeight * imageScale;
-            const offsetX = (size / 2) + imagePosition.x - (imgWidth / 2);
-            const offsetY = (size / 2) + imagePosition.y - (imgHeight / 2);
-            
-            ctx.drawImage(image, offsetX, offsetY, imgWidth, imgHeight);
-            
-            const croppedImage = canvas.toDataURL('image/jpeg', 0.9);
-            
-            const classKey = currentCropClassName.replace(/\s/g, '-');
-            const studentId = `${classKey}-student-${currentCropStudentIndex}`;
-            const preview = document.getElementById(`preview-${studentId}`);
-            preview.innerHTML = `<img src="${croppedImage}" alt="Preview">`;
-            
-            closeCropper();
-        }
-
-        // Close cropper
-        function closeCropper() {
-            const modal = document.getElementById('cropperModal');
-            modal.classList.remove('show');
-            currentCropClassName = null;
-            currentCropStudentIndex = null;
-            currentImageData = null;
-        }
-
-        // Open display page
-        function openDisplayPage() {
-            window.open('students_display_github.html', '_blank');
-        }
-
-        // Initialize on page load
-        window.onload = async function() {
-            const hasSettings = loadSettings();
-            if (hasSettings) {
-                await loadFromGitHub();
-            } else {
-                initForms();
-                openSettings();
-            }
-        };
-    </script>
+  loadStudents();
+</script>
 </body>
 </html>
