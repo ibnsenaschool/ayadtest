@@ -55,23 +55,130 @@
         .slide {
             display: none;
             padding: 60px 40px;
-            text-align: center;
             animation: fadeIn 0.5s ease;
         }
 
         .slide.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .photo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            width: 100%;
         }
 
         .student-photo {
-            width: 300px;
-            height: 300px;
+            width: 450px;
+            height: 450px;
             border-radius: 50%;
             object-fit: cover;
-            border: 8px solid #667eea;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin: 0 auto 30px;
-            animation: scaleIn 0.5s ease;
+            border: 12px solid transparent;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%) border-box;
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5),
+                        0 0 0 20px rgba(255, 255, 255, 0.1),
+                        inset 0 0 20px rgba(0, 0, 0, 0.1);
+            animation: scaleIn 0.5s ease, photoGlow 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        .student-photo::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #667eea);
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(15px);
+            animation: rotate 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes photoGlow {
+            0%, 100% {
+                box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5),
+                            0 0 0 20px rgba(255, 255, 255, 0.1),
+                            inset 0 0 20px rgba(0, 0, 0, 0.1);
+            }
+            50% {
+                box-shadow: 0 20px 60px rgba(118, 75, 162, 0.7),
+                            0 0 0 25px rgba(255, 255, 255, 0.15),
+                            inset 0 0 30px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        .motivation-text {
+            flex: 1;
+            max-width: 250px;
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #667eea;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+            animation: fadeInLeft 0.8s ease;
+        }
+
+        .motivation-text.right {
+            animation: fadeInRight 0.8s ease;
+        }
+
+        .motivation-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .student-info {
@@ -233,8 +340,9 @@
             }
             
             .student-photo {
-                width: 200px;
-                height: 200px;
+                width: 250px;
+                height: 250px;
+                border-width: 8px;
             }
             
             .student-name {
@@ -243,6 +351,42 @@
             
             .slide {
                 padding: 40px 20px;
+            }
+
+            .photo-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .motivation-text {
+                max-width: 100%;
+                font-size: 1.1rem;
+            }
+
+            .motivation-icon {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .student-photo {
+                width: 200px;
+                height: 200px;
+                border-width: 6px;
+            }
+
+            .student-name {
+                font-size: 1.5rem;
+            }
+
+            .student-average {
+                font-size: 1.5rem;
+                padding: 8px 20px;
+            }
+
+            .motivation-text {
+                font-size: 1rem;
+                padding: 15px;
             }
         }
     </style>
@@ -301,14 +445,41 @@
         function initSlideshow() {
             const container = document.getElementById('slideshowContainer');
             
+            // عبارات تحفيزية متنوعة
+            const motivationalQuotes = [
+                { left: { icon: '⭐', text: 'النجاح يبدأ بخطوة واحدة نحو التميز' }, 
+                  right: { icon: '🎯', text: 'التفوق ثمرة الجهد والإصرار' } },
+                { left: { icon: '💪', text: 'المثابرة طريقك نحو القمة' }, 
+                  right: { icon: '🌟', text: 'العزيمة والإرادة سر النجاح' } },
+                { left: { icon: '📚', text: 'العلم نور والجهل ظلام' }, 
+                  right: { icon: '🏆', text: 'كن مصراً على تحقيق أحلامك' } },
+                { left: { icon: '✨', text: 'التميز ليس صدفة بل نتيجة جد واجتهاد' }, 
+                  right: { icon: '🎓', text: 'اجعل من التفوق عادة لديك' } },
+                { left: { icon: '🚀', text: 'حلق عالياً نحو أهدافك' }, 
+                  right: { icon: '💎', text: 'أنت قادر على تحقيق المستحيل' } },
+                { left: { icon: '🌈', text: 'كل قطرة عرق تستحق النجاح' }, 
+                  right: { icon: '⚡', text: 'الإيمان بالنفس أول خطوات التفوق' } }
+            ];
+            
             // Create slides HTML
             let slidesHTML = '<div class="progress-bar" id="progressBar"></div>';
             
             students.forEach((student, index) => {
+                const quote = motivationalQuotes[index % motivationalQuotes.length];
                 slidesHTML += `
                     <div class="slide ${index === 0 ? 'active' : ''}" data-index="${index}">
                         <div class="medal">🥇</div>
-                        <img src="${student.photo}" alt="${student.name}" class="student-photo">
+                        <div class="photo-container">
+                            <div class="motivation-text">
+                                <div class="motivation-icon">${quote.left.icon}</div>
+                                ${quote.left.text}
+                            </div>
+                            <img src="${student.photo}" alt="${student.name}" class="student-photo">
+                            <div class="motivation-text right">
+                                <div class="motivation-icon">${quote.right.icon}</div>
+                                ${quote.right.text}
+                            </div>
+                        </div>
                         <div class="student-info">
                             <div class="student-class">${student.className}</div>
                             <div class="student-name">${student.name}</div>
