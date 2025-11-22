@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -117,6 +117,11 @@
             background: #c82333;
         }
 
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -169,17 +174,16 @@
             margin-bottom: 8px;
         }
 
-        .form-input {
+        .form-input, .form-select {
             width: 100%;
             padding: 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1em;
             transition: border-color 0.3s;
-            font-family: monospace;
         }
 
-        .form-input:focus {
+        .form-input:focus, .form-select:focus {
             outline: none;
             border-color: #667eea;
         }
@@ -199,78 +203,44 @@
             text-decoration: underline;
         }
 
-        /* Main Content */
-        .content {
+        /* Add Student Form */
+        .add-student-section {
             background: white;
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
         }
 
-        .grade-section {
-            margin-bottom: 40px;
-        }
-
-        .grade-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .grade-header {
-            background: #667eea;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-size: 1.4em;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .classes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .class-card {
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 20px;
-            background: #f9f9f9;
-            transition: all 0.3s;
-        }
-
-        .class-card:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .class-name {
-            font-size: 1.3em;
-            font-weight: bold;
+        .section-title {
             color: #667eea;
-            margin-bottom: 15px;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 25px;
             text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
         }
 
         .photo-upload {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            margin-bottom: 25px;
         }
 
         .photo-preview {
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
-            border: 3px solid #ddd;
             overflow: hidden;
             background: #f0f0f0;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 3em;
-            color: #999;
+            align-items: center;
+            font-size: 4em;
+            margin-bottom: 15px;
+            border: 3px solid #667eea;
         }
 
         .photo-preview img {
@@ -281,116 +251,161 @@
 
         .file-input-wrapper {
             position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
         }
 
-        .file-input-wrapper input[type=file] {
+        .file-input-wrapper input[type="file"] {
             position: absolute;
-            left: -9999px;
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
 
         .file-input-label {
-            display: block;
-            padding: 8px 15px;
+            display: inline-block;
+            padding: 12px 30px;
             background: #667eea;
             color: white;
-            text-align: center;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background 0.3s;
+            font-weight: bold;
+            transition: all 0.3s;
         }
 
         .file-input-label:hover {
             background: #5568d3;
+            transform: translateY(-2px);
         }
 
-        /* Image Cropper Modal */
-        .modal {
+        /* Students List */
+        .students-list-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .students-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .students-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .students-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .student-photo-small {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .no-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+        }
+
+        /* Cropper Modal */
+        .cropper-modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
+            background: rgba(0,0,0,0.95);
+            z-index: 3000;
             justify-content: center;
             align-items: center;
         }
 
-        .modal.show {
+        .cropper-modal.show {
             display: flex;
         }
 
-        .modal-content {
+        .cropper-content {
             background: white;
             padding: 30px;
             border-radius: 20px;
             max-width: 600px;
             width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
+            text-align: center;
         }
 
-        .modal-header {
-            text-align: center;
+        .cropper-header {
             margin-bottom: 20px;
         }
 
-        .modal-header h2 {
+        .cropper-header h2 {
             color: #667eea;
             margin-bottom: 10px;
         }
 
         .crop-container {
+            width: 400px;
+            height: 400px;
+            max-width: 100%;
+            margin: 0 auto;
             position: relative;
-            width: 300px;
-            height: 300px;
-            margin: 20px auto;
-            border: 3px solid #667eea;
-            border-radius: 50%;
             overflow: hidden;
+            border-radius: 50%;
+            border: 3px solid #667eea;
             background: #f0f0f0;
         }
 
-        .crop-image {
+        .crop-container img {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            max-width: none;
             cursor: move;
             user-select: none;
+            -webkit-user-drag: none;
         }
 
-        .controls {
+        .zoom-control {
             margin: 20px 0;
         }
 
-        .control-group {
-            margin-bottom: 15px;
-        }
-
-        .control-label {
+        .zoom-control label {
             display: block;
+            margin-bottom: 10px;
             font-weight: bold;
-            margin-bottom: 5px;
             color: #333;
         }
 
-        .slider {
+        .zoom-slider {
             width: 100%;
-            height: 8px;
-            border-radius: 5px;
+            height: 6px;
+            border-radius: 3px;
             background: #ddd;
             outline: none;
             -webkit-appearance: none;
         }
 
-        .slider::-webkit-slider-thumb {
+        .zoom-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
             width: 20px;
             height: 20px;
             border-radius: 50%;
@@ -398,7 +413,7 @@
             cursor: pointer;
         }
 
-        .slider::-moz-range-thumb {
+        .zoom-slider::-moz-range-thumb {
             width: 20px;
             height: 20px;
             border-radius: 50%;
@@ -407,27 +422,28 @@
             border: none;
         }
 
-        .modal-actions {
+        .cropper-actions {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            justify-content: center;
             margin-top: 20px;
         }
 
-        .modal-actions .btn {
-            flex: 1;
-        }
-
         .message {
-            padding: 15px;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
             border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
             font-weight: bold;
-            display: none;
+            z-index: 4000;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .message.show {
-            display: block;
+            opacity: 1;
         }
 
         .message.success {
@@ -440,48 +456,23 @@
             color: #721c24;
         }
 
-        .message.info {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #667eea;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.8em;
             }
 
-            .classes-grid {
-                grid-template-columns: 1fr;
+            .crop-container {
+                width: 300px;
+                height: 300px;
             }
 
-            .actions {
-                flex-direction: column;
+            .students-table {
+                font-size: 0.9em;
             }
 
             .btn {
-                width: 100%;
+                padding: 10px 20px;
+                font-size: 1em;
             }
         }
     </style>
@@ -490,214 +481,270 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>⚙️ إدارة بيانات الطلاب المتميزين</h1>
-            <p>التخزين عبر GitHub</p>
+            <h1>🏆 إدارة الطلاب المتميزين</h1>
+            <p>نظام مبسط لإدارة بيانات الطلاب المتفوقين</p>
             <div id="githubStatus" class="github-status disconnected">
-                🔴 غير متصل بـ GitHub
+                ⚠️ لم يتم ربط GitHub بعد
             </div>
             <div class="actions">
-                <button class="btn btn-warning" onclick="openSettings()">⚙️ إعدادات GitHub</button>
-                <button class="btn btn-primary" id="saveBtn" onclick="saveToGitHub()" disabled>💾 حفظ إلى GitHub</button>
-                <button class="btn btn-secondary" id="loadBtn" onclick="loadFromGitHub()" disabled>📥 تحميل من GitHub</button>
-                <button class="btn btn-secondary" onclick="openDisplayPage()">📊 عرض الصفحة الرئيسية</button>
+                <button class="btn btn-secondary" onclick="openSettings()">⚙️ إعدادات GitHub</button>
+                <button class="btn btn-primary" onclick="saveToGitHub()" id="saveBtn" disabled>💾 حفظ البيانات</button>
+                <button class="btn btn-warning" onclick="loadFromGitHub()" id="loadBtn" disabled>🔄 تحميل البيانات</button>
             </div>
         </div>
 
-        <div id="messageBox" class="message"></div>
+        <!-- Add Student Form -->
+        <div class="add-student-section">
+            <h2 class="section-title">➕ إضافة طالب جديد</h2>
+            
+            <div class="photo-upload">
+                <div class="photo-preview" id="newStudentPreview">
+                    👤
+                </div>
+                <div class="file-input-wrapper">
+                    <input type="file" id="studentPhoto" accept="image/*" onchange="handlePhotoUpload(this)">
+                    <label for="studentPhoto" class="file-input-label">
+                        📷 اختر صورة الطالب
+                    </label>
+                </div>
+            </div>
 
-        <!-- Main Content -->
-        <div class="content" id="formsContainer">
-            <div class="loading">
-                <div class="spinner"></div>
-                <p>جاري التحميل...</p>
+            <div class="form-group">
+                <label class="form-label">الصف:</label>
+                <select class="form-select" id="studentClass">
+                    <option value="">-- اختر الصف --</option>
+                    <optgroup label="الصف الثالث">
+                        <option value="الثالث أ">الثالث أ</option>
+                        <option value="الثالث ب">الثالث ب</option>
+                        <option value="الثالث ت">الثالث ت</option>
+                        <option value="الثالث ث">الثالث ث</option>
+                        <option value="الثالث ج">الثالث ج</option>
+                        <option value="الثالث ح">الثالث ح</option>
+                    </optgroup>
+                    <optgroup label="الصف الرابع">
+                        <option value="الرابع أ">الرابع أ</option>
+                        <option value="الرابع ب">الرابع ب</option>
+                        <option value="الرابع ت">الرابع ت</option>
+                        <option value="الرابع ث">الرابع ث</option>
+                        <option value="الرابع ج">الرابع ج</option>
+                        <option value="الرابع ح">الرابع ح</option>
+                    </optgroup>
+                    <optgroup label="الصف الخامس">
+                        <option value="الخامس أ">الخامس أ</option>
+                        <option value="الخامس ب">الخامس ب</option>
+                        <option value="الخامس ت">الخامس ت</option>
+                        <option value="الخامس ث">الخامس ث</option>
+                        <option value="الخامس ج">الخامس ج</option>
+                        <option value="الخامس ح">الخامس ح</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">اسم الطالب:</label>
+                <input type="text" class="form-input" id="studentName" placeholder="أدخل اسم الطالب">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">المعدل العام (%):</label>
+                <input type="number" class="form-input" id="studentAverage" placeholder="مثال: 95" min="0" max="100">
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn btn-primary" onclick="addStudent()">✅ إضافة الطالب</button>
             </div>
         </div>
 
-        <!-- GitHub Settings Modal -->
-        <div class="settings-modal" id="settingsModal">
-            <div class="settings-content">
-                <div class="settings-header">
-                    <h2>⚙️ إعدادات GitHub</h2>
-                    <p style="color: #666;">أدخل معلومات مستودع GitHub الخاص بك</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">GitHub Token:</label>
-                    <input type="password" class="form-input" id="githubToken" 
-                           placeholder="ghp_xxxxxxxxxxxx">
-                    <div class="help-text">
-                        <a href="https://github.com/settings/tokens/new" target="_blank" class="help-link">
-                            🔗 احصل على Token من هنا
-                        </a>
-                        (اختر repo permissions)
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">اسم المستودع (Repository):</label>
-                    <input type="text" class="form-input" id="githubRepo" 
-                           placeholder="username/repo-name">
-                    <div class="help-text">مثال: ayad/ibn-sina-students</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">اسم الفرع (Branch):</label>
-                    <input type="text" class="form-input" id="githubBranch" 
-                           value="main" placeholder="main">
-                    <div class="help-text">عادة: main أو master</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">مسار الملف:</label>
-                    <input type="text" class="form-input" id="githubFilePath" 
-                           value="students-data.json" placeholder="students-data.json">
-                    <div class="help-text">اسم ملف JSON لحفظ البيانات</div>
-                </div>
-
-                <div class="modal-actions">
-                    <button class="btn btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
-                    <button class="btn btn-danger" onclick="closeSettings()">❌ إلغاء</button>
-                </div>
-            </div>
+        <!-- Students List -->
+        <div class="students-list-section">
+            <h2 class="section-title">📋 قائمة الطلاب المضافين</h2>
+            <table class="students-table" id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>الصورة</th>
+                        <th>الصف</th>
+                        <th>الاسم</th>
+                        <th>المعدل</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #999; padding: 30px;">
+                            لا توجد بيانات بعد
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+    </div>
 
-        <!-- Image Cropper Modal -->
-        <div class="modal" id="cropperModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>✂️ تعديل الصورة</h2>
-                    <p style="color: #666;">اسحب الصورة لتحريكها، واستخدم شريط التكبير</p>
-                </div>
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>⚙️ إعدادات GitHub</h2>
+                <p class="help-text">قم بإدخال بيانات حسابك على GitHub لحفظ وتحميل البيانات</p>
+            </div>
 
-                <div class="crop-container" id="cropContainer">
-                    <img id="cropImage" class="crop-image" src="" alt="Crop">
-                </div>
+            <div class="form-group">
+                <label class="form-label">GitHub Token:</label>
+                <input type="password" class="form-input" id="githubToken" placeholder="ghp_xxxxxxxxxxxxx">
+                <p class="help-text">
+                    <a href="https://github.com/settings/tokens/new" target="_blank" class="help-link">
+                        احصل على Token من هنا
+                    </a>
+                    (اختر scope: repo)
+                </p>
+            </div>
 
-                <div class="controls">
-                    <div class="control-group">
-                        <label class="control-label">🔍 التكبير / التصغير</label>
-                        <input type="range" class="slider" id="zoomSlider" 
-                               min="50" max="200" value="100" step="1">
-                    </div>
-                </div>
+            <div class="form-group">
+                <label class="form-label">اسم المستودع (مثل: username/repo-name):</label>
+                <input type="text" class="form-input" id="githubRepo" placeholder="username/repo-name">
+            </div>
 
-                <div class="modal-actions">
-                    <button class="btn btn-primary" onclick="applyCrop()">✅ تطبيق</button>
-                    <button class="btn btn-danger" onclick="closeCropper()">❌ إلغاء</button>
-                </div>
+            <div class="form-group">
+                <label class="form-label">اسم الفرع:</label>
+                <input type="text" class="form-input" id="githubBranch" value="main" placeholder="main">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">مسار الملف:</label>
+                <input type="text" class="form-input" id="githubFilePath" value="students_data.json" placeholder="students_data.json">
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+                <button class="btn btn-secondary" onclick="closeSettings()">❌ إلغاء</button>
             </div>
         </div>
     </div>
 
+    <!-- Cropper Modal -->
+    <div class="cropper-modal" id="cropperModal">
+        <div class="cropper-content">
+            <div class="cropper-header">
+                <h2>✂️ تعديل الصورة</h2>
+                <p class="help-text">اسحب الصورة لتحريكها واستخدم المؤشر لتكبيرها أو تصغيرها</p>
+            </div>
+            
+            <div class="crop-container">
+                <img id="cropImage" src="" alt="Crop">
+            </div>
+            
+            <div class="zoom-control">
+                <label>🔍 تكبير/تصغير:</label>
+                <input type="range" class="zoom-slider" id="zoomSlider" min="10" max="300" value="100">
+            </div>
+            
+            <div class="cropper-actions">
+                <button class="btn btn-primary" onclick="applyCrop()">✅ تطبيق</button>
+                <button class="btn btn-secondary" onclick="closeCropper()">❌ إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Toast -->
+    <div class="message" id="messageToast"></div>
+
     <script>
-        // تنظيم الصفوف حسب المستوى
-        const gradeGroups = {
-            'الصف الثالث': ['الثالث 1', 'الثالث 2', 'الثالث 3', 'الثالث 4', 'الثالث 5'],
-            'الصف الرابع': ['الرابع 1', 'الرابع 2', 'الرابع 3', 'الرابع 4', 'الرابع 5'],
-            'الصف الخامس': ['الخامس 1', 'الخامس 2', 'الخامس 3', 'الخامس 4'],
-            'الصف السادس': ['السادس 1', 'السادس 2', 'السادس 3', 'السادس 4']
-        };
-
-        let currentCropClassName = null;
-        let currentImageData = null;
-        let imagePosition = { x: 0, y: 0 };
-        let imageScale = 1;
-        let isDragging = false;
-        let dragStart = { x: 0, y: 0 };
+        // Global variables
         let currentData = {};
-
-        // GitHub settings
         let githubSettings = {
             token: '',
             repo: '',
             branch: 'main',
-            filePath: 'wel/motfokon/students-data.json'
+            filePath: 'students_data.json'
         };
+        
+        let currentImageData = null;
+        let imageScale = 1;
+        let imagePosition = { x: 0, y: 0 };
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
 
-        // Load settings from localStorage
+        // Show message
+        function showMessage(text, type) {
+            const message = document.getElementById('messageToast');
+            message.textContent = text;
+            message.className = `message ${type}`;
+            message.classList.add('show');
+            
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 3000);
+        }
+
+        // Settings management
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('show');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('show');
+        }
+
+        function saveSettings() {
+            githubSettings.token = document.getElementById('githubToken').value.trim();
+            githubSettings.repo = document.getElementById('githubRepo').value.trim();
+            githubSettings.branch = document.getElementById('githubBranch').value.trim() || 'main';
+            githubSettings.filePath = document.getElementById('githubFilePath').value.trim() || 'students_data.json';
+
+            if (!githubSettings.token || !githubSettings.repo) {
+                showMessage('❌ الرجاء إدخال Token واسم المستودع', 'error');
+                return;
+            }
+
+            localStorage.setItem('githubSettings', JSON.stringify(githubSettings));
+            updateGitHubStatus(true);
+            showMessage('✅ تم حفظ الإعدادات بنجاح!', 'success');
+            closeSettings();
+        }
+
         function loadSettings() {
             const saved = localStorage.getItem('githubSettings');
             if (saved) {
                 githubSettings = JSON.parse(saved);
-                updateGitHubStatus();
+                document.getElementById('githubToken').value = githubSettings.token;
+                document.getElementById('githubRepo').value = githubSettings.repo;
+                document.getElementById('githubBranch').value = githubSettings.branch;
+                document.getElementById('githubFilePath').value = githubSettings.filePath;
+                updateGitHubStatus(true);
                 return true;
             }
             return false;
         }
 
-        // Save settings to localStorage
-        function saveSettingsToLocal() {
-            localStorage.setItem('githubSettings', JSON.stringify(githubSettings));
-        }
-
-        // Update GitHub connection status
-        function updateGitHubStatus() {
+        function updateGitHubStatus(connected) {
             const status = document.getElementById('githubStatus');
             const saveBtn = document.getElementById('saveBtn');
             const loadBtn = document.getElementById('loadBtn');
             
-            if (githubSettings.token && githubSettings.repo) {
+            if (connected) {
                 status.className = 'github-status connected';
-                status.textContent = '🟢 متصل بـ GitHub: ' + githubSettings.repo;
+                status.textContent = '✅ متصل بـ GitHub';
                 saveBtn.disabled = false;
                 loadBtn.disabled = false;
             } else {
                 status.className = 'github-status disconnected';
-                status.textContent = '🔴 غير متصل بـ GitHub - قم بإعداد الإعدادات أولاً';
+                status.textContent = '⚠️ لم يتم ربط GitHub بعد';
                 saveBtn.disabled = true;
                 loadBtn.disabled = true;
             }
         }
 
-        // Show message
-        function showMessage(text, type = 'info') {
-            const messageBox = document.getElementById('messageBox');
-            messageBox.textContent = text;
-            messageBox.className = 'message ' + type + ' show';
-            setTimeout(() => {
-                messageBox.classList.remove('show');
-            }, 5000);
-        }
-
-        // Open settings modal
-        function openSettings() {
-            document.getElementById('githubToken').value = githubSettings.token;
-            document.getElementById('githubRepo').value = githubSettings.repo;
-            document.getElementById('githubBranch').value = githubSettings.branch;
-            document.getElementById('githubFilePath').value = githubSettings.filePath;
-            document.getElementById('settingsModal').classList.add('show');
-        }
-
-        // Close settings modal
-        function closeSettings() {
-            document.getElementById('settingsModal').classList.remove('show');
-        }
-
-        // Save settings
-        function saveSettings() {
-            githubSettings.token = document.getElementById('githubToken').value.trim();
-            githubSettings.repo = document.getElementById('githubRepo').value.trim();
-            githubSettings.branch = document.getElementById('githubBranch').value.trim();
-            githubSettings.filePath = document.getElementById('githubFilePath').value.trim();
-
+        // GitHub operations
+        async function loadFromGitHub() {
             if (!githubSettings.token || !githubSettings.repo) {
-                showMessage('⚠️ يجب إدخال Token واسم المستودع', 'error');
+                showMessage('❌ الرجاء إعداد GitHub أولاً', 'error');
+                openSettings();
                 return;
             }
 
-            saveSettingsToLocal();
-            updateGitHubStatus();
-            closeSettings();
-            showMessage('✅ تم حفظ الإعدادات بنجاح!', 'success');
-        }
-
-        // Load data from GitHub
-        async function loadFromGitHub() {
             try {
-                showMessage('⏳ جاري التحميل من GitHub...', 'info');
+                showMessage('🔄 جاري تحميل البيانات من GitHub...', 'success');
                 
                 const url = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
-                
                 const response = await fetch(url, {
                     headers: {
                         'Authorization': `token ${githubSettings.token}`,
@@ -705,12 +752,14 @@
                     }
                 });
 
+                if (response.status === 404) {
+                    showMessage('ℹ️ لم يتم العثور على بيانات سابقة', 'error');
+                    currentData = {};
+                    updateStudentsTable();
+                    return;
+                }
+
                 if (!response.ok) {
-                    if (response.status === 404) {
-                        showMessage('ℹ️ الملف غير موجود على GitHub - ابدأ بإدخال البيانات واحفظها', 'info');
-                        initForms();
-                        return;
-                    }
                     throw new Error('فشل تحميل البيانات من GitHub');
                 }
 
@@ -718,47 +767,44 @@
                 const content = atob(data.content);
                 currentData = JSON.parse(content);
                 
-                showMessage('✅ تم تحميل البيانات من GitHub بنجاح!', 'success');
-                initForms();
+                updateStudentsTable();
+                showMessage('✅ تم تحميل البيانات بنجاح!', 'success');
             } catch (error) {
                 console.error('Error loading from GitHub:', error);
                 showMessage('❌ خطأ في تحميل البيانات: ' + error.message, 'error');
-                initForms();
             }
         }
 
-        // Save data to GitHub
         async function saveToGitHub() {
+            if (!githubSettings.token || !githubSettings.repo) {
+                showMessage('❌ الرجاء إعداد GitHub أولاً', 'error');
+                openSettings();
+                return;
+            }
+
             try {
-                // Collect all data
-                collectFormData();
+                showMessage('💾 جاري حفظ البيانات إلى GitHub...', 'success');
 
-                showMessage('⏳ جاري الحفظ إلى GitHub...', 'info');
+                const jsonContent = JSON.stringify(currentData, null, 2);
+                const content = btoa(unescape(encodeURIComponent(jsonContent)));
 
-                // Get current file SHA (if exists)
-                const getUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
                 let sha = null;
-
                 try {
+                    const getUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
                     const getResponse = await fetch(getUrl, {
                         headers: {
                             'Authorization': `token ${githubSettings.token}`,
                             'Accept': 'application/vnd.github.v3+json'
                         }
                     });
-
                     if (getResponse.ok) {
-                        const existingFile = await getResponse.json();
-                        sha = existingFile.sha;
+                        const getData = await getResponse.json();
+                        sha = getData.sha;
                     }
                 } catch (e) {
-                    // File doesn't exist, that's okay
+                    console.log('File does not exist yet, will create new');
                 }
 
-                // Prepare data
-                const content = btoa(unescape(encodeURIComponent(JSON.stringify(currentData, null, 2))));
-
-                // Create/Update file
                 const putUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}`;
                 const putResponse = await fetch(putUrl, {
                     method: 'PUT',
@@ -786,94 +832,12 @@
             }
         }
 
-        // Collect form data
-        function collectFormData() {
-            let allClasses = [];
-            Object.values(gradeGroups).forEach(classes => {
-                allClasses = allClasses.concat(classes);
-            });
-
-            allClasses.forEach(className => {
-                const classKey = className.replace(/\s/g, '-');
-                const name = document.getElementById(`name-${classKey}`).value;
-                const average = document.getElementById(`average-${classKey}`).value;
-                const preview = document.getElementById(`preview-${classKey}`);
-                const img = preview.querySelector('img');
-                const photo = img ? img.src : '';
-
-                currentData[className] = {
-                    name: name,
-                    average: average,
-                    photo: photo
-                };
-            });
-        }
-
-        // Initialize forms
-        function initForms() {
-            const container = document.getElementById('formsContainer');
-            container.innerHTML = '';
-
-            Object.keys(gradeGroups).forEach(gradeTitle => {
-                const section = document.createElement('div');
-                section.className = 'grade-section';
-
-                const header = document.createElement('div');
-                header.className = 'grade-header';
-                header.textContent = gradeTitle;
-                section.appendChild(header);
-
-                const grid = document.createElement('div');
-                grid.className = 'classes-grid';
-
-                gradeGroups[gradeTitle].forEach(className => {
-                    const student = currentData[className] || { name: '', photo: '', average: '' };
-                    
-                    const card = document.createElement('div');
-                    card.className = 'class-card';
-                    card.innerHTML = `
-                        <div class="class-name">${className}</div>
-                        
-                        <div class="form-group photo-upload">
-                            <div class="photo-preview" id="preview-${className.replace(/\s/g, '-')}">
-                                ${student.photo ? `<img src="${student.photo}" alt="${student.name}">` : '👤'}
-                            </div>
-                            <div class="file-input-wrapper">
-                                <input type="file" id="photo-${className.replace(/\s/g, '-')}" accept="image/*" onchange="handlePhotoUpload('${className}', this)">
-                                <label for="photo-${className.replace(/\s/g, '-')}" class="file-input-label">
-                                    📷 اختر صورة
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">اسم الطالب:</label>
-                            <input type="text" class="form-input" id="name-${className.replace(/\s/g, '-')}" 
-                                   value="${student.name}" placeholder="أدخل اسم الطالب">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">المعدل العام (%):</label>
-                            <input type="number" class="form-input" id="average-${className.replace(/\s/g, '-')}" 
-                                   value="${student.average}" placeholder="مثال: 95" min="0" max="100">
-                        </div>
-                    `;
-                    
-                    grid.appendChild(card);
-                });
-
-                section.appendChild(grid);
-                container.appendChild(section);
-            });
-        }
-
-        // Handle photo upload - open cropper
-        function handlePhotoUpload(className, input) {
+        // Photo handling
+        function handlePhotoUpload(input) {
             const file = input.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    currentCropClassName = className;
                     currentImageData = e.target.result;
                     openCropper(e.target.result);
                 };
@@ -881,7 +845,6 @@
             }
         }
 
-        // Open image cropper
         function openCropper(imageSrc) {
             const modal = document.getElementById('cropperModal');
             const image = document.getElementById('cropImage');
@@ -900,7 +863,6 @@
             setupDragging();
         }
 
-        // Setup image dragging
         function setupDragging() {
             const image = document.getElementById('cropImage');
             const slider = document.getElementById('zoomSlider');
@@ -955,13 +917,11 @@
             };
         }
 
-        // Update image transform
         function updateImageTransform() {
             const image = document.getElementById('cropImage');
             image.style.transform = `translate(calc(-50% + ${imagePosition.x}px), calc(-50% + ${imagePosition.y}px)) scale(${imageScale})`;
         }
 
-        // Apply crop and save
         function applyCrop() {
             const image = document.getElementById('cropImage');
             const canvas = document.createElement('canvas');
@@ -984,23 +944,106 @@
             
             const croppedImage = canvas.toDataURL('image/jpeg', 0.9);
             
-            const preview = document.getElementById(`preview-${currentCropClassName.replace(/\s/g, '-')}`);
+            const preview = document.getElementById('newStudentPreview');
             preview.innerHTML = `<img src="${croppedImage}" alt="Preview">`;
             
             closeCropper();
         }
 
-        // Close cropper
         function closeCropper() {
             const modal = document.getElementById('cropperModal');
             modal.classList.remove('show');
-            currentCropClassName = null;
-            currentImageData = null;
         }
 
-        // Open display page
-        function openDisplayPage() {
-            window.open('students_display_github.html', '_blank');
+        // Add student
+        function addStudent() {
+            const className = document.getElementById('studentClass').value;
+            const name = document.getElementById('studentName').value.trim();
+            const average = document.getElementById('studentAverage').value.trim();
+            const preview = document.getElementById('newStudentPreview');
+            const img = preview.querySelector('img');
+            const photo = img ? img.src : '';
+
+            if (!className) {
+                showMessage('❌ الرجاء اختيار الصف', 'error');
+                return;
+            }
+
+            if (!name) {
+                showMessage('❌ الرجاء إدخال اسم الطالب', 'error');
+                return;
+            }
+
+            if (!average) {
+                showMessage('❌ الرجاء إدخال المعدل', 'error');
+                return;
+            }
+
+            currentData[className] = {
+                name: name,
+                average: average,
+                photo: photo
+            };
+
+            updateStudentsTable();
+            clearForm();
+            showMessage('✅ تم إضافة الطالب بنجاح!', 'success');
+        }
+
+        function clearForm() {
+            document.getElementById('studentClass').value = '';
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentAverage').value = '';
+            document.getElementById('studentPhoto').value = '';
+            document.getElementById('newStudentPreview').innerHTML = '👤';
+        }
+
+        function deleteStudent(className) {
+            if (confirm(`هل أنت متأكد من حذف طالب ${className}؟`)) {
+                delete currentData[className];
+                updateStudentsTable();
+                showMessage('✅ تم حذف الطالب بنجاح!', 'success');
+            }
+        }
+
+        function updateStudentsTable() {
+            const tbody = document.getElementById('studentsTableBody');
+            
+            if (Object.keys(currentData).length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #999; padding: 30px;">
+                            لا توجد بيانات بعد
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            let html = '';
+            for (let className in currentData) {
+                const student = currentData[className];
+                html += `
+                    <tr>
+                        <td>
+                            ${student.photo ? 
+                                `<img src="${student.photo}" alt="${student.name}" class="student-photo-small">` : 
+                                '<div class="no-photo">👤</div>'
+                            }
+                        </td>
+                        <td><strong>${className}</strong></td>
+                        <td>${student.name}</td>
+                        <td>${student.average}%</td>
+                        <td>
+                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${className}')">
+                                🗑️ حذف
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            tbody.innerHTML = html;
         }
 
         // Initialize on page load
@@ -1009,7 +1052,7 @@
             if (hasSettings) {
                 await loadFromGitHub();
             } else {
-                initForms();
+                updateStudentsTable();
                 openSettings();
             }
         };
