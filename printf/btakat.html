@@ -756,14 +756,10 @@
 
         /* Print Styles */
         @media print {
-            @page {
-                size: A4 landscape;
-                margin: 1cm;
-            }
-
             * {
                 print-color-adjust: exact !important;
                 -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
             }
 
             body {
@@ -788,7 +784,8 @@
             }
 
             .cards-preview {
-                display: block !important;
+                display: flex !important;
+                flex-direction: column !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 gap: 0 !important;
@@ -801,9 +798,11 @@
                 animation: none !important;
                 border-radius: 0 !important;
                 background: white !important;
-                position: relative !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
 
             .preview-card::before {
@@ -816,71 +815,126 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                padding: 1cm !important;
+                padding: 2cm !important;
+                box-sizing: border-box !important;
             }
 
             .border-preview {
                 width: 100% !important;
                 height: 100% !important;
+                max-width: 90% !important;
+                max-height: 90% !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                border: none !important;
+                box-sizing: border-box !important;
             }
 
             .card-text {
                 text-align: center !important;
+                word-wrap: break-word !important;
+                max-width: 90% !important;
             }
 
             .delete-btn {
                 display: none !important;
             }
 
-            /* Full page style */
+            /* Full page style - LANDSCAPE orientation - one card per page */
+            .print-full {
+                /* Landscape page settings */
+            }
+
+            @page :first {
+                size: A4 landscape;
+                margin: 0;
+            }
+
             .print-full .preview-card {
-                width: 100% !important;
-                height: 26cm !important;
+                width: 29.7cm !important;
+                height: 21cm !important;
                 page-break-after: always !important;
                 break-after: page !important;
             }
 
             .print-full .preview-card:last-child {
                 page-break-after: auto !important;
-            }
-
-            .print-full .border-preview {
-                min-height: 20cm !important;
+                break-after: auto !important;
             }
 
             .print-full .card-text {
-                font-size: 7rem !important;
+                font-size: 6rem !important;
                 line-height: 1.2 !important;
             }
 
-            /* Half page style */
-            .print-half .preview-card {
-                width: 100% !important;
-                height: 13cm !important;
-                page-break-after: avoid !important;
-                break-after: avoid !important;
+            /* Half page style - PORTRAIT orientation - two cards per page */
+            @page {
+                size: A4 portrait;
+                margin: 0;
             }
 
-            .print-half .preview-card:nth-child(even) {
+            .print-half .preview-card {
+                width: 21cm !important;
+                height: 14.85cm !important;
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            /* After every second card, insert page break */
+            .print-half .preview-card:nth-child(2n) {
                 page-break-after: always !important;
                 break-after: page !important;
             }
 
+            /* Don't break after last card */
             .print-half .preview-card:last-child {
                 page-break-after: auto !important;
-            }
-
-            .print-half .border-preview {
-                min-height: 10cm !important;
+                break-after: auto !important;
             }
 
             .print-half .card-text {
-                font-size: 4.5rem !important;
+                font-size: 3.5rem !important;
                 line-height: 1.2 !important;
+            }
+
+            .print-half .card-content {
+                padding: 1.5cm !important;
+            }
+
+            /* Override page orientation for full page */
+            .print-full ~ @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+
+            /* Ensure all border styles print correctly */
+            .border-preview::before,
+            .border-preview::after {
+                print-color-adjust: exact !important;
+                -webkit-print-color-adjust: exact !important;
+            }
+        }
+
+        /* Additional page rules for different print modes */
+        @media print {
+            @page full-page {
+                size: A4 landscape;
+                margin: 0;
+            }
+
+            @page half-page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .print-full {
+                page: full-page;
+            }
+
+            .print-half {
+                page: half-page;
             }
         }
 
@@ -1084,11 +1138,11 @@
                 <div class="size-selector">
                     <div class="size-option">
                         <input type="radio" name="size" id="full" value="full" checked>
-                        <label for="full">صفحة كاملة<br><small>بطاقة واحدة لكل صفحة</small></label>
+                        <label for="full">صفحة كاملة 🗘<br><small>بطاقة واحدة - ورقة أفقية</small></label>
                     </div>
                     <div class="size-option">
                         <input type="radio" name="size" id="half" value="half">
-                        <label for="half">نصف صفحة<br><small>بطاقتان لكل صفحة</small></label>
+                        <label for="half">نصف صفحة ⬍<br><small>بطاقتان - ورقة عمودية</small></label>
                     </div>
                 </div>
             </div>
