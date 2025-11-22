@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مولد البطاقات التعليمية المزخرفة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800;900&family=Almarai:wght@400;700;800&family=Lateef:wght@400;700&family=Scheherazade:wght@400;700&family=Markazi+Text:wght@400;500;600;700&family=Changa:wght@400;500;600;700;800&family=El+Messiri:wght@400;500;600;700&family=Lalezar&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #FF6B9D;
@@ -191,6 +191,74 @@
         .color-option label:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .font-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .font-dropdown {
+            position: relative;
+        }
+
+        .font-dropdown select {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 16px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 1rem center;
+            background-size: 20px;
+            padding-left: 3rem;
+        }
+
+        .font-dropdown select:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+        }
+
+        .font-dropdown select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .font-dropdown option {
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .font-preview-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .font-preview-text {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--dark);
+            text-align: center;
+            word-wrap: break-word;
+            max-width: 100%;
         }
 
         .border-option {
@@ -1418,6 +1486,26 @@
                 grid-template-columns: repeat(3, 1fr);
             }
 
+            .font-selector {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .font-dropdown select {
+                font-size: 1rem;
+                padding: 0.8rem 2.5rem 0.8rem 1rem;
+                background-position: left 0.8rem center;
+            }
+
+            .font-preview-box {
+                min-height: 120px;
+                padding: 1.5rem;
+            }
+
+            .font-preview-text {
+                font-size: 2rem;
+            }
+
             .size-selector {
                 flex-direction: column;
             }
@@ -1482,6 +1570,29 @@
 القطة
 الفيل
 الزرافة"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>🔤 اختر نوع الخط:</label>
+                <div class="font-selector">
+                    <div class="font-dropdown">
+                        <select id="fontSelect" name="font">
+                            <option value="Arial" style="font-family: Arial, sans-serif;">Arial</option>
+                            <option value="Cairo" style="font-family: 'Cairo', sans-serif;">Cairo - القاهرة</option>
+                            <option value="Tajawal" style="font-family: 'Tajawal', sans-serif;">Tajawal - تجوال</option>
+                            <option value="Amiri" style="font-family: 'Amiri', serif;">Amiri - أميري</option>
+                            <option value="Almarai" style="font-family: 'Almarai', sans-serif;">Almarai - المرعى</option>
+                            <option value="Lateef" style="font-family: 'Lateef', serif;">Lateef - لطيف</option>
+                            <option value="Scheherazade" style="font-family: 'Scheherazade', serif;">Scheherazade - شهرزاد</option>
+                            <option value="Markazi Text" style="font-family: 'Markazi Text', serif;">Markazi Text - مركزي</option>
+                            <option value="Changa" style="font-family: 'Changa', sans-serif;">Changa - تشانغا</option>
+                            <option value="El Messiri" style="font-family: 'El Messiri', sans-serif;">El Messiri - المسيري</option>
+                        </select>
+                    </div>
+                    <div class="font-preview-box">
+                        <div class="font-preview-text" id="fontPreview">مثال</div>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -1772,6 +1883,20 @@
     <script>
         let cards = [];
 
+        // Update font preview
+        function updateFontPreview() {
+            const selectedFont = document.getElementById('fontSelect').value;
+            const previewText = document.getElementById('fontPreview');
+            previewText.style.fontFamily = selectedFont === 'Arial' ? 'Arial, sans-serif' : `'${selectedFont}', sans-serif`;
+        }
+
+        // Add event listeners for font selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const fontSelect = document.getElementById('fontSelect');
+            fontSelect.addEventListener('change', updateFontPreview);
+            updateFontPreview();
+        });
+
         function generateCards() {
             const wordsInput = document.getElementById('wordsInput').value.trim();
             
@@ -1783,6 +1908,7 @@
             const words = wordsInput.split('\n').filter(word => word.trim() !== '');
             const selectedBorder = document.querySelector('input[name="border"]:checked').value;
             const selectedColor = document.querySelector('input[name="color"]:checked').value;
+            const selectedFont = document.getElementById('fontSelect').value;
             
             // Add new cards
             words.forEach((word, index) => {
@@ -1790,7 +1916,8 @@
                     id: Date.now() + index,
                     text: word.trim(),
                     border: selectedBorder,
-                    color: selectedColor
+                    color: selectedColor,
+                    font: selectedFont
                 });
             });
 
@@ -1813,16 +1940,19 @@
                 return;
             }
 
-            container.innerHTML = cards.map((card, index) => `
-                <div class="preview-card" style="animation-delay: ${index * 0.1}s">
-                    <button class="delete-btn" onclick="deleteCard(${card.id})" title="حذف البطاقة">×</button>
-                    <div class="card-content">
-                        <div class="border-preview ${card.border}">
-                            <div class="card-text" style="color: ${card.color} !important;">${card.text}</div>
+            container.innerHTML = cards.map((card, index) => {
+                const fontFamily = card.font === 'Arial' ? 'Arial, sans-serif' : `'${card.font}', sans-serif`;
+                return `
+                    <div class="preview-card" style="animation-delay: ${index * 0.1}s">
+                        <button class="delete-btn" onclick="deleteCard(${card.id})" title="حذف البطاقة">×</button>
+                        <div class="card-content">
+                            <div class="border-preview ${card.border}">
+                                <div class="card-text" style="color: ${card.color} !important; font-family: ${fontFamily} !important;">${card.text}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function deleteCard(id) {
