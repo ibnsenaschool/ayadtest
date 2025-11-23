@@ -224,29 +224,116 @@
 
         .photo-upload {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
+            justify-content: center;
             margin-bottom: 25px;
+            gap: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            position: relative;
         }
 
         .photo-preview {
-            width: 150px;
-            height: 150px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             overflow: hidden;
-            background: #f0f0f0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 4em;
-            margin-bottom: 15px;
-            border: 3px solid #667eea;
+            font-size: 6em;
+            border: 8px solid #fff;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4),
+                        0 0 0 12px rgba(102, 126, 234, 0.1),
+                        inset 0 -5px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .photo-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5),
+                        0 0 0 15px rgba(102, 126, 234, 0.15),
+                        inset 0 -5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .photo-preview::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            border-radius: 50%;
+            border: 3px dashed rgba(102, 126, 234, 0.3);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .photo-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .motivational-text {
+            flex: 1;
+            max-width: 280px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .motivational-text.left {
+            text-align: right;
+        }
+
+        .motivational-text.right {
+            text-align: left;
+        }
+
+        .motivational-quote {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            line-height: 1.6;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .motivational-subtext {
+            font-size: 1em;
+            color: #555;
+            font-style: italic;
+            line-height: 1.5;
+            transition: all 0.5s ease-in-out;
+        }
+
+        .star-decoration {
+            display: inline-block;
+            color: #ffd700;
+            font-size: 1.5em;
+            margin: 0 5px;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        .photo-upload-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
 
         .file-input-wrapper {
@@ -474,6 +561,28 @@
                 padding: 10px 20px;
                 font-size: 1em;
             }
+
+            .photo-upload {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .motivational-text {
+                max-width: 100%;
+            }
+
+            .photo-preview {
+                width: 200px;
+                height: 200px;
+            }
+
+            .motivational-quote {
+                font-size: 1.1em;
+            }
+
+            .motivational-subtext {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
@@ -498,14 +607,41 @@
             <h2 class="section-title">➕ إضافة طالب جديد</h2>
             
             <div class="photo-upload">
-                <div class="photo-preview" id="newStudentPreview">
-                    👤
+                <!-- العبارة اليمنى -->
+                <div class="motivational-text left">
+                    <div class="motivational-quote">
+                        <span class="star-decoration">⭐</span>
+                        النجاح ليس صدفة
+                        <span class="star-decoration">⭐</span>
+                    </div>
+                    <div class="motivational-subtext">
+                        بالجهد والمثابرة نحقق أحلامنا
+                    </div>
                 </div>
-                <div class="file-input-wrapper">
-                    <input type="file" id="studentPhoto" accept="image/*" onchange="handlePhotoUpload(this)">
-                    <label for="studentPhoto" class="file-input-label">
-                        📷 اختر صورة الطالب
-                    </label>
+
+                <!-- الصورة والزر -->
+                <div class="photo-upload-wrapper">
+                    <div class="photo-preview" id="newStudentPreview">
+                        👤
+                    </div>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="studentPhoto" accept="image/*" onchange="handlePhotoUpload(this)">
+                        <label for="studentPhoto" class="file-input-label">
+                            📷 اختر صورة الطالب
+                        </label>
+                    </div>
+                </div>
+
+                <!-- العبارة اليسرى -->
+                <div class="motivational-text right">
+                    <div class="motivational-quote">
+                        <span class="star-decoration">🌟</span>
+                        التفوق رحلة
+                        <span class="star-decoration">🌟</span>
+                    </div>
+                    <div class="motivational-subtext">
+                        كل خطوة تقربنا من القمة
+                    </div>
                 </div>
             </div>
 
@@ -514,39 +650,29 @@
                 <select class="form-select" id="studentClass">
                     <option value="">-- اختر الصف --</option>
                     <optgroup label="الصف الثالث">
-                        <option value="الثالث 1">الثالث 1</option>
-                        <option value="الثالث 2">الثالث 2</option>
-                        <option value="الثالث 3">الثالث 3</option>
-                        <option value="الثالث 4">الثالث 4</option>
-                        <option value="الثالث 5">الثالث 5</option>
-                       
+                        <option value="الثالث أ">الثالث أ</option>
+                        <option value="الثالث ب">الثالث ب</option>
+                        <option value="الثالث ت">الثالث ت</option>
+                        <option value="الثالث ث">الثالث ث</option>
+                        <option value="الثالث ج">الثالث ج</option>
+                        <option value="الثالث ح">الثالث ح</option>
                     </optgroup>
                     <optgroup label="الصف الرابع">
-                        <option value="الرابع 1">الرابع 1</option>
-                        <option value="الرابع 2">الرابع 2</option>
-                        <option value="الرابع 3">الرابع 3</option>
-                        <option value="الرابع 4">الرابع 4</option>
-                        <option value="الرابع 5">الرابع 5</option>
-                        
+                        <option value="الرابع أ">الرابع أ</option>
+                        <option value="الرابع ب">الرابع ب</option>
+                        <option value="الرابع ت">الرابع ت</option>
+                        <option value="الرابع ث">الرابع ث</option>
+                        <option value="الرابع ج">الرابع ج</option>
+                        <option value="الرابع ح">الرابع ح</option>
                     </optgroup>
                     <optgroup label="الصف الخامس">
-                        <option value="الخامس 1">الخامس 1</option>
-                        <option value="الخامس 2">الخامس 2</option>
-                        <option value="الخامس 3">الخامس 3</option>
-                        <option value="الخامس 4">الخامس 4</option>
-                        <option value="الخامس 5">الخامس 5</option>
-                       
+                        <option value="الخامس أ">الخامس أ</option>
+                        <option value="الخامس ب">الخامس ب</option>
+                        <option value="الخامس ت">الخامس ت</option>
+                        <option value="الخامس ث">الخامس ث</option>
+                        <option value="الخامس ج">الخامس ج</option>
+                        <option value="الخامس ح">الخامس ح</option>
                     </optgroup>
-
-                    <optgroup label="الصف السادس">
-                        <option value="السادس 1">السادس 1</option>
-                        <option value="السادس 2">السادس 2</option>
-                        <option value="السادس 3">السادس 3</option>
-                        <option value="السادس 4">السادس 4</option>
-                        <option value="السادس 5">السادس 5</option>
-                       
-                    </optgroup>
-                    
                 </select>
             </div>
 
@@ -673,6 +799,65 @@
         let isDragging = false;
         let dragStart = { x: 0, y: 0 };
 
+        // Motivational quotes
+        const motivationalQuotes = [
+            {
+                right: { main: "النجاح ليس صدفة", sub: "بالجهد والمثابرة نحقق أحلامنا" },
+                left: { main: "التفوق رحلة", sub: "كل خطوة تقربنا من القمة" }
+            },
+            {
+                right: { main: "التميز سلوك", sub: "ليس حظاً بل عملاً وإصراراً" },
+                left: { main: "أنت قادر", sub: "على تحقيق المستحيل بالإرادة" }
+            },
+            {
+                right: { main: "الطموح لا حدود له", sub: "ارسم أهدافك واعمل على تحقيقها" },
+                left: { main: "التفوق يبدأ بقرار", sub: "وينتهي بإنجاز يفخر به الجميع" }
+            },
+            {
+                right: { main: "العلم نور", sub: "والاجتهاد طريق النجاح والتفوق" },
+                left: { main: "المثابرة سر التميز", sub: "لا تستسلم أبداً مهما كانت الصعوبات" }
+            },
+            {
+                right: { main: "كن مثلهم", sub: "متفوقاً بالعلم والأخلاق معاً" },
+                left: { main: "النجاح بالعمل", sub: "وليس بالأماني والتمنيات فقط" }
+            }
+        ];
+
+        // Change motivational quotes periodically
+        function rotateMotivationalQuotes() {
+            const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+            const quotes = motivationalQuotes[randomIndex];
+            
+            const leftQuote = document.querySelector('.motivational-text.left .motivational-quote');
+            const leftSub = document.querySelector('.motivational-text.left .motivational-subtext');
+            const rightQuote = document.querySelector('.motivational-text.right .motivational-quote');
+            const rightSub = document.querySelector('.motivational-text.right .motivational-subtext');
+            
+            if (leftQuote && leftSub && rightQuote && rightSub) {
+                // Fade out
+                [leftQuote, leftSub, rightQuote, rightSub].forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(-10px)';
+                });
+                
+                // Change content and fade in
+                setTimeout(() => {
+                    leftQuote.innerHTML = `<span class="star-decoration">⭐</span>${quotes.right.main}<span class="star-decoration">⭐</span>`;
+                    leftSub.textContent = quotes.right.sub;
+                    rightQuote.innerHTML = `<span class="star-decoration">🌟</span>${quotes.left.main}<span class="star-decoration">🌟</span>`;
+                    rightSub.textContent = quotes.left.sub;
+                    
+                    [leftQuote, leftSub, rightQuote, rightSub].forEach(el => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    });
+                }, 500);
+            }
+        }
+
+        // Start rotating quotes every 8 seconds
+        setInterval(rotateMotivationalQuotes, 8000);
+
         // Show message
         function showMessage(text, type) {
             const message = document.getElementById('messageToast');
@@ -774,7 +959,15 @@
                 }
 
                 const data = await response.json();
-                const content = atob(data.content);
+                // Decode base64 and handle UTF-8 properly
+                const base64Content = data.content.replace(/\n/g, '');
+                const binaryString = atob(base64Content);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                const decoder = new TextDecoder('utf-8');
+                const content = decoder.decode(bytes);
                 currentData = JSON.parse(content);
                 
                 updateStudentsTable();
@@ -796,7 +989,14 @@
                 showMessage('💾 جاري حفظ البيانات إلى GitHub...', 'success');
 
                 const jsonContent = JSON.stringify(currentData, null, 2);
-                const content = btoa(unescape(encodeURIComponent(jsonContent)));
+                // Encode UTF-8 to base64 properly
+                const encoder = new TextEncoder();
+                const utf8Bytes = encoder.encode(jsonContent);
+                let binaryString = '';
+                for (let i = 0; i < utf8Bytes.length; i++) {
+                    binaryString += String.fromCharCode(utf8Bytes[i]);
+                }
+                const content = btoa(binaryString);
 
                 let sha = null;
                 try {
