@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسابقة أجمل ساحة 🏆</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* الشريحة الأولى - العنوان */
+        .title-slide {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 6em;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .title-slide .subtitle {
+            font-size: 3em;
+            color: white;
+            opacity: 0.95;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        .title-slide .emoji {
+            font-size: 10em;
+            animation: rotate 3s ease-in-out infinite;
+        }
+
+        @keyframes rotate {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        /* شريحة بسيطة */
+        .simple-slide {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            text-align: center;
+        }
+
+        .big-text {
+            font-size: 5em;
+            color: #333;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            line-height: 1.4;
+        }
+
+        .medium-text {
+            font-size: 3.5em;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .highlight {
+            color: #f5576c;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* جدول النقاط */
+        .table-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 30px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .table-container h2 {
+            font-size: 4em;
+            color: #667eea;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            font-size: 1.3em;
+        }
+
+        td {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .total-row {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .icon {
+            font-size: 1.5em;
+            margin-left: 10px;
+        }
+
+        /* رسائل تحفيزية */
+        .motivation-box {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border: 5px solid white;
+        }
+
+        .motivation-box h3 {
+            font-size: 3em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .motivation-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .motivation-item {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-right: 8px solid #f5576c;
+        }
+
+        .motivation-item .emoji {
+            font-size: 2em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* شريحة الأدوار */
+        .roles-slide {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .roles-container {
+            background: white;
+            border-radius: 30px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .roles-container h2 {
+            font-size: 4em;
+            color: #667eea;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .role-card {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .role-card:hover {
+            transform: scale(1.05);
+        }
+
+        .role-card .emoji {
+            font-size: 4em;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .role-card h3 {
+            font-size: 2.2em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* شريحة الجوائز */
+        .prizes-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .prizes-container {
+            background: white;
+            border-radius: 30px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .prizes-container h2 {
+            font-size: 4em;
+            color: #667eea;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .prizes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .prize-card {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+            color: white;
+        }
+
+        .prize-card:hover {
+            transform: scale(1.05);
+        }
+
+        .prize-card .emoji {
+            font-size: 4em;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .prize-card h3 {
+            font-size: 2.2em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* الشريحة الأخيرة */
+        .final-slide {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            text-align: center;
+        }
+
+        .final-slide h2 {
+            font-size: 5em;
+            color: white;
+            margin-bottom: 40px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .final-slide .message {
+            font-size: 3em;
+            color: white;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .final-slide .emoji {
+            font-size: 12em;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* أزرار التنقل */
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* مؤشر التقدم */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700 0%, #f5576c 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 2px 10px rgba(255,215,0,0.5);
+        }
+
+        /* زر التحكم بالتشغيل */
+        .play-pause-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #667eea;
+            z-index: 1000;
+        }
+
+        .play-pause-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .title-slide h1 { font-size: 3em; }
+            .big-text { font-size: 2.5em; }
+            .roles-grid, .prizes-grid, .motivation-items { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- مؤشر التقدم -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- زر التحكم بالتشغيل -->
+    <button class="play-pause-btn" id="playPauseBtn" onclick="toggleAutoPlay()">⏸️ إيقاف</button>
+
+    <!-- الشريحة 1: العنوان -->
+    <div class="slide title-slide" id="slide1">
+        <div class="emoji">🏆</div>
+        <h1>مسابقة أجمل ساحة</h1>
+        <p class="subtitle">نحو مدرسة أنظف وأجمل</p>
+    </div>
+
+    <!-- الشريحة 2: رسالة للطلاب -->
+    <div class="slide simple-slide" id="slide2">
+        <p class="big-text">
+            🌟<br>
+            مدرستنا بيتنا الثاني<br>
+            🏫<br>
+            ونظافتها مسؤوليتنا جميعاً
+        </p>
+    </div>
+
+    <!-- الشريحة 3: ما هي المسابقة -->
+    <div class="slide simple-slide" id="slide3">
+        <p class="big-text">
+            📢<br>
+            مسابقة بين الصفوف<br>
+            <span class="highlight">من الأنظف؟</span><br>
+            كل أسبوع نختار<br>
+            الصف الفائز! 🎊
+        </p>
+    </div>
+
+    <!-- الشريحة 4: متى التقييم -->
+    <div class="slide simple-slide" id="slide4">
+        <p class="big-text">
+            📅<br>
+            التقييم يومياً<br>
+            الإعلان عن الفائز<br>
+            <span class="highlight">كل خميس</span><br>
+            في الطابور الصباحي
+        </p>
+    </div>
+
+    <!-- الشريحة 5: جدول النقاط مع التحفيز -->
+    <div class="slide table-slide" id="slide5">
+        <div class="table-container">
+            <h2>📊 كيف نحسب النقاط؟</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>المعيار</th>
+                        <th>النقاط</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="icon">🧹</span> نظافة الأرض</td>
+                        <td><span class="highlight">0-10</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="icon">🪑</span> نظافة المقاعد</td>
+                        <td><span class="highlight">0-10</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="icon">🗑️</span> ترتيب سلال المهملات</td>
+                        <td><span class="highlight">0-10</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="icon">📄</span> عدم وجود أوراق على الأرض</td>
+                        <td><span class="highlight">0-10</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="icon">🤝</span> مشاركة الصف وتعاونه</td>
+                        <td><span class="highlight">0-10</span></td>
+                    </tr>
+                    <tr class="total-row">
+                        <td>المجموع اليومي</td>
+                        <td><span class="highlight">50 نقطة</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- رسائل تحفيزية عن عدم رمي الأوراق -->
+            <div class="motivation-box">
+                <h3>⭐ تذكّر دائماً ⭐</h3>
+                <div class="motivation-items">
+                    <div class="motivation-item">
+                        <span class="emoji">🚫</span>
+                        لا ترمِ الأوراق على الأرض
+                    </div>
+                    <div class="motivation-item">
+                        <span class="emoji">🗑️</span>
+                        استخدم سلة المهملات
+                    </div>
+                    <div class="motivation-item">
+                        <span class="emoji">🌱</span>
+                        ساحة نظيفة = بيئة صحية
+                    </div>
+                    <div class="motivation-item">
+                        <span class="emoji">💪</span>
+                        أنت مسؤول عن نظافة مدرستك
+                    </div>
+                    <div class="motivation-item">
+                        <span class="emoji">👀</span>
+                        شاهدت ورقة؟ التقطها!
+                    </div>
+                    <div class="motivation-item">
+                        <span class="emoji">🏆</span>
+                        نظافتك = فوز صفك
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الشريحة 6: الأدوار -->
+    <div class="slide roles-slide" id="slide6">
+        <div class="roles-container">
+            <h2>👥 كل طالب له دور مهم!</h2>
+            <div class="roles-grid">
+                <div class="role-card">
+                    <span class="emoji">🗑️</span>
+                    <h3>مسؤول السلال</h3>
+                </div>
+                <div class="role-card">
+                    <span class="emoji">🪑</span>
+                    <h3>مسؤول المقاعد</h3>
+                </div>
+                <div class="role-card">
+                    <span class="emoji">🧹</span>
+                    <h3>مسؤول الأرض</h3>
+                </div>
+                <div class="role-card">
+                    <span class="emoji">🌱</span>
+                    <h3>مسؤول النباتات</h3>
+                </div>
+                <div class="role-card">
+                    <span class="emoji">🔔</span>
+                    <h3>مسؤول التذكير</h3>
+                </div>
+                <div class="role-card">
+                    <span class="emoji">⚡</span>
+                    <h3>مسؤول التنظيف السريع</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الشريحة 7: الجوائز -->
+    <div class="slide prizes-slide" id="slide7">
+        <div class="prizes-container">
+            <h2>🎁 ما هي الجوائز؟</h2>
+            <div class="prizes-grid">
+                <div class="prize-card">
+                    <span class="emoji">📜</span>
+                    <h3>شهادة تقدير للصف الفائز</h3>
+                </div>
+                <div class="prize-card">
+                    <span class="emoji">📸</span>
+                    <h3>صورة على لوحة الشرف</h3>
+                </div>
+                <div class="prize-card">
+                    <span class="emoji">⏰</span>
+                    <h3>5 دقائق زيادة في الفرصة</h3>
+                </div>
+                <div class="prize-card">
+                    <span class="emoji">🎮</span>
+                    <h3>درس ترفيهي أو لعبة</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الشريحة 8: رسالة قوية -->
+    <div class="slide simple-slide" id="slide8">
+        <p class="big-text">
+            💪<br>
+            صفك يحتاجك<br>
+            كل ورقة تلتقطها<br>
+            <span class="highlight">تقرّب صفك من الفوز!</span><br>
+            🏆
+        </p>
+    </div>
+
+    <!-- الشريحة 9: رسالة أخرى -->
+    <div class="slide simple-slide" id="slide9">
+        <p class="big-text">
+            🌟<br>
+            النظافة ليست مهمة صعبة<br>
+            بل <span class="highlight">عادة جميلة</span><br>
+            نتعلمها معاً<br>
+            ونفتخر بها
+        </p>
+    </div>
+
+    <!-- الشريحة 10: الختام -->
+    <div class="slide final-slide" id="slide10">
+        <div class="emoji">🎊</div>
+        <h2>معاً نصنع الفرق!</h2>
+        <p class="message">🌟 بالتوفيق لجميع الصفوف 🌟</p>
+        <p class="message">لنجعل مدرستنا الأجمل!</p>
+    </div>
+
+    <!-- أزرار التنقل -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">◄ السابق</button>
+        <button class="nav-btn" onclick="nextSlide()">التالي ►</button>
+    </div>
+
+    <div class="slide-counter" id="slideCounter">1 / 10</div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+        let autoPlayInterval;
+        let progressInterval;
+        let isPlaying = true;
+        const slideDelay = 8000; // 8 ثواني لكل شريحة
+        const progressStep = 100 / (slideDelay / 100); // تحديث كل 100ms
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                slide.style.display = 'none';
+            });
+
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+
+            document.getElementById(`slide${currentSlide}`).style.display = 'flex';
+            document.getElementById('slideCounter').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            // إعادة تعيين مؤشر التقدم
+            resetProgress();
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            if (currentSlide > totalSlides) currentSlide = 1;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide--;
+            if (currentSlide < 1) currentSlide = totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function resetProgress() {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = '0%';
+            
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+            
+            if (isPlaying) {
+                let progress = 0;
+                progressInterval = setInterval(() => {
+                    progress += progressStep;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(progressInterval);
+                    }
+                    progressBar.style.width = progress + '%';
+                }, 100);
+            }
+        }
+
+        function startAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+            }
+            autoPlayInterval = setInterval(nextSlide, slideDelay);
+            isPlaying = true;
+            document.getElementById('playPauseBtn').innerHTML = '⏸️ إيقاف';
+            resetProgress();
+        }
+
+        function stopAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+            }
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+            isPlaying = false;
+            document.getElementById('playPauseBtn').innerHTML = '▶️ تشغيل';
+            document.getElementById('progressBar').style.width = '0%';
+        }
+
+        function toggleAutoPlay() {
+            if (isPlaying) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        }
+
+        // التنقل بلوحة المفاتيح
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                previousSlide();
+                // إعادة تشغيل العداد التلقائي
+                if (isPlaying) {
+                    startAutoPlay();
+                }
+            } else if (event.key === 'ArrowLeft') {
+                nextSlide();
+                // إعادة تشغيل العداد التلقائي
+                if (isPlaying) {
+                    startAutoPlay();
+                }
+            } else if (event.key === ' ') {
+                event.preventDefault();
+                toggleAutoPlay();
+            }
+        });
+
+        // عند الضغط على أزرار التنقل
+        const originalNextSlide = nextSlide;
+        const originalPreviousSlide = previousSlide;
+
+        window.nextSlide = function() {
+            originalNextSlide();
+            if (isPlaying) {
+                startAutoPlay();
+            }
+        };
+
+        window.previousSlide = function() {
+            originalPreviousSlide();
+            if (isPlaying) {
+                startAutoPlay();
+            }
+        };
+
+        // بدء العرض
+        showSlide(1);
+        startAutoPlay();
+    </script>
+</body>
+</html>
