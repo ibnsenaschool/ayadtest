@@ -52,7 +52,7 @@
 
     <div class="top-bar">
       <img class="logo-left" src="https://ibnsenaschool.github.io/ayadtest/wel/f3aleat/ibnsena.jpg" alt="شعار ابن سينا" />
-      <div class="center-title" id="centerTitle"><span>يوم الزيت والزيتون - مدرسة ابن سينا</span></div>
+      <div class="center-title" id="centerTitle"><span>ابن سينا في الاقصى</span></div>
       <img class="logo-right" src="https://ibnsenaschool.github.io/ayadtest/wel/f3aleat/ibnsena2.jpg" alt="شعار ابن سينا 2" />
     </div>
 
@@ -168,8 +168,8 @@
       slides.forEach(s => s.classList.remove('active'));
       slides[index]?.classList.add('active');
       current = index;
-      titleEl.textContent = items[index].name;
-      countEl.textContent = `${index + 1} / ${items.length}`;
+      titleEl.textContent = "";
+      countEl.textContent = "";
     }
 
     function changeSlide(dir) {
