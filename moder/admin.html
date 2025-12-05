@@ -368,6 +368,10 @@
                     <label>الفرع (Branch)</label>
                     <input type="text" id="githubBranch" placeholder="main" value="main">
                 </div>
+                <div>
+                    <label>مسار المجلد (اتركه فارغاً للجذر)</label>
+                    <input type="text" id="githubPath" placeholder="مثال: moder">
+                </div>
                 <button class="btn-load" onclick="loadFromGitHub()">📥 تحميل البيانات الحالية</button>
             </div>
             <div class="data-status" id="dataStatus">أدخل بيانات GitHub واضغط "تحميل البيانات الحالية" لتحميل البيانات الموجودة</div>
@@ -434,7 +438,7 @@
 
         // تحميل الإعدادات المحفوظة
         function loadSettings() {
-            const settings = ['githubUsername', 'githubRepo', 'githubToken', 'githubBranch'];
+            const settings = ['githubUsername', 'githubRepo', 'githubToken', 'githubBranch', 'githubPath'];
             settings.forEach(setting => {
                 const saved = localStorage.getItem(setting);
                 if (saved) document.getElementById(setting).value = saved;
@@ -443,7 +447,7 @@
 
         // حفظ الإعدادات
         function saveSettings() {
-            const settings = ['githubUsername', 'githubRepo', 'githubToken', 'githubBranch'];
+            const settings = ['githubUsername', 'githubRepo', 'githubToken', 'githubBranch', 'githubPath'];
             settings.forEach(setting => {
                 localStorage.setItem(setting, document.getElementById(setting).value);
             });
@@ -454,6 +458,7 @@
             const username = document.getElementById('githubUsername').value;
             const repo = document.getElementById('githubRepo').value;
             const branch = document.getElementById('githubBranch').value || 'main';
+            const path = document.getElementById('githubPath').value;
 
             if (!username || !repo) {
                 showStatus('يرجى إدخال اسم المستخدم والمستودع', 'error');
@@ -463,9 +468,12 @@
             saveSettings();
             showStatus('جاري تحميل البيانات...', 'loading');
 
+            // بناء المسار الكامل
+            const filePath = path ? `${path}/data.js` : 'data.js';
+
             try {
                 const response = await fetch(
-                    `https://raw.githubusercontent.com/${username}/${repo}/${branch}/data.js?t=${Date.now()}`
+                    `https://raw.githubusercontent.com/${username}/${repo}/${branch}/${filePath}?t=${Date.now()}`
                 );
                 
                 if (response.ok) {
@@ -652,6 +660,7 @@
             const repo = document.getElementById('githubRepo').value;
             const token = document.getElementById('githubToken').value;
             const branch = document.getElementById('githubBranch').value || 'main';
+            const path = document.getElementById('githubPath').value;
 
             if (!username || !repo || !token) {
                 showStatus('يرجى ملء جميع إعدادات GitHub', 'error');
@@ -663,12 +672,15 @@
             const content = generateFileContent();
             const encodedContent = btoa(unescape(encodeURIComponent(content)));
 
+            // بناء المسار الكامل
+            const filePath = path ? `${path}/data.js` : 'data.js';
+
             try {
                 // الحصول على SHA الملف الحالي (إن وجد)
                 let sha = '';
                 try {
                     const getResponse = await fetch(
-                        `https://api.github.com/repos/${username}/${repo}/contents/data.js?ref=${branch}`,
+                        `https://api.github.com/repos/${username}/${repo}/contents/${filePath}?ref=${branch}`,
                         {
                             headers: {
                                 'Authorization': `token ${token}`,
@@ -684,7 +696,7 @@
 
                 // تحديث/إنشاء الملف (يمسح القديم ويضيف الجديد)
                 const response = await fetch(
-                    `https://api.github.com/repos/${username}/${repo}/contents/data.js`,
+                    `https://api.github.com/repos/${username}/${repo}/contents/${filePath}`,
                     {
                         method: 'PUT',
                         headers: {
@@ -719,9 +731,13 @@
         function openPreview() {
             const username = document.getElementById('githubUsername').value;
             const repo = document.getElementById('githubRepo').value;
+            const path = document.getElementById('githubPath').value;
             
             if (username && repo) {
-                window.open(`https://${username}.github.io/${repo}/`, '_blank');
+                const url = path 
+                    ? `https://${username}.github.io/${repo}/${path}/`
+                    : `https://${username}.github.io/${repo}/`;
+                window.open(url, '_blank');
             } else {
                 window.open('index.html', '_blank');
             }
