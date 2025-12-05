@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - إعلانات المعلمين</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .config-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .config-section h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 10px;
+        }
+
+        .github-config {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .github-config label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        .github-config input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .github-config input::placeholder {
+            color: #666;
+        }
+
+        .btn-load {
+            background: #4ecdc4;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            height: fit-content;
+            margin-top: 20px;
+        }
+
+        .btn-load:hover {
+            background: #3dbdb5;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .section h3 {
+            margin-bottom: 15px;
+            color: #4ecdc4;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 span {
+            font-size: 1.2em;
+        }
+
+        .announcement-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .announcement-item input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .announcement-item label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85em;
+            color: #ff6b6b;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .announcement-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .btn-delete {
+            background: #ff6b6b;
+            color: #fff;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .btn-delete:hover {
+            background: #ee5a5a;
+            transform: scale(1.1);
+        }
+
+        .btn-add {
+            background: #4ecdc4;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-add:hover {
+            background: #3dbdb5;
+        }
+
+        .day-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .day-section h4 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .day-events {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .event-item {
+            display: flex;
+            gap: 10px;
+        }
+
+        .event-item input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .reminder-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .reminder-item input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .week-title-input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        .save-section {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-save:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-preview {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-preview:hover {
+            transform: scale(1.05);
+        }
+
+        .status-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            display: none;
+            z-index: 1000;
+        }
+
+        .status-success {
+            background: #4ecdc4;
+            color: #fff;
+        }
+
+        .status-error {
+            background: #ff6b6b;
+            color: #fff;
+        }
+
+        .status-loading {
+            background: #ffd700;
+            color: #333;
+        }
+
+        .spacer {
+            height: 100px;
+        }
+
+        .data-status {
+            text-align: center;
+            padding: 10px;
+            background: rgba(78, 205, 196, 0.2);
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎛️ لوحة التحكم - إعلانات المعلمين</h1>
+            <p>مدرسة ابن سينا الابتدائية</p>
+        </header>
+
+        <!-- إعدادات GitHub -->
+        <div class="config-section">
+            <h3>⚙️ إعدادات GitHub</h3>
+            <div class="github-config">
+                <div>
+                    <label>اسم المستخدم (Username)</label>
+                    <input type="text" id="githubUsername" placeholder="مثال: username">
+                </div>
+                <div>
+                    <label>اسم المستودع (Repository)</label>
+                    <input type="text" id="githubRepo" placeholder="مثال: school-announcements">
+                </div>
+                <div>
+                    <label>Personal Access Token</label>
+                    <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx">
+                </div>
+                <div>
+                    <label>الفرع (Branch)</label>
+                    <input type="text" id="githubBranch" placeholder="main" value="main">
+                </div>
+                <button class="btn-load" onclick="loadFromGitHub()">📥 تحميل البيانات الحالية</button>
+            </div>
+            <div class="data-status" id="dataStatus">أدخل بيانات GitHub واضغط "تحميل البيانات الحالية" لتحميل البيانات الموجودة</div>
+        </div>
+
+        <!-- عنوان الأسبوع -->
+        <div class="config-section">
+            <h3>📅 عنوان الأسبوع</h3>
+            <input type="text" class="week-title-input" id="weekTitle" placeholder="مثال: الأسبوع الأول - شهر يناير">
+        </div>
+
+        <div class="main-content">
+            <!-- قسم الإعلانات -->
+            <div class="section">
+                <h3><span>📢</span> الإعلانات المتحركة</h3>
+                <div id="announcementsList"></div>
+                <button class="btn-add" onclick="addAnnouncement()">+ إضافة إعلان</button>
+            </div>
+
+            <!-- قسم التذكيرات -->
+            <div class="section">
+                <h3><span>⚡</span> تذكيرات مهمة</h3>
+                <div id="remindersList"></div>
+                <button class="btn-add" onclick="addReminder()">+ إضافة تذكير</button>
+            </div>
+        </div>
+
+        <!-- التقويم الأسبوعي -->
+        <div class="section" style="margin-top: 20px;">
+            <h3><span>📆</span> أحداث الأسبوع</h3>
+            <div id="weekCalendar"></div>
+        </div>
+
+        <div class="spacer"></div>
+    </div>
+
+    <!-- أزرار الحفظ -->
+    <div class="save-section">
+        <button class="btn-preview" onclick="openPreview()">👁️ معاينة</button>
+        <button class="btn-save" onclick="saveToGitHub()">💾 حفظ على GitHub</button>
+    </div>
+
+    <!-- رسالة الحالة -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <script>
+        // البيانات الحالية
+        let currentData = {
+            lastUpdate: new Date().toISOString().split('T')[0],
+            announcements: [],
+            weekEvents: {
+                sunday: { title: "الأحد", events: [] },
+                monday: { title: "الإثنين", events: [] },
+                tuesday: { title: "الثلاثاء", events: [] },
+                wednesday: { title: "الأربعاء", events: [] },
+                thursday: { title: "الخميس", events: [] }
+            },
+            reminders: [],
+            weekTitle: ""
+        };
+
+        const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday'];
+        const dayNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+
+        // تحميل الإعدادات المحفوظة
+        function loadSettings() {
+            const settings = ['githubUsername', 'githubRepo', 'githubToken', 'githubBranch'];
+            settings.forEach(setting => {
+                const saved = localStorage.getItem(setting);
+                if (saved) document.getElementById(setting).value = saved;
+            });
+        }
+
+        // حفظ الإعدادات
+        function saveSettings() {
+            const settings = ['githubUsername', 'githubRepo', 'githubToken', 'githubBranch'];
+            settings.forEach(setting => {
+                localStorage.setItem(setting, document.getElementById(setting).value);
+            });
+        }
+
+        // تحميل البيانات من GitHub
+        async function loadFromGitHub() {
+            const username = document.getElementById('githubUsername').value;
+            const repo = document.getElementById('githubRepo').value;
+            const branch = document.getElementById('githubBranch').value || 'main';
+
+            if (!username || !repo) {
+                showStatus('يرجى إدخال اسم المستخدم والمستودع', 'error');
+                return;
+            }
+
+            saveSettings();
+            showStatus('جاري تحميل البيانات...', 'loading');
+
+            try {
+                const response = await fetch(
+                    `https://raw.githubusercontent.com/${username}/${repo}/${branch}/data.js?t=${Date.now()}`
+                );
+                
+                if (response.ok) {
+                    const text = await response.text();
+                    // استخراج البيانات من الملف
+                    const match = text.match(/const schoolData = (\{[\s\S]*\});/);
+                    if (match) {
+                        try {
+                            currentData = JSON.parse(match[1]);
+                            renderAll();
+                            showStatus('✅ تم تحميل البيانات بنجاح!', 'success');
+                            document.getElementById('dataStatus').textContent = 
+                                `✅ تم تحميل البيانات - آخر تحديث: ${currentData.lastUpdate || 'غير محدد'}`;
+                            document.getElementById('dataStatus').style.background = 'rgba(78, 205, 196, 0.3)';
+                        } catch (e) {
+                            // محاولة بطريقة أخرى
+                            eval('currentData = ' + match[1]);
+                            renderAll();
+                            showStatus('✅ تم تحميل البيانات بنجاح!', 'success');
+                            document.getElementById('dataStatus').textContent = 
+                                `✅ تم تحميل البيانات - آخر تحديث: ${currentData.lastUpdate || 'غير محدد'}`;
+                        }
+                    } else {
+                        showStatus('تعذر قراءة البيانات من الملف', 'error');
+                    }
+                } else {
+                    showStatus('الملف غير موجود - سيتم إنشاؤه عند الحفظ', 'error');
+                    document.getElementById('dataStatus').textContent = '⚠️ لا يوجد ملف بيانات - أضف البيانات واحفظ';
+                    document.getElementById('dataStatus').style.background = 'rgba(255, 215, 0, 0.3)';
+                }
+            } catch (error) {
+                showStatus(`خطأ في التحميل: ${error.message}`, 'error');
+            }
+        }
+
+        // عرض الإعلانات
+        function renderAnnouncements() {
+            const container = document.getElementById('announcementsList');
+            container.innerHTML = currentData.announcements.map((ann, index) => `
+                <div class="announcement-item">
+                    <input type="text" value="${ann.text || ''}" onchange="updateAnnouncement(${index}, this.value)" placeholder="نص الإعلان...">
+                    <label>
+                        <input type="checkbox" ${ann.urgent ? 'checked' : ''} onchange="toggleUrgent(${index})">
+                        عاجل
+                    </label>
+                    <button class="btn-delete" onclick="deleteAnnouncement(${index})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // عرض التذكيرات
+        function renderReminders() {
+            const container = document.getElementById('remindersList');
+            container.innerHTML = currentData.reminders.map((rem, index) => `
+                <div class="reminder-item">
+                    <input type="text" value="${rem || ''}" onchange="updateReminder(${index}, this.value)" placeholder="نص التذكير...">
+                    <button class="btn-delete" onclick="deleteReminder(${index})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // عرض التقويم
+        function renderCalendar() {
+            const container = document.getElementById('weekCalendar');
+            container.innerHTML = days.map((day, dayIndex) => `
+                <div class="day-section">
+                    <h4>${dayNames[dayIndex]}</h4>
+                    <div class="day-events" id="events-${day}">
+                        ${(currentData.weekEvents[day]?.events || []).map((event, eventIndex) => `
+                            <div class="event-item">
+                                <input type="text" value="${event || ''}" onchange="updateEvent('${day}', ${eventIndex}, this.value)" placeholder="حدث...">
+                                <button class="btn-delete" onclick="deleteEvent('${day}', ${eventIndex})">×</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="btn-add" onclick="addEvent('${day}')" style="margin-top: 8px; padding: 8px 15px; font-size: 0.9em;">+ حدث</button>
+                </div>
+            `).join('');
+        }
+
+        // عرض كل شيء
+        function renderAll() {
+            document.getElementById('weekTitle').value = currentData.weekTitle || '';
+            renderAnnouncements();
+            renderReminders();
+            renderCalendar();
+        }
+
+        // إضافة إعلان
+        function addAnnouncement() {
+            currentData.announcements.push({ text: '', urgent: false });
+            renderAnnouncements();
+        }
+
+        // تحديث إعلان
+        function updateAnnouncement(index, value) {
+            currentData.announcements[index].text = value;
+        }
+
+        // تبديل حالة العاجل
+        function toggleUrgent(index) {
+            currentData.announcements[index].urgent = !currentData.announcements[index].urgent;
+        }
+
+        // حذف إعلان
+        function deleteAnnouncement(index) {
+            currentData.announcements.splice(index, 1);
+            renderAnnouncements();
+        }
+
+        // إضافة تذكير
+        function addReminder() {
+            currentData.reminders.push('');
+            renderReminders();
+        }
+
+        // تحديث تذكير
+        function updateReminder(index, value) {
+            currentData.reminders[index] = value;
+        }
+
+        // حذف تذكير
+        function deleteReminder(index) {
+            currentData.reminders.splice(index, 1);
+            renderReminders();
+        }
+
+        // إضافة حدث
+        function addEvent(day) {
+            if (!currentData.weekEvents[day]) {
+                currentData.weekEvents[day] = { title: dayNames[days.indexOf(day)], events: [] };
+            }
+            currentData.weekEvents[day].events.push('');
+            renderCalendar();
+        }
+
+        // تحديث حدث
+        function updateEvent(day, index, value) {
+            currentData.weekEvents[day].events[index] = value;
+        }
+
+        // حذف حدث
+        function deleteEvent(day, index) {
+            currentData.weekEvents[day].events.splice(index, 1);
+            renderCalendar();
+        }
+
+        // عرض رسالة الحالة
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type}`;
+            statusEl.style.display = 'block';
+            
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // إنشاء محتوى الملف
+        function generateFileContent() {
+            currentData.lastUpdate = new Date().toISOString().split('T')[0];
+            currentData.weekTitle = document.getElementById('weekTitle').value;
+            
+            // تنظيف البيانات الفارغة
+            currentData.announcements = currentData.announcements.filter(a => a.text && a.text.trim());
+            currentData.reminders = currentData.reminders.filter(r => r && r.trim());
+            days.forEach(day => {
+                if (currentData.weekEvents[day]?.events) {
+                    currentData.weekEvents[day].events = currentData.weekEvents[day].events.filter(e => e && e.trim());
+                }
+            });
+
+            return `const schoolData = ${JSON.stringify(currentData, null, 4)};`;
+        }
+
+        // الحفظ على GitHub
+        async function saveToGitHub() {
+            saveSettings();
+
+            const username = document.getElementById('githubUsername').value;
+            const repo = document.getElementById('githubRepo').value;
+            const token = document.getElementById('githubToken').value;
+            const branch = document.getElementById('githubBranch').value || 'main';
+
+            if (!username || !repo || !token) {
+                showStatus('يرجى ملء جميع إعدادات GitHub', 'error');
+                return;
+            }
+
+            showStatus('جاري الحفظ...', 'loading');
+
+            const content = generateFileContent();
+            const encodedContent = btoa(unescape(encodeURIComponent(content)));
+
+            try {
+                // الحصول على SHA الملف الحالي (إن وجد)
+                let sha = '';
+                try {
+                    const getResponse = await fetch(
+                        `https://api.github.com/repos/${username}/${repo}/contents/data.js?ref=${branch}`,
+                        {
+                            headers: {
+                                'Authorization': `token ${token}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        }
+                    );
+                    if (getResponse.ok) {
+                        const data = await getResponse.json();
+                        sha = data.sha;
+                    }
+                } catch (e) {}
+
+                // تحديث/إنشاء الملف (يمسح القديم ويضيف الجديد)
+                const response = await fetch(
+                    `https://api.github.com/repos/${username}/${repo}/contents/data.js`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `تحديث الإعلانات - ${new Date().toLocaleString('ar-EG')}`,
+                            content: encodedContent,
+                            branch: branch,
+                            ...(sha && { sha })
+                        })
+                    }
+                );
+
+                if (response.ok) {
+                    showStatus('✅ تم الحفظ بنجاح! البيانات الجديدة استبدلت القديمة', 'success');
+                    document.getElementById('dataStatus').textContent = 
+                        `✅ تم الحفظ - آخر تحديث: ${currentData.lastUpdate}`;
+                    renderAll();
+                } else {
+                    const error = await response.json();
+                    showStatus(`خطأ: ${error.message}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`خطأ في الاتصال: ${error.message}`, 'error');
+            }
+        }
+
+        // فتح المعاينة
+        function openPreview() {
+            const username = document.getElementById('githubUsername').value;
+            const repo = document.getElementById('githubRepo').value;
+            
+            if (username && repo) {
+                window.open(`https://${username}.github.io/${repo}/`, '_blank');
+            } else {
+                window.open('index.html', '_blank');
+            }
+        }
+
+        // عند تحميل الصفحة
+        window.onload = function() {
+            loadSettings();
+            renderAll();
+            
+            // محاولة تحميل البيانات تلقائياً إذا كانت الإعدادات موجودة
+            const username = document.getElementById('githubUsername').value;
+            const repo = document.getElementById('githubRepo').value;
+            if (username && repo) {
+                setTimeout(loadFromGitHub, 500);
+            }
+        };
+    </script>
+</body>
+</html>
