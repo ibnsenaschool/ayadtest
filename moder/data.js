@@ -39,15 +39,21 @@ const schoolData = {
         },
         "monday": {
             "title": "الإثنين",
-            "events": []
+            "events": [
+                "اىةى"
+            ]
         },
         "tuesday": {
             "title": "الثلاثاء",
-            "events": []
+            "events": [
+                "لاةىتغبل"
+            ]
         },
         "wednesday": {
             "title": "الأربعاء",
-            "events": []
+            "events": [
+                "بلاة"
+            ]
         },
         "thursday": {
             "title": "الخميس",
