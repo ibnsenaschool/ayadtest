@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إعلانات المعلمين - مدرسة ابن سينا</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
             background: linear-gradient(135deg, #0c0c1e 0%, #1a1a3e 50%, #0c0c1e 100%);
@@ -18,7 +13,6 @@
             color: #fff;
             overflow-x: hidden;
         }
-
         header {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
             padding: 20px;
@@ -26,258 +20,66 @@
             border-bottom: 3px solid #667eea;
             position: relative;
         }
-
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-        }
-
-        header h1 span {
-            color: #ffd700;
-        }
-
-        .school-name {
-            font-size: 1.3em;
-            color: #4ecdc4;
-        }
-
+        header h1 { font-size: 2.5em; margin-bottom: 5px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        header h1 span { color: #ffd700; }
+        .school-name { font-size: 1.3em; color: #4ecdc4; }
         .current-date {
-            position: absolute;
-            left: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.1);
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 1.1em;
+            position: absolute; left: 30px; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px; font-size: 1.1em;
         }
-
         .current-time {
-            position: absolute;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.1);
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #ffd700;
+            position: absolute; right: 30px; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px;
+            font-size: 1.5em; font-weight: bold; color: #ffd700;
         }
-
         .reminders-bar {
             background: linear-gradient(90deg, #667eea 0%, #5a9fd4 100%);
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            overflow: hidden;
+            padding: 15px; display: flex; align-items: center; gap: 15px; overflow: hidden;
         }
-
-        .reminders-bar.hidden {
-            display: none;
-        }
-
-        .reminder-icon {
-            font-size: 1.8em;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .reminders-content {
-            flex: 1;
-            display: flex;
-            gap: 50px;
-            animation: scrollReminders 30s linear infinite;
-        }
-
-        .reminder-item {
-            white-space: nowrap;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        @keyframes scrollReminders {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .main-container {
-            display: flex;
-            height: calc(100vh - 180px);
-            padding: 20px;
-            gap: 20px;
-        }
-
-        .calendar-section {
-            flex: 2;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .week-title {
-            text-align: center;
-            font-size: 1.8em;
-            color: #ffd700;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .calendar-grid {
-            display: flex;
-            gap: 15px;
-            flex: 1;
-        }
-
+        .reminders-bar.hidden { display: none; }
+        .reminder-icon { font-size: 1.8em; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        .reminders-content { flex: 1; display: flex; gap: 50px; animation: scrollReminders 30s linear infinite; }
+        .reminder-item { white-space: nowrap; font-size: 1.2em; font-weight: bold; }
+        @keyframes scrollReminders { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .main-container { display: flex; height: calc(100vh - 180px); padding: 20px; gap: 20px; }
+        .calendar-section { flex: 2; display: flex; flex-direction: column; }
+        .week-title { text-align: center; font-size: 1.8em; color: #ffd700; margin-bottom: 15px; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); }
+        .calendar-grid { display: flex; gap: 15px; flex: 1; }
         .day-card {
             flex: 1;
             background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            border-radius: 15px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s;
-            border: 2px solid transparent;
+            border-radius: 15px; overflow: hidden; display: flex; flex-direction: column;
+            transition: all 0.3s; border: 2px solid transparent;
         }
-
-        .day-card:hover {
-            transform: translateY(-5px);
-            border-color: #4ecdc4;
-            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2);
-        }
-
-        .day-card.today {
-            border-color: #ffd700;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-        }
-
-        .day-card.today .day-header {
-            background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
-            color: #333;
-        }
-
-        .day-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px;
-            text-align: center;
-            font-size: 1.3em;
-            font-weight: bold;
-        }
-
-        .day-content {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-        }
-
-        .event-item {
-            background: rgba(255,255,255,0.1);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-right: 4px solid #4ecdc4;
-            font-size: 1.1em;
-            line-height: 1.5;
-        }
-
-        .no-events {
-            color: #666;
-            text-align: center;
-            padding: 20px;
-            font-style: italic;
-        }
-
+        .day-card:hover { transform: translateY(-5px); border-color: #4ecdc4; box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2); }
+        .day-card.today { border-color: #ffd700; box-shadow: 0 0 30px rgba(255, 215, 0, 0.3); }
+        .day-card.today .day-header { background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%); color: #333; }
+        .day-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; text-align: center; font-size: 1.3em; font-weight: bold; }
+        .day-content { flex: 1; padding: 15px; overflow-y: auto; }
+        .event-item { background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-right: 4px solid #4ecdc4; font-size: 1.1em; line-height: 1.5; }
+        .no-events { color: #666; text-align: center; padding: 20px; font-style: italic; }
         .announcements-section {
             flex: 1;
             background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 2px solid #667eea;
+            border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; border: 2px solid #667eea;
         }
-
-        .announcements-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px;
-            text-align: center;
-            font-size: 1.3em;
-            font-weight: bold;
-        }
-
-        .announcements-content {
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .announcements-scroll {
-            position: absolute;
-            width: 100%;
-            animation: scrollAnnouncements 40s linear infinite;
-        }
-
-        .announcements-content:hover .announcements-scroll {
-            animation-play-state: paused;
-        }
-
-        @keyframes scrollAnnouncements {
-            0% { top: 100%; }
-            100% { top: -200%; }
-        }
-
-        .announcement-item {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            font-size: 1.2em;
-            line-height: 1.6;
-        }
-
-        .announcement-item.urgent {
-            background: linear-gradient(90deg, rgba(255, 107, 107, 0.3) 0%, transparent 100%);
-            border-right: 5px solid #ff6b6b;
-        }
-
-        .announcement-item.urgent::before {
-            content: '🔴 عاجل: ';
-            color: #ff6b6b;
-            font-weight: bold;
-        }
-
-        .last-update {
-            text-align: center;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
-            color: #888;
-            font-size: 0.9em;
-        }
-
+        .announcements-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; text-align: center; font-size: 1.3em; font-weight: bold; }
+        .announcements-content { flex: 1; overflow: hidden; position: relative; }
+        .announcements-scroll { position: absolute; width: 100%; animation: scrollAnnouncements 40s linear infinite; }
+        .announcements-content:hover .announcements-scroll { animation-play-state: paused; }
+        @keyframes scrollAnnouncements { 0% { top: 100%; } 100% { top: -200%; } }
+        .announcement-item { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1.2em; line-height: 1.6; }
+        .announcement-item.urgent { background: linear-gradient(90deg, rgba(255, 107, 107, 0.3) 0%, transparent 100%); border-right: 5px solid #ff6b6b; }
+        .announcement-item.urgent::before { content: '🔴 عاجل: '; color: #ff6b6b; font-weight: bold; }
+        .last-update { text-align: center; padding: 10px; background: rgba(0,0,0,0.3); color: #888; font-size: 0.9em; }
+        .loading { display: flex; justify-content: center; align-items: center; height: 100%; font-size: 1.5em; color: #667eea; }
         @media (max-width: 1200px) {
-            .main-container {
-                flex-direction: column;
-                height: auto;
-            }
-            .calendar-grid {
-                flex-wrap: wrap;
-            }
-            .day-card {
-                min-width: calc(50% - 10px);
-                min-height: 200px;
-            }
-            .current-date, .current-time {
-                position: static;
-                transform: none;
-                display: inline-block;
-                margin: 10px;
-            }
-            header {
-                padding-bottom: 60px;
-            }
+            .main-container { flex-direction: column; height: auto; }
+            .calendar-grid { flex-wrap: wrap; }
+            .day-card { min-width: calc(50% - 10px); min-height: 200px; }
+            .current-date, .current-time { position: static; transform: none; display: inline-block; margin: 10px; }
+            header { padding-bottom: 60px; }
         }
     </style>
 </head>
@@ -297,7 +99,9 @@
     <div class="main-container">
         <div class="calendar-section">
             <h2 class="week-title" id="weekTitle"></h2>
-            <div class="calendar-grid" id="calendarGrid"></div>
+            <div class="calendar-grid" id="calendarGrid">
+                <div class="loading">جاري تحميل البيانات...</div>
+            </div>
         </div>
 
         <div class="announcements-section">
@@ -310,86 +114,38 @@
     </div>
 
     <script>
-        const schoolData = {
-            lastUpdate: "2025-12-05",
-            announcements: [
-                { text: "يُرجى من جميع المعلمين تسليم كشوف الدرجات قبل نهاية الأسبوع", urgent: true },
-                { text: "اجتماع مجلس الآباء يوم الأربعاء الساعة 4 عصراً في قاعة المدرسة", urgent: false },
-                { text: "تهنئة للطالبة سارة أحمد - الأولى على مستوى الصف الرابع 🌟", urgent: false },
-                { text: "غداً: رحلة الصف السادس إلى المتحف العلمي - الانطلاق الساعة 8 صباحاً", urgent: false },
-                { text: "تم تحديث جدول الحصص الاحتياطية - يرجى مراجعة لوحة الإعلانات", urgent: false },
-                { text: "ورشة عمل: استخدام التكنولوجيا في التعليم - الخميس الساعة 1 ظهراً", urgent: false },
-                { text: "مبروك لفريق المدرسة الفوز ببطولة الرياضيات على مستوى المنطقة! 🏆", urgent: false }
-            ],
-            weekEvents: {
-                sunday: { 
-                    title: "الأحد", 
-                    events: [
-                        "اختبار رياضيات - الصف الخامس (الحصة 2)",
-                        "نشاط فني للصف الثالث",
-                        "اجتماع معلمي المرحلة الدنيا - الساعة 12"
-                    ] 
-                },
-                monday: { 
-                    title: "الإثنين", 
-                    events: [
-                        "تسليم مشاريع العلوم - الصف السادس",
-                        "زيارة مشرف الرياضيات",
-                        "تدريب الإذاعة المدرسية - الاستراحة"
-                    ] 
-                },
-                tuesday: { 
-                    title: "الثلاثاء", 
-                    events: [
-                        "رحلة الصف السادس - المتحف العلمي 🚌",
-                        "مسابقة القراءة - الصف الرابع",
-                        "اجتماع لجنة الأنشطة - 11:30"
-                    ] 
-                },
-                wednesday: { 
-                    title: "الأربعاء", 
-                    events: [
-                        "اجتماع مجلس الآباء - 4 عصراً",
-                        "اختبار إملاء - الصف الثالث",
-                        "عرض مسرحي - الصف الخامس (الحصة 5)"
-                    ] 
-                },
-                thursday: { 
-                    title: "الخميس", 
-                    events: [
-                        "ورشة التكنولوجيا للمعلمين - 1 ظهراً",
-                        "توزيع شهادات التفوق الشهرية 🎖️",
-                        "تسليم تقارير نهاية الشهر"
-                    ] 
-                }
-            },
-            reminders: [
-                "تسليم كشوف الدرجات قبل الخميس!",
-                "لا تنسوا حضور اجتماع الأربعاء",
-                "الموعد النهائي لتقارير الشهر: الخميس"
-            ],
-            weekTitle: "📚 الأسبوع الثاني - شهر ديسمبر 2025"
-        };
-
         const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday'];
         const dayNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+        
+        let schoolData = null;
+
+        // تحميل البيانات من الملف
+        async function loadData() {
+            try {
+                const response = await fetch('data.js?t=' + Date.now());
+                const text = await response.text();
+                const match = text.match(/const schoolData = (\{[\s\S]*\});/);
+                if (match) {
+                    schoolData = JSON.parse(match[1]);
+                    renderAll();
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل البيانات:', error);
+                document.getElementById('calendarGrid').innerHTML = '<div style="color:#ff6b6b;text-align:center;padding:20px;">خطأ في تحميل البيانات</div>';
+            }
+        }
 
         function updateTime() {
             const now = new Date();
             document.getElementById('currentTime').textContent = now.toLocaleTimeString('ar-EG', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit'
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
             });
         }
 
         function updateDate() {
             const now = new Date();
             document.getElementById('currentDate').textContent = now.toLocaleDateString('ar-EG', { 
-                weekday: 'long',
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
             });
         }
 
@@ -402,61 +158,80 @@
         function renderCalendar() {
             const grid = document.getElementById('calendarGrid');
             const todayIndex = getTodayIndex();
+            
+            if (!schoolData || !schoolData.weekEvents) return;
 
             grid.innerHTML = days.map((day, index) => {
-                const dayData = schoolData.weekEvents[day];
+                const dayData = schoolData.weekEvents[day] || { events: [] };
                 const events = dayData.events || [];
                 const isToday = index === todayIndex;
 
-                return `
-                    <div class="day-card ${isToday ? 'today' : ''}">
-                        <div class="day-header">${dayNames[index]}</div>
-                        <div class="day-content">
-                            ${events.length > 0 
-                                ? events.map(e => `<div class="event-item">${e}</div>`).join('')
-                                : '<div class="no-events">لا توجد أحداث</div>'
-                            }
-                        </div>
-                    </div>
-                `;
+                return '<div class="day-card ' + (isToday ? 'today' : '') + '">' +
+                    '<div class="day-header">' + dayNames[index] + '</div>' +
+                    '<div class="day-content">' +
+                    (events.length > 0 
+                        ? events.map(function(e) { return '<div class="event-item">' + e + '</div>'; }).join('')
+                        : '<div class="no-events">لا توجد أحداث</div>'
+                    ) +
+                    '</div></div>';
             }).join('');
         }
 
         function renderAnnouncements() {
             const container = document.getElementById('announcementsScroll');
             const announcements = schoolData.announcements || [];
-            const doubled = [...announcements, ...announcements];
             
-            container.innerHTML = doubled.map(ann => `
-                <div class="announcement-item ${ann.urgent ? 'urgent' : ''}">
-                    ${ann.text}
-                </div>
-            `).join('');
+            if (announcements.length === 0) {
+                container.innerHTML = '<div class="announcement-item">لا توجد إعلانات</div>';
+                return;
+            }
+
+            const doubled = announcements.concat(announcements);
+            container.innerHTML = doubled.map(function(ann) {
+                return '<div class="announcement-item ' + (ann.urgent ? 'urgent' : '') + '">' + ann.text + '</div>';
+            }).join('');
         }
 
         function renderReminders() {
+            const bar = document.getElementById('remindersBar');
             const content = document.getElementById('remindersContent');
             const reminders = schoolData.reminders || [];
-            const doubled = [...reminders, ...reminders, ...reminders];
-            
-            content.innerHTML = doubled.map(r => `
-                <span class="reminder-item">⚡ ${r}</span>
-            `).join('');
+
+            if (reminders.length === 0) {
+                bar.classList.add('hidden');
+                return;
+            }
+
+            bar.classList.remove('hidden');
+            const tripled = reminders.concat(reminders).concat(reminders);
+            content.innerHTML = tripled.map(function(r) {
+                return '<span class="reminder-item">⚡ ' + r + '</span>';
+            }).join('');
         }
 
         function renderAll() {
-            document.getElementById('weekTitle').textContent = schoolData.weekTitle;
-            document.getElementById('lastUpdate').textContent = `آخر تحديث: ${schoolData.lastUpdate}`;
+            if (!schoolData) {
+                document.getElementById('calendarGrid').innerHTML = '<div style="color:#ffd700;text-align:center;padding:20px;">جاري تحميل البيانات...</div>';
+                return;
+            }
+            document.getElementById('weekTitle').textContent = schoolData.weekTitle || 'الأسبوع الدراسي';
+            document.getElementById('lastUpdate').textContent = 'آخر تحديث: ' + (schoolData.lastUpdate || '--');
             renderCalendar();
             renderAnnouncements();
             renderReminders();
+        }
+
+        // تحديث تلقائي كل 5 دقائق
+        function autoRefresh() {
+            setInterval(function() { location.reload(); }, 5 * 60 * 1000);
         }
 
         window.onload = function() {
             updateTime();
             updateDate();
             setInterval(updateTime, 1000);
-            renderAll();
+            loadData();
+            autoRefresh();
         };
     </script>
 </body>
