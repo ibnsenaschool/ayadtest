@@ -224,7 +224,7 @@
             </ol>
             
             <div class="success">
-                <strong>✅ جاهز!</strong> البوت سيظهر في أسفل يسار الشاشة عند التشغيل
+                <strong>✅ جاهز!</strong> البوت سيظهر في أسفل يسار الشاشة ويبدأ الفحص فوراً!
                 <br><strong>🔥 جديد:</strong> البوت يستمر في العمل حتى لو انتقلت لتبويب آخر!
             </div>
         </div>
@@ -235,7 +235,7 @@
                 <li>حدد <strong>العتبة</strong> - البوت يبيع عندما تكون قيمة السوق أقل أو تساوي العتبة</li>
                 <li>فعّل <code>🔊 صوت</code> للتنبيه عند البيع</li>
                 <li>فعّل <code>🔄 البيع التلقائي</code> للبيع تلقائياً</li>
-                <li>البوت يفحص كل 30 ثانية (قابل للتغيير)</li>
+                <li>البوت يبدأ الفحص تلقائياً كل 30 ثانية (قابل للتغيير)</li>
             </ul>
         </div>
         
@@ -253,7 +253,7 @@
         
         <div class="footer">
             <p>📱 للدعم والتجديد: @YourTelegram</p>
-            <p style="margin-top: 10px; font-size: 12px;">Auto Market Sell v5.0 - Background Edition</p>
+            <p style="margin-top: 10px; font-size: 12px;">Auto Market Sell v5.1 - Background Edition</p>
         </div>
     </div>
     
@@ -294,7 +294,9 @@
         checking: decodeURIComponent("%D9%81%D8%AD%D8%B5"),
         sold: decodeURIComponent("%D8%AA%D9%85%20%D8%A7%D9%84%D8%A8%D9%8A%D8%B9"),
         thresholdMet: decodeURIComponent("%D8%A7%D9%84%D8%B9%D8%AA%D8%A8%D8%A9%20%D8%AA%D8%AD%D9%82%D9%82%D8%AA"),
-        background: decodeURIComponent("%D9%8A%D8%B9%D9%85%D9%84%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AE%D9%84%D9%81%D9%8A%D8%A9")
+        background: decodeURIComponent("%D9%8A%D8%B9%D9%85%D9%84%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AE%D9%84%D9%81%D9%8A%D8%A9"),
+        nextCheck: decodeURIComponent("%D8%A7%D9%84%D9%81%D8%AD%D8%B5%20%D8%A7%D9%84%D9%82%D8%A7%D8%AF%D9%85"),
+        seconds: decodeURIComponent("%D8%AB%D8%A7%D9%86%D9%8A%D8%A9")
     };
     
     function checkSub(cb) {
@@ -332,50 +334,13 @@
         var sound = true;
         var interval = DEFAULT_INTERVAL;
         var threshold = DEFAULT_THRESHOLD;
-        var bgWorker = null;
+        var timerWorker = null;
+        var countdownTimer = null;
+        var countdown = interval / 1000;
         var logBox = null;
         
         function $(s){ return document.querySelector(s); }
         function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
-        
-        /* ============================================
-           نظام العمل في الخلفية باستخدام Web Worker
-           ============================================ */
-        function createBackgroundTimer(callback, ms) {
-            var workerCode = "var i=" + ms + ";setInterval(function(){postMessage('tick');},i);";
-            var blob = new Blob([workerCode], {type: "application/javascript"});
-            var worker = new Worker(URL.createObjectURL(blob));
-            worker.onmessage = function(e) {
-                if(e.data === "tick") callback();
-            };
-            return worker;
-        }
-        
-        /* حل بديل إذا Web Worker لم يعمل */
-        function createFallbackTimer(callback, ms) {
-            var lastTime = Date.now();
-            function check() {
-                var now = Date.now();
-                if(now - lastTime >= ms) {
-                    lastTime = now;
-                    callback();
-                }
-                requestAnimationFrame(check);
-            }
-            requestAnimationFrame(check);
-            
-            /* إبقاء التبويب نشط */
-            setInterval(function(){}, 1000);
-            
-            /* محاولة منع المتصفح من إبطاء التبويب */
-            if(document.hidden !== undefined) {
-                document.addEventListener("visibilitychange", function() {
-                    if(document.hidden) {
-                        console.log("[MS] Tab hidden - using alternative timer");
-                    }
-                });
-            }
-        }
         
         function log(m){
             var t = new Date().toLocaleTimeString();
@@ -449,6 +414,15 @@
             if(i) i.textContent = res.iron.toLocaleString();
         }
         
+        function updateCountdown(){
+            var el = $("#ms-countdown");
+            if(el && enabled){
+                el.textContent = countdown + " " + TEXTS.seconds;
+                countdown--;
+                if(countdown < 0) countdown = interval / 1000;
+            }
+        }
+        
         async function sellRes(r){
             log(TEXTS.checking + " " + r + "...");
             var sel = getSel(r);
@@ -500,6 +474,7 @@
         
         async function autoSellCheck(){
             if(!enabled) return;
+            countdown = interval / 1000;
             log(TEXTS.checking + "...");
             updRes();
             
@@ -526,32 +501,49 @@
             updRes();
         }
         
-        function startBackgroundTimer(){
-            if(bgWorker) bgWorker.terminate();
+        function startTimer(){
+            if(timerWorker) timerWorker.terminate();
+            if(countdownTimer) clearInterval(countdownTimer);
+            
+            countdown = interval / 1000;
+            
             try {
-                bgWorker = createBackgroundTimer(function(){
-                    if(enabled && autoSell) autoSellCheck();
-                }, interval);
-                log("Web Worker " + TEXTS.background);
+                var workerCode = "var t=" + interval + ";setInterval(function(){postMessage('tick');},t);";
+                var blob = new Blob([workerCode], {type: "application/javascript"});
+                timerWorker = new Worker(URL.createObjectURL(blob));
+                timerWorker.onmessage = function(e) {
+                    if(e.data === "tick" && enabled) {
+                        autoSellCheck();
+                    }
+                };
+                log("Worker Timer " + TEXTS.background);
             } catch(e) {
-                console.log("Web Worker failed, using fallback");
-                createFallbackTimer(function(){
-                    if(enabled && autoSell) autoSellCheck();
+                setInterval(function(){
+                    if(enabled) autoSellCheck();
                 }, interval);
-                log("Fallback timer " + TEXTS.background);
+                log("Fallback Timer");
             }
+            
+            countdownTimer = setInterval(updateCountdown, 1000);
+        }
+        
+        function stopTimer(){
+            if(timerWorker) timerWorker.terminate();
+            if(countdownTimer) clearInterval(countdownTimer);
+            timerWorker = null;
         }
         
         function buildUI(){
             if($("#ms-p")) return;
             var css = document.createElement("style");
-            css.textContent = "#ms-p{position:fixed;left:20px;bottom:20px;z-index:999999;width:300px;padding:10px;border-radius:10px;background:rgba(0,0,0,0.9);color:#fff;font-family:tahoma;direction:rtl;font-size:12px}#ms-p h3{margin:0 0 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:6px;font-size:14px}#ms-p .inf{background:rgba(255,255,255,0.15);padding:5px;border-radius:5px;margin-bottom:6px;text-align:center;font-size:11px}#ms-p .bg-status{background:rgba(76,175,80,0.3);color:#8BC34A;padding:3px 6px;border-radius:3px;font-size:10px;display:inline-block;margin-top:4px}#ms-p .rs{background:rgba(255,255,255,0.1);padding:6px;border-radius:5px;margin-bottom:6px;font-size:11px}#ms-p .rs div{display:flex;justify-content:space-between;padding:2px 0}#ms-p .ck{margin:5px 0}#ms-p button{width:100%;margin:3px 0;padding:6px;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:11px}#ms-p .bt{background:#1e88e5;color:#fff}#ms-p .bt.off{background:#f44336}#ms-p .bn{background:#4CAF50;color:#fff}#ms-p .bi{background:#FF9800;color:#fff}#ms-p .bc{background:#666;color:#fff}#ms-p #ms-lg{max-height:100px;overflow-y:auto;background:rgba(255,255,255,0.08);padding:4px;font-size:10px;margin-top:5px;border-radius:3px}";
+            css.textContent = "#ms-p{position:fixed;left:20px;bottom:20px;z-index:999999;width:320px;padding:10px;border-radius:10px;background:rgba(0,0,0,0.92);color:#fff;font-family:tahoma;direction:rtl;font-size:12px;box-shadow:0 5px 25px rgba(0,0,0,0.5)}#ms-p h3{margin:0 0 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:6px;font-size:14px}#ms-p .inf{background:rgba(255,255,255,0.15);padding:5px;border-radius:5px;margin-bottom:6px;text-align:center;font-size:11px}#ms-p .bg-status{background:rgba(76,175,80,0.3);color:#8BC34A;padding:3px 6px;border-radius:3px;font-size:10px;display:inline-block;margin-top:4px}#ms-p .countdown-box{background:rgba(33,150,243,0.3);color:#64B5F6;padding:5px 8px;border-radius:5px;margin:6px 0;text-align:center;font-size:12px}#ms-p .rs{background:rgba(255,255,255,0.1);padding:6px;border-radius:5px;margin-bottom:6px;font-size:11px}#ms-p .rs div{display:flex;justify-content:space-between;padding:2px 0}#ms-p .ck{margin:5px 0}#ms-p button{width:100%;margin:3px 0;padding:6px;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:11px;transition:opacity 0.2s}#ms-p button:hover{opacity:0.9}#ms-p .bt{background:#1e88e5;color:#fff}#ms-p .bt.off{background:#f44336}#ms-p .bn{background:#4CAF50;color:#fff}#ms-p .bi{background:#FF9800;color:#fff}#ms-p .bc{background:#666;color:#fff}#ms-p #ms-lg{max-height:100px;overflow-y:auto;background:rgba(255,255,255,0.08);padding:4px;font-size:10px;margin-top:5px;border-radius:3px}";
             document.head.appendChild(css);
             
             var box = document.createElement("div");
             box.id = "ms-p";
-            box.innerHTML = "<h3>&#128176; " + TEXTS.title + " v5</h3>" +
+            box.innerHTML = "<h3>&#128176; " + TEXTS.title + " v5.1</h3>" +
                 "<div class='inf'>&#128100; " + USER_NAME + " | &#9203; " + sub.days + " " + TEXTS.day + "<br><span class='bg-status'>&#9889; " + TEXTS.background + "</span></div>" +
+                "<div class='countdown-box'>&#9201; " + TEXTS.nextCheck + ": <span id='ms-countdown'>" + countdown + " " + TEXTS.seconds + "</span></div>" +
                 "<div class='rs'><div><span>&#129717; " + TEXTS.wood + ":</span><span id='ms-w' style='color:#8BC34A'>" + getMyRes().wood.toLocaleString() + "</span></div>" +
                 "<div><span>&#129704; " + TEXTS.stone + ":</span><span id='ms-s' style='color:#FF9800'>" + getMyRes().stone.toLocaleString() + "</span></div>" +
                 "<div><span>&#9881; " + TEXTS.iron + ":</span><span id='ms-i' style='color:#9E9E9E'>" + getMyRes().iron.toLocaleString() + "</span></div>" +
@@ -574,37 +566,54 @@
                 var b = $("#ms-tg");
                 b.innerHTML = enabled ? "&#9208; " + TEXTS.stop : "&#9654; " + TEXTS.start;
                 b.className = enabled ? "bt" : "bt off";
+                if(enabled){
+                    startTimer();
+                    log(TEXTS.start);
+                } else {
+                    stopTimer();
+                    log(TEXTS.stop);
+                }
             };
             
             $("#ms-nw").onclick = function(){ autoSellCheck(); };
             
             $("#ms-th").onclick = function(){
                 var v = prompt(TEXTS.threshold + ":", threshold);
-                if(v){ threshold = Number(v); $("#ms-th").innerHTML = "&#127919; " + TEXTS.threshold + " (" + threshold + ")"; }
+                if(v){ threshold = Number(v); $("#ms-th").innerHTML = "&#127919; " + TEXTS.threshold + " (" + threshold + ")"; log(TEXTS.threshold + " = " + threshold); }
             };
             
             $("#ms-in").onclick = function(){
                 var v = prompt(TEXTS.period + " (s):", interval/1000);
                 if(v){ 
                     interval = Number(v)*1000; 
+                    countdown = interval / 1000;
                     $("#ms-in").innerHTML = "&#9201; " + TEXTS.period + " (" + (interval/1000) + "s)"; 
-                    startBackgroundTimer();
+                    if(enabled) startTimer();
+                    log(TEXTS.period + " = " + (interval/1000) + "s");
                 }
             };
             
-            $("#ms-au").onchange = function(e){ autoSell = e.target.checked; };
+            $("#ms-au").onchange = function(e){ autoSell = e.target.checked; log(TEXTS.autoSell + " = " + (autoSell ? "ON" : "OFF")); };
             $("#ms-sn").onchange = function(e){ sound = e.target.checked; };
             
             $("#ms-cl").onclick = function(){
-                if(bgWorker) bgWorker.terminate();
+                stopTimer();
                 box.remove();
                 window.__MS_RUN__ = false;
             };
         }
         
         buildUI();
-        startBackgroundTimer();
         log(TEXTS.running + "!");
+        
+        /* ========================================
+           تشغيل الفحص فوراً عند بدء البوت
+           ثم بدء المؤقت للفحص الدوري
+           ======================================== */
+        setTimeout(function(){
+            autoSellCheck();
+            startTimer();
+        }, 1000);
     });
 })();
     `;
