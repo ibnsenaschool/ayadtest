@@ -174,12 +174,20 @@
             font-size: 10px;
             margin-right: 5px;
         }
+        
+        .important-note {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>💰 Auto Market Sell</h1>
-        <p class="subtitle">بوت البيع التلقائي في السوق <span class="new-feature">🔥 يعمل في الخلفية</span></p>
+        <p class="subtitle">بوت البيع التلقائي في السوق <span class="new-feature">🔥 v5.2</span></p>
         
         <div class="card">
             <h2>✨ المميزات</h2>
@@ -194,17 +202,22 @@
                 </div>
                 <div class="feature">
                     <div class="feature-icon">🔄</div>
-                    <div><span class="new-feature">جديد</span>يعمل في الخلفية</div>
+                    <div>يعمل في الخلفية</div>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">⚡</div>
-                    <div>بيع تلقائي</div>
+                    <div class="feature-icon">🔐</div>
+                    <div>نظام اشتراك</div>
                 </div>
             </div>
         </div>
         
         <div class="card">
             <h2>📥 التثبيت</h2>
+            
+            <div class="important-note">
+                <div class="warning-title">🔐 نظام الاشتراك</div>
+                عند تشغيل البوت سيطلب منك إدخال اسم المستخدم الخاص بك للتحقق من الاشتراك
+            </div>
             
             <div class="warning">
                 <div class="warning-title">⚠️ مهم</div>
@@ -220,22 +233,20 @@
                 <li>تأكد من ظهور <strong>شريط المفضلة</strong> في متصفحك (Ctrl+Shift+B)</li>
                 <li><strong>اسحب الزر البرتقالي</strong> أعلاه وأفلته في شريط المفضلة</li>
                 <li>افتح صفحة <strong>السوق</strong> في اللعبة (mode=exchange)</li>
-                <li>اضغط على الزر في المفضلة لتشغيل البوت</li>
+                <li>اضغط على الزر في المفضلة وأدخل <strong>اسم المستخدم</strong></li>
             </ol>
             
             <div class="success">
-                <strong>✅ جاهز!</strong> البوت سيظهر في أسفل يسار الشاشة ويبدأ الفحص فوراً!
-                <br><strong>🔥 جديد:</strong> البوت يستمر في العمل حتى لو انتقلت لتبويب آخر!
+                <strong>✅ جاهز!</strong> البوت سيتحقق من اشتراكك ثم يبدأ العمل تلقائياً
             </div>
         </div>
         
         <div class="card">
             <h2>📖 طريقة الاستخدام</h2>
             <ul class="steps">
+                <li>أدخل <strong>اسم المستخدم</strong> الذي حصلت عليه عند الاشتراك</li>
                 <li>حدد <strong>العتبة</strong> - البوت يبيع عندما تكون قيمة السوق أقل أو تساوي العتبة</li>
-                <li>فعّل <code>🔊 صوت</code> للتنبيه عند البيع</li>
-                <li>فعّل <code>🔄 البيع التلقائي</code> للبيع تلقائياً</li>
-                <li>البوت يبدأ الفحص تلقائياً كل 30 ثانية (قابل للتغيير)</li>
+                <li>البوت يبدأ الفحص تلقائياً كل 30 ثانية</li>
             </ul>
         </div>
         
@@ -243,25 +254,28 @@
             <h2>⚠️ ملاحظات</h2>
             <div class="warning">
                 <ul style="list-style: disc; padding-right: 20px; line-height: 2;">
-                    <li><strong>🔥 البوت يعمل في الخلفية</strong> - يمكنك العمل على تبويبات أخرى</li>
-                    <li>لا تغلق تبويب السوق (يمكنك تركه في الخلفية)</li>
-                    <li>يحتفظ البوت بـ 1000 من كل مورد كاحتياطي</li>
-                    <li>الكمية المباعة محدودة بعدد التجار المتاحين</li>
+                    <li>يجب أن يكون لديك <strong>اشتراك ساري</strong> لاستخدام البوت</li>
+                    <li>البوت يعمل في الخلفية - يمكنك العمل على تبويبات أخرى</li>
+                    <li>لا تغلق تبويب السوق</li>
                 </ul>
             </div>
         </div>
         
         <div class="footer">
-            <p>📱 للدعم والتجديد: @YourTelegram</p>
-            <p style="margin-top: 10px; font-size: 12px;">Auto Market Sell v5.1 - Background Edition</p>
+            <p>📱 للاشتراك والدعم: @YourTelegram</p>
+            <p style="margin-top: 10px; font-size: 12px;">Auto Market Sell v5.2</p>
         </div>
     </div>
     
     <script>
+    // ============================================
+    // 🔴 مهم: غيّر هذا الرابط إلى رابط ملف subscribers.json على GitHub
+    // ============================================
+    const SUBSCRIBERS_URL = "https://YOUR_USERNAME.github.io/YOUR_REPO/subscribers.json";
+    
     const bookmarkletCode = `
 (function(){
-    var EXPIRY_DATE = "2026-12-01";
-    var USER_NAME = decodeURIComponent("%D8%A7%D9%84%D9%85%D8%B4%D8%AA%D8%B1%D9%83");
+    var SUBS_URL = "${SUBSCRIBERS_URL}";
     var CLICK_DELAY = 1000;
     var BETWEEN_SELL_DELAY = 10000;
     var MERCHANT_CAPACITY = 1000;
@@ -272,6 +286,12 @@
     
     var TEXTS = {
         title: decodeURIComponent("%D8%A8%D9%8A%D8%B9%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A"),
+        enterUsername: decodeURIComponent("%D8%A3%D8%AF%D8%AE%D9%84%20%D8%A7%D8%B3%D9%85%20%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%AE%D8%AF%D9%85"),
+        checking: decodeURIComponent("%D8%AC%D8%A7%D8%B1%D9%8A%20%D8%A7%D9%84%D8%AA%D8%AD%D9%82%D9%82"),
+        userNotFound: decodeURIComponent("%D8%A7%D8%B3%D9%85%20%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%20%D8%BA%D9%8A%D8%B1%20%D9%85%D9%88%D8%AC%D9%88%D8%AF"),
+        expired: decodeURIComponent("%D8%A7%D9%86%D8%AA%D9%87%D9%89%20%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%D9%83"),
+        renewSub: decodeURIComponent("%D9%8A%D8%B1%D8%AC%D9%89%20%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83"),
+        welcome: decodeURIComponent("%D9%85%D8%B1%D8%AD%D8%A8%D8%A7"),
         wood: decodeURIComponent("%D8%AE%D8%B4%D8%A8"),
         stone: decodeURIComponent("%D8%B7%D9%85%D9%8A"),
         iron: decodeURIComponent("%D8%AD%D8%AF%D9%8A%D8%AF"),
@@ -285,47 +305,140 @@
         threshold: decodeURIComponent("%D8%A7%D9%84%D8%B9%D8%AA%D8%A8%D8%A9"),
         log: decodeURIComponent("%D8%A7%D9%84%D8%B3%D8%AC%D9%84"),
         day: decodeURIComponent("%D9%8A%D9%88%D9%85"),
-        expired: decodeURIComponent("%D8%B9%D8%B2%D9%8A%D8%B2%D9%8A%20%D8%A7%D9%84%D9%85%D8%B4%D8%AA%D8%B1%D9%83%20%D9%8A%D8%B1%D8%AC%D9%89%20%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83"),
-        myResources: decodeURIComponent("%D9%85%D9%88%D8%A7%D8%B1%D8%AF%D9%8A"),
+        days: decodeURIComponent("%D8%A3%D9%8A%D8%A7%D9%85"),
         reserve: decodeURIComponent("%D8%A7%D8%AD%D8%AA%D9%8A%D8%A7%D8%B7%D9%8A"),
         running: decodeURIComponent("%D8%A7%D9%84%D8%A8%D9%88%D8%AA%20%D9%8A%D8%B9%D9%85%D9%84"),
         noMerchants: decodeURIComponent("%D9%84%D8%A7%20%D9%8A%D9%88%D8%AC%D8%AF%20%D8%AA%D8%AC%D8%A7%D8%B1"),
         done: decodeURIComponent("%D8%AA%D9%85"),
-        checking: decodeURIComponent("%D9%81%D8%AD%D8%B5"),
+        checkNow: decodeURIComponent("%D9%81%D8%AD%D8%B5"),
         sold: decodeURIComponent("%D8%AA%D9%85%20%D8%A7%D9%84%D8%A8%D9%8A%D8%B9"),
         thresholdMet: decodeURIComponent("%D8%A7%D9%84%D8%B9%D8%AA%D8%A8%D8%A9%20%D8%AA%D8%AD%D9%82%D9%82%D8%AA"),
         background: decodeURIComponent("%D9%8A%D8%B9%D9%85%D9%84%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AE%D9%84%D9%81%D9%8A%D8%A9"),
         nextCheck: decodeURIComponent("%D8%A7%D9%84%D9%81%D8%AD%D8%B5%20%D8%A7%D9%84%D9%82%D8%A7%D8%AF%D9%85"),
-        seconds: decodeURIComponent("%D8%AB%D8%A7%D9%86%D9%8A%D8%A9")
+        seconds: decodeURIComponent("%D8%AB%D8%A7%D9%86%D9%8A%D8%A9"),
+        plan: decodeURIComponent("%D8%A7%D9%84%D8%A8%D8%A7%D9%82%D8%A9"),
+        expiryDate: decodeURIComponent("%D8%AA%D8%A7%D8%B1%D9%8A%D8%AE%20%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%87%D8%A7%D8%A1"),
+        connectionError: decodeURIComponent("%D8%AE%D8%B7%D8%A3%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84"),
+        tryAgain: decodeURIComponent("%D8%AD%D8%A7%D9%88%D9%84%20%D9%85%D8%B1%D8%A9%20%D8%A3%D8%AE%D8%B1%D9%89")
     };
     
-    function checkSub(cb) {
-        fetch("https://worldtimeapi.org/api/ip")
-        .then(function(r){ return r.json(); })
-        .then(function(data){
-            var cur = new Date(data.datetime);
-            var exp = new Date(EXPIRY_DATE);
-            if(cur > exp) cb({valid:false});
-            else cb({valid:true, days: Math.ceil((exp-cur)/(1000*60*60*24))});
+    function showLoginDialog(callback) {
+        var overlay = document.createElement("div");
+        overlay.id = "ms-login-overlay";
+        overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999998;display:flex;align-items:center;justify-content:center;";
+        
+        var dialog = document.createElement("div");
+        dialog.style.cssText = "background:linear-gradient(135deg,#1a1a2e,#16213e);padding:30px;border-radius:15px;text-align:center;font-family:tahoma;direction:rtl;color:white;min-width:350px;box-shadow:0 10px 40px rgba(0,0,0,0.5);";
+        dialog.innerHTML = "<h2 style='margin:0 0 20px;color:#ffc107;'>&#128176; " + TEXTS.title + "</h2>" +
+            "<p style='margin-bottom:15px;'>" + TEXTS.enterUsername + ":</p>" +
+            "<input type='text' id='ms-username' style='width:100%;padding:12px;border:none;border-radius:8px;font-size:16px;text-align:center;margin-bottom:15px;' placeholder='username'>" +
+            "<div id='ms-login-error' style='color:#ff6b6b;margin-bottom:10px;min-height:20px;'></div>" +
+            "<button id='ms-login-btn' style='width:100%;padding:12px;background:linear-gradient(45deg,#ff6b6b,#ffc107);border:none;border-radius:8px;color:#1a1a2e;font-weight:bold;font-size:16px;cursor:pointer;'>" + TEXTS.checking + "...</button>" +
+            "<button id='ms-cancel-btn' style='width:100%;padding:10px;background:#666;border:none;border-radius:8px;color:white;margin-top:10px;cursor:pointer;'>" + TEXTS.close + "</button>";
+        
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+        
+        var input = document.getElementById("ms-username");
+        var btn = document.getElementById("ms-login-btn");
+        var cancelBtn = document.getElementById("ms-cancel-btn");
+        var errorDiv = document.getElementById("ms-login-error");
+        
+        btn.textContent = TEXTS.checking.replace("...", "");
+        
+        input.focus();
+        
+        function doLogin() {
+            var username = input.value.trim().toLowerCase();
+            if(!username) {
+                errorDiv.textContent = TEXTS.enterUsername;
+                return;
+            }
+            btn.textContent = TEXTS.checking + "...";
+            btn.disabled = true;
+            errorDiv.textContent = "";
+            callback(username, overlay);
+        }
+        
+        btn.onclick = doLogin;
+        input.onkeypress = function(e) { if(e.key === "Enter") doLogin(); };
+        cancelBtn.onclick = function() { overlay.remove(); };
+    }
+    
+    function showExpiredDialog(userName, expiryDate, contact) {
+        var overlay = document.createElement("div");
+        overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999999;display:flex;align-items:center;justify-content:center;";
+        
+        var dialog = document.createElement("div");
+        dialog.style.cssText = "background:linear-gradient(135deg,#ff4444,#cc0000);padding:40px;border-radius:15px;text-align:center;font-family:tahoma;direction:rtl;color:white;min-width:400px;box-shadow:0 10px 40px rgba(0,0,0,0.5);";
+        dialog.innerHTML = "<h2 style='margin:0 0 20px;font-size:24px;'>&#9940; " + TEXTS.expired + "</h2>" +
+            "<p style='font-size:18px;margin-bottom:10px;'>" + TEXTS.welcome + " <strong>" + userName + "</strong></p>" +
+            "<p style='margin-bottom:20px;'>" + TEXTS.expiryDate + ": <strong>" + expiryDate + "</strong></p>" +
+            "<p style='font-size:20px;color:#ffeb3b;margin-bottom:20px;'>" + TEXTS.renewSub + "</p>" +
+            "<div style='background:rgba(255,255,255,0.2);padding:15px;border-radius:8px;'>" +
+            "<p>&#128222; " + contact + "</p></div>" +
+            "<button onclick='this.parentElement.parentElement.remove()' style='margin-top:20px;padding:10px 30px;background:white;color:#cc0000;border:none;border-radius:8px;font-weight:bold;cursor:pointer;'>" + TEXTS.close + "</button>";
+        
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+    }
+    
+    function showError(message, overlay) {
+        var errorDiv = document.getElementById("ms-login-error");
+        var btn = document.getElementById("ms-login-btn");
+        if(errorDiv) errorDiv.textContent = message;
+        if(btn) {
+            btn.textContent = TEXTS.tryAgain;
+            btn.disabled = false;
+        }
+    }
+    
+    function checkSubscription(username, overlay) {
+        fetch(SUBS_URL + "?t=" + Date.now())
+        .then(function(r) { 
+            if(!r.ok) throw new Error("HTTP " + r.status);
+            return r.json(); 
         })
-        .catch(function(){
-            var cur = new Date();
-            var exp = new Date(EXPIRY_DATE);
-            if(cur > exp) cb({valid:false});
-            else cb({valid:true, days: Math.ceil((exp-cur)/(1000*60*60*24))});
+        .then(function(data) {
+            var user = data.users[username];
+            
+            if(!user) {
+                showError(TEXTS.userNotFound, overlay);
+                return;
+            }
+            
+            var now = new Date();
+            var expiry = new Date(user.expiry);
+            
+            fetch("https://worldtimeapi.org/api/ip")
+            .then(function(r){ return r.json(); })
+            .then(function(timeData){
+                now = new Date(timeData.datetime);
+                checkExpiry(now, expiry, user, data.settings, overlay);
+            })
+            .catch(function(){
+                checkExpiry(now, expiry, user, data.settings, overlay);
+            });
+        })
+        .catch(function(err) {
+            console.error("Fetch error:", err);
+            showError(TEXTS.connectionError + ": " + err.message, overlay);
         });
     }
     
-    function showExpired() {
-        var d = document.createElement("div");
-        d.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999999;background:linear-gradient(135deg,#ff4444,#cc0000);color:white;padding:40px;border-radius:15px;text-align:center;font-family:tahoma;direction:rtl;box-shadow:0 10px 40px rgba(0,0,0,0.5);min-width:400px;";
-        d.innerHTML = "<h2 style='margin:0 0 20px;font-size:22px;'>&#9940; " + TEXTS.expired + "</h2><p style='margin-top:20px;padding:15px;background:rgba(255,255,255,0.2);border-radius:8px;'>&#128222; Telegram: @YourUsername</p>";
-        document.body.appendChild(d);
+    function checkExpiry(now, expiry, user, settings, overlay) {
+        if(now > expiry) {
+            overlay.remove();
+            showExpiredDialog(user.name, user.expiry, settings.contact);
+            return;
+        }
+        
+        var daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+        overlay.remove();
+        startBot(user, daysLeft, settings);
     }
     
-    checkSub(function(sub){
-        if(!sub.valid){ showExpired(); return; }
-        
+    function startBot(user, daysLeft, settings) {
         if(window.__MS_RUN__){ alert(TEXTS.running + "!"); return; }
         window.__MS_RUN__ = true;
         
@@ -424,7 +537,7 @@
         }
         
         async function sellRes(r){
-            log(TEXTS.checking + " " + r + "...");
+            log(TEXTS.checkNow + " " + r + "...");
             var sel = getSel(r);
             if(!sel.stock || !sel.cap || !sel.input){ log(r + " not found"); return false; }
             
@@ -475,7 +588,7 @@
         async function autoSellCheck(){
             if(!enabled) return;
             countdown = interval / 1000;
-            log(TEXTS.checking + "...");
+            log(TEXTS.checkNow + "...");
             updRes();
             
             var list = ["wood", "stone", "iron"];
@@ -516,12 +629,10 @@
                         autoSellCheck();
                     }
                 };
-                log("Worker Timer " + TEXTS.background);
             } catch(e) {
                 setInterval(function(){
                     if(enabled) autoSellCheck();
                 }, interval);
-                log("Fallback Timer");
             }
             
             countdownTimer = setInterval(updateCountdown, 1000);
@@ -536,13 +647,19 @@
         function buildUI(){
             if($("#ms-p")) return;
             var css = document.createElement("style");
-            css.textContent = "#ms-p{position:fixed;left:20px;bottom:20px;z-index:999999;width:320px;padding:10px;border-radius:10px;background:rgba(0,0,0,0.92);color:#fff;font-family:tahoma;direction:rtl;font-size:12px;box-shadow:0 5px 25px rgba(0,0,0,0.5)}#ms-p h3{margin:0 0 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:6px;font-size:14px}#ms-p .inf{background:rgba(255,255,255,0.15);padding:5px;border-radius:5px;margin-bottom:6px;text-align:center;font-size:11px}#ms-p .bg-status{background:rgba(76,175,80,0.3);color:#8BC34A;padding:3px 6px;border-radius:3px;font-size:10px;display:inline-block;margin-top:4px}#ms-p .countdown-box{background:rgba(33,150,243,0.3);color:#64B5F6;padding:5px 8px;border-radius:5px;margin:6px 0;text-align:center;font-size:12px}#ms-p .rs{background:rgba(255,255,255,0.1);padding:6px;border-radius:5px;margin-bottom:6px;font-size:11px}#ms-p .rs div{display:flex;justify-content:space-between;padding:2px 0}#ms-p .ck{margin:5px 0}#ms-p button{width:100%;margin:3px 0;padding:6px;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:11px;transition:opacity 0.2s}#ms-p button:hover{opacity:0.9}#ms-p .bt{background:#1e88e5;color:#fff}#ms-p .bt.off{background:#f44336}#ms-p .bn{background:#4CAF50;color:#fff}#ms-p .bi{background:#FF9800;color:#fff}#ms-p .bc{background:#666;color:#fff}#ms-p #ms-lg{max-height:100px;overflow-y:auto;background:rgba(255,255,255,0.08);padding:4px;font-size:10px;margin-top:5px;border-radius:3px}";
+            css.textContent = "#ms-p{position:fixed;left:20px;bottom:20px;z-index:999999;width:320px;padding:10px;border-radius:10px;background:rgba(0,0,0,0.92);color:#fff;font-family:tahoma;direction:rtl;font-size:12px;box-shadow:0 5px 25px rgba(0,0,0,0.5)}#ms-p h3{margin:0 0 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:6px;font-size:14px}#ms-p .inf{background:rgba(255,255,255,0.15);padding:8px;border-radius:5px;margin-bottom:6px;text-align:center;font-size:11px}#ms-p .user-info{color:#ffc107;font-weight:bold;font-size:13px}#ms-p .plan-info{color:#8BC34A;font-size:10px;margin-top:4px}#ms-p .days-left{background:rgba(76,175,80,0.3);color:#8BC34A;padding:3px 8px;border-radius:10px;font-size:10px;display:inline-block;margin-top:4px}#ms-p .days-left.warning{background:rgba(255,152,0,0.3);color:#FFB74D}#ms-p .days-left.danger{background:rgba(244,67,54,0.3);color:#ef5350}#ms-p .countdown-box{background:rgba(33,150,243,0.3);color:#64B5F6;padding:5px 8px;border-radius:5px;margin:6px 0;text-align:center;font-size:12px}#ms-p .rs{background:rgba(255,255,255,0.1);padding:6px;border-radius:5px;margin-bottom:6px;font-size:11px}#ms-p .rs div{display:flex;justify-content:space-between;padding:2px 0}#ms-p .ck{margin:5px 0}#ms-p button{width:100%;margin:3px 0;padding:6px;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:11px;transition:opacity 0.2s}#ms-p button:hover{opacity:0.9}#ms-p .bt{background:#1e88e5;color:#fff}#ms-p .bt.off{background:#f44336}#ms-p .bn{background:#4CAF50;color:#fff}#ms-p .bi{background:#FF9800;color:#fff}#ms-p .bc{background:#666;color:#fff}#ms-p #ms-lg{max-height:100px;overflow-y:auto;background:rgba(255,255,255,0.08);padding:4px;font-size:10px;margin-top:5px;border-radius:3px}";
             document.head.appendChild(css);
+            
+            var daysClass = "days-left";
+            if(daysLeft <= 7) daysClass += " danger";
+            else if(daysLeft <= 30) daysClass += " warning";
             
             var box = document.createElement("div");
             box.id = "ms-p";
-            box.innerHTML = "<h3>&#128176; " + TEXTS.title + " v5.1</h3>" +
-                "<div class='inf'>&#128100; " + USER_NAME + " | &#9203; " + sub.days + " " + TEXTS.day + "<br><span class='bg-status'>&#9889; " + TEXTS.background + "</span></div>" +
+            box.innerHTML = "<h3>&#128176; " + TEXTS.title + " v5.2</h3>" +
+                "<div class='inf'><div class='user-info'>&#128100; " + user.name + "</div>" +
+                "<div class='plan-info'>&#127873; " + TEXTS.plan + ": " + user.plan + "</div>" +
+                "<span class='" + daysClass + "'>&#9203; " + daysLeft + " " + TEXTS.days + " " + TEXTS.running.split(" ")[0] + "</span></div>" +
                 "<div class='countdown-box'>&#9201; " + TEXTS.nextCheck + ": <span id='ms-countdown'>" + countdown + " " + TEXTS.seconds + "</span></div>" +
                 "<div class='rs'><div><span>&#129717; " + TEXTS.wood + ":</span><span id='ms-w' style='color:#8BC34A'>" + getMyRes().wood.toLocaleString() + "</span></div>" +
                 "<div><span>&#129704; " + TEXTS.stone + ":</span><span id='ms-s' style='color:#FF9800'>" + getMyRes().stone.toLocaleString() + "</span></div>" +
@@ -604,17 +721,15 @@
         }
         
         buildUI();
-        log(TEXTS.running + "!");
+        log(TEXTS.welcome + " " + user.name + "!");
         
-        /* ========================================
-           تشغيل الفحص فوراً عند بدء البوت
-           ثم بدء المؤقت للفحص الدوري
-           ======================================== */
         setTimeout(function(){
             autoSellCheck();
             startTimer();
         }, 1000);
-    });
+    }
+    
+    showLoginDialog(checkSubscription);
 })();
     `;
     
