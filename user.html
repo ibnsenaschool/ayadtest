@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Market Buy - تثبيت البوت</title>
+    <title>Auto Market Sell - تثبيت البوت</title>
     <style>
         * {
             margin: 0;
@@ -28,7 +28,7 @@
             text-align: center;
             margin-bottom: 10px;
             font-size: 2.5em;
-            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            background: linear-gradient(45deg, #ff6b6b, #ffc107);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -48,7 +48,7 @@
         }
         
         .card h2 {
-            color: #00d4ff;
+            color: #ffc107;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -78,7 +78,7 @@
             transform: translateY(-50%);
             width: 35px;
             height: 35px;
-            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            background: linear-gradient(45deg, #ff6b6b, #ffc107);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -91,7 +91,7 @@
             display: block;
             width: 100%;
             padding: 20px;
-            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            background: linear-gradient(45deg, #ff6b6b, #ffc107);
             color: #1a1a2e;
             text-align: center;
             text-decoration: none;
@@ -105,7 +105,7 @@
         
         .bookmarklet-btn:hover {
             transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(0,212,255,0.3);
+            box-shadow: 0 10px 30px rgba(255,107,107,0.3);
         }
         
         .bookmarklet-btn:active {
@@ -165,31 +165,40 @@
             border-radius: 4px;
             font-family: monospace;
         }
+        
+        .new-feature {
+            background: rgba(76,175,80,0.3);
+            border: 1px solid #4CAF50;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🛒 Auto Market Buy</h1>
-        <p class="subtitle">بوت الشراء التلقائي من السوق</p>
+        <h1>💰 Auto Market Sell</h1>
+        <p class="subtitle">بوت البيع التلقائي في السوق <span class="new-feature">🔥 يعمل في الخلفية</span></p>
         
         <div class="card">
             <h2>✨ المميزات</h2>
             <div class="features">
                 <div class="feature">
-                    <div class="feature-icon">🔄</div>
-                    <div>فحص دوري تلقائي</div>
+                    <div class="feature-icon">📊</div>
+                    <div>فحص العتبة تلقائياً</div>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">🔔</div>
                     <div>تنبيه صوتي</div>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🎨</div>
-                    <div>تمييز العناصر</div>
+                    <div class="feature-icon">🔄</div>
+                    <div><span class="new-feature">جديد</span>يعمل في الخلفية</div>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">⚡</div>
-                    <div>شراء تلقائي</div>
+                    <div>بيع تلقائي</div>
                 </div>
             </div>
         </div>
@@ -204,27 +213,28 @@
             
             <!-- Bookmarklet Button -->
             <a class="bookmarklet-btn" id="bookmarklet-link" href="#">
-                🛒 اسحبني للمفضلة - Auto Buy
+                💰 اسحبني للمفضلة - Auto Sell
             </a>
             
             <ol class="steps">
                 <li>تأكد من ظهور <strong>شريط المفضلة</strong> في متصفحك (Ctrl+Shift+B)</li>
-                <li><strong>اسحب الزر الأخضر</strong> أعلاه وأفلته في شريط المفضلة</li>
+                <li><strong>اسحب الزر البرتقالي</strong> أعلاه وأفلته في شريط المفضلة</li>
                 <li>افتح صفحة <strong>السوق</strong> في اللعبة (mode=exchange)</li>
                 <li>اضغط على الزر في المفضلة لتشغيل البوت</li>
             </ol>
             
             <div class="success">
-                <strong>✅ جاهز!</strong> البوت سيظهر في أعلى يمين الشاشة عند التشغيل
+                <strong>✅ جاهز!</strong> البوت سيظهر في أسفل يسار الشاشة عند التشغيل
+                <br><strong>🔥 جديد:</strong> البوت يستمر في العمل حتى لو انتقلت لتبويب آخر!
             </div>
         </div>
         
         <div class="card">
             <h2>📖 طريقة الاستخدام</h2>
             <ul class="steps">
-                <li>أدخل الكمية المطلوبة لكل مورد (خشب، حجر، حديد)</li>
-                <li>فعّل <code>🔊 صوت</code> للتنبيه عند توفر الموارد</li>
-                <li>فعّل <code>🛒 شراء تلقائي</code> للشراء تلقائياً</li>
+                <li>حدد <strong>العتبة</strong> - البوت يبيع عندما تكون قيمة السوق أقل أو تساوي العتبة</li>
+                <li>فعّل <code>🔊 صوت</code> للتنبيه عند البيع</li>
+                <li>فعّل <code>🔄 البيع التلقائي</code> للبيع تلقائياً</li>
                 <li>البوت يفحص كل 30 ثانية (قابل للتغيير)</li>
             </ul>
         </div>
@@ -233,50 +243,58 @@
             <h2>⚠️ ملاحظات</h2>
             <div class="warning">
                 <ul style="list-style: disc; padding-right: 20px; line-height: 2;">
-                    <li>يجب الضغط على الزر في كل مرة تفتح فيها صفحة السوق</li>
-                    <li>لا تغلق صفحة السوق أثناء عمل البوت</li>
-                    <li>الكمية المشتراة = مواردك - 1000 (للأمان)</li>
+                    <li><strong>🔥 البوت يعمل في الخلفية</strong> - يمكنك العمل على تبويبات أخرى</li>
+                    <li>لا تغلق تبويب السوق (يمكنك تركه في الخلفية)</li>
+                    <li>يحتفظ البوت بـ 1000 من كل مورد كاحتياطي</li>
+                    <li>الكمية المباعة محدودة بعدد التجار المتاحين</li>
                 </ul>
             </div>
         </div>
         
         <div class="footer">
             <p>📱 للدعم والتجديد: @YourTelegram</p>
-            <p style="margin-top: 10px; font-size: 12px;">Auto Market Buy v4.0</p>
+            <p style="margin-top: 10px; font-size: 12px;">Auto Market Sell v5.0 - Background Edition</p>
         </div>
     </div>
     
     <script>
-    // إنشاء الـ Bookmarklet بشكل صحيح
     const bookmarkletCode = `
 (function(){
     var EXPIRY_DATE = "2026-12-01";
-    var USER_NAME = decodeURIComponent("%D9%85%D8%B3%D8%AA%D8%AE%D8%AF%D9%85");
-    var BUFFER = 1000;
+    var USER_NAME = decodeURIComponent("%D8%A7%D9%84%D9%85%D8%B4%D8%AA%D8%B1%D9%83");
     var CLICK_DELAY = 1000;
-    var BETWEEN_BUY_DELAY = 10000;
+    var BETWEEN_SELL_DELAY = 10000;
+    var MERCHANT_CAPACITY = 1000;
+    var BUFFER = 500;
+    var RESOURCE_BUFFER = 1000;
     var DEFAULT_INTERVAL = 30000;
+    var DEFAULT_THRESHOLD = 101;
     
     var TEXTS = {
-        title: decodeURIComponent("%D8%B4%D8%B1%D8%A7%D8%A1%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A"),
+        title: decodeURIComponent("%D8%A8%D9%8A%D8%B9%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A"),
         wood: decodeURIComponent("%D8%AE%D8%B4%D8%A8"),
         stone: decodeURIComponent("%D8%B7%D9%85%D9%8A"),
         iron: decodeURIComponent("%D8%AD%D8%AF%D9%8A%D8%AF"),
-        autoBuy: decodeURIComponent("%D8%B4%D8%B1%D8%A7%D8%A1%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A"),
+        autoSell: decodeURIComponent("%D8%A8%D9%8A%D8%B9%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A"),
         sound: decodeURIComponent("%D8%B5%D9%88%D8%AA"),
         stop: decodeURIComponent("%D8%A5%D9%8A%D9%82%D8%A7%D9%81"),
         start: decodeURIComponent("%D8%AA%D8%B4%D8%BA%D9%8A%D9%84"),
-        check: decodeURIComponent("%D9%81%D8%AD%D8%B5%20%D8%A7%D9%84%D8%A2%D9%86"),
+        runNow: decodeURIComponent("%D8%AA%D8%B4%D8%BA%D9%8A%D9%84%20%D8%A7%D9%84%D8%A2%D9%86"),
         close: decodeURIComponent("%D8%A5%D8%BA%D9%84%D8%A7%D9%82"),
         period: decodeURIComponent("%D8%A7%D9%84%D9%81%D8%AA%D8%B1%D8%A9"),
+        threshold: decodeURIComponent("%D8%A7%D9%84%D8%B9%D8%AA%D8%A8%D8%A9"),
         log: decodeURIComponent("%D8%A7%D9%84%D8%B3%D8%AC%D9%84"),
         day: decodeURIComponent("%D9%8A%D9%88%D9%85"),
-        expired: decodeURIComponent("%D8%A7%D9%86%D8%AA%D9%87%D9%89%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83"),
-        available: decodeURIComponent("%D9%85%D8%AA%D8%A7%D8%AD"),
+        expired: decodeURIComponent("%D8%B9%D8%B2%D9%8A%D8%B2%D9%8A%20%D8%A7%D9%84%D9%85%D8%B4%D8%AA%D8%B1%D9%83%20%D9%8A%D8%B1%D8%AC%D9%89%20%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83"),
+        myResources: decodeURIComponent("%D9%85%D9%88%D8%A7%D8%B1%D8%AF%D9%8A"),
+        reserve: decodeURIComponent("%D8%A7%D8%AD%D8%AA%D9%8A%D8%A7%D8%B7%D9%8A"),
         running: decodeURIComponent("%D8%A7%D9%84%D8%A8%D9%88%D8%AA%20%D9%8A%D8%B9%D9%85%D9%84"),
-        notEnough: decodeURIComponent("%D8%BA%D9%8A%D8%B1%20%D9%83%D8%A7%D9%81%D9%8A"),
+        noMerchants: decodeURIComponent("%D9%84%D8%A7%20%D9%8A%D9%88%D8%AC%D8%AF%20%D8%AA%D8%AC%D8%A7%D8%B1"),
         done: decodeURIComponent("%D8%AA%D9%85"),
-        checking: decodeURIComponent("%D9%81%D8%AD%D8%B5")
+        checking: decodeURIComponent("%D9%81%D8%AD%D8%B5"),
+        sold: decodeURIComponent("%D8%AA%D9%85%20%D8%A7%D9%84%D8%A8%D9%8A%D8%B9"),
+        thresholdMet: decodeURIComponent("%D8%A7%D9%84%D8%B9%D8%AA%D8%A8%D8%A9%20%D8%AA%D8%AD%D9%82%D9%82%D8%AA"),
+        background: decodeURIComponent("%D9%8A%D8%B9%D9%85%D9%84%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AE%D9%84%D9%81%D9%8A%D8%A9")
     };
     
     function checkSub(cb) {
@@ -298,33 +316,70 @@
     
     function showExpired() {
         var d = document.createElement("div");
-        d.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999999;background:linear-gradient(135deg,#ff4444,#cc0000);color:white;padding:40px;border-radius:15px;text-align:center;font-family:tahoma;direction:rtl;box-shadow:0 10px 40px rgba(0,0,0,0.5);min-width:350px;";
-        d.innerHTML = "<h2 style='margin:0 0 20px;font-size:24px;'>&#9940; " + TEXTS.expired + "</h2><p>" + USER_NAME + "</p>";
+        d.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999999;background:linear-gradient(135deg,#ff4444,#cc0000);color:white;padding:40px;border-radius:15px;text-align:center;font-family:tahoma;direction:rtl;box-shadow:0 10px 40px rgba(0,0,0,0.5);min-width:400px;";
+        d.innerHTML = "<h2 style='margin:0 0 20px;font-size:22px;'>&#9940; " + TEXTS.expired + "</h2><p style='margin-top:20px;padding:15px;background:rgba(255,255,255,0.2);border-radius:8px;'>&#128222; Telegram: @YourUsername</p>";
         document.body.appendChild(d);
     }
     
     checkSub(function(sub){
         if(!sub.valid){ showExpired(); return; }
         
-        if(window.__MB_RUN__){ alert(TEXTS.running + "!"); return; }
-        window.__MB_RUN__ = true;
+        if(window.__MS_RUN__){ alert(TEXTS.running + "!"); return; }
+        window.__MS_RUN__ = true;
         
         var enabled = true;
-        var autoBuy = false;
+        var autoSell = true;
         var sound = true;
         var interval = DEFAULT_INTERVAL;
-        var woodQty = 1000;
-        var stoneQty = 1000;
-        var ironQty = 1000;
-        var timer = null;
+        var threshold = DEFAULT_THRESHOLD;
+        var bgWorker = null;
         var logBox = null;
         
         function $(s){ return document.querySelector(s); }
         function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
         
+        /* ============================================
+           نظام العمل في الخلفية باستخدام Web Worker
+           ============================================ */
+        function createBackgroundTimer(callback, ms) {
+            var workerCode = "var i=" + ms + ";setInterval(function(){postMessage('tick');},i);";
+            var blob = new Blob([workerCode], {type: "application/javascript"});
+            var worker = new Worker(URL.createObjectURL(blob));
+            worker.onmessage = function(e) {
+                if(e.data === "tick") callback();
+            };
+            return worker;
+        }
+        
+        /* حل بديل إذا Web Worker لم يعمل */
+        function createFallbackTimer(callback, ms) {
+            var lastTime = Date.now();
+            function check() {
+                var now = Date.now();
+                if(now - lastTime >= ms) {
+                    lastTime = now;
+                    callback();
+                }
+                requestAnimationFrame(check);
+            }
+            requestAnimationFrame(check);
+            
+            /* إبقاء التبويب نشط */
+            setInterval(function(){}, 1000);
+            
+            /* محاولة منع المتصفح من إبطاء التبويب */
+            if(document.hidden !== undefined) {
+                document.addEventListener("visibilitychange", function() {
+                    if(document.hidden) {
+                        console.log("[MS] Tab hidden - using alternative timer");
+                    }
+                });
+            }
+        }
+        
         function log(m){
             var t = new Date().toLocaleTimeString();
-            console.log("[MB]", t, m);
+            console.log("[MS]", t, m);
             if(logBox){
                 var d = document.createElement("div");
                 d.textContent = "[" + t + "] " + m;
@@ -340,158 +395,220 @@
                 var osc = ctx.createOscillator();
                 var gain = ctx.createGain();
                 osc.type = "sine";
-                osc.frequency.value = 700;
-                gain.gain.value = 0.15;
+                osc.frequency.value = 550;
+                gain.gain.value = 0.1;
                 osc.connect(gain);
                 gain.connect(ctx.destination);
                 osc.start();
-                setTimeout(function(){ osc.stop(); }, 200);
+                setTimeout(function(){ osc.stop(); }, 180);
             }catch(e){}
         }
         
         function toNum(t){ return Number(String(t||"0").replace(/[^0-9]/g,"")); }
-        function getRes(r){ var e = $("#"+r); return e ? toNum(e.textContent) : 0; }
-        function getStock(r){ var e = $("#premium_exchange_stock_"+r); return e ? toNum(e.textContent) : 0; }
-        function getStockEl(r){ return $("#premium_exchange_stock_"+r); }
-        function getInput(r){ return $("input[name='buy_"+r+"']") || $("input[data-resource='"+r+"'][data-type='buy']"); }
         
-        function hl(r, on){
-            var e = getStockEl(r);
-            if(e) e.style.backgroundColor = on ? "#add8e6" : "";
+        function getMyRes(){
+            return {
+                wood: toNum($("#wood") ? $("#wood").textContent : 0),
+                stone: toNum($("#stone") ? $("#stone").textContent : 0),
+                iron: toNum($("#iron") ? $("#iron").textContent : 0)
+            };
         }
-        function clrHl(){ ["wood","stone","iron"].forEach(function(r){ hl(r,false); }); }
+        
+        function getMarketVal(r){
+            var divs = document.querySelectorAll(".premium-exchange-sep");
+            for(var i=0; i<divs.length; i++){
+                var d = divs[i];
+                var img = d.querySelector("img");
+                if(!img) continue;
+                var src = img.src;
+                if(r === "wood" && src.indexOf("wood_") !== -1) return toNum(d.textContent);
+                if(r === "stone" && src.indexOf("stone_") !== -1) return toNum(d.textContent);
+                if(r === "iron" && src.indexOf("iron_") !== -1) return toNum(d.textContent);
+            }
+            return null;
+        }
+        
+        function getMerchants(){
+            var el = $("#market_merchant_available_count");
+            return el ? toNum(el.textContent) : 0;
+        }
+        
+        function getSel(r){
+            return {
+                stock: $("#premium_exchange_stock_" + r),
+                cap: $("#premium_exchange_capacity_" + r),
+                input: $("input[name='sell_" + r + "']") || $("input[data-resource='" + r + "'][data-type='sell']")
+            };
+        }
         
         function updRes(){
-            var w = $("#mb-w"); var s = $("#mb-s"); var i = $("#mb-i");
-            if(w) w.textContent = getRes("wood").toLocaleString();
-            if(s) s.textContent = getRes("stone").toLocaleString();
-            if(i) i.textContent = getRes("iron").toLocaleString();
+            var res = getMyRes();
+            var w = $("#ms-w"); var s = $("#ms-s"); var i = $("#ms-i");
+            if(w) w.textContent = res.wood.toLocaleString();
+            if(s) s.textContent = res.stone.toLocaleString();
+            if(i) i.textContent = res.iron.toLocaleString();
         }
         
-        async function buyRes(r, qty){
+        async function sellRes(r){
             log(TEXTS.checking + " " + r + "...");
-            var stock = getStock(r);
-            var myRes = getRes(r);
-            var inp = getInput(r);
-            if(!inp){ log(r + " input not found"); return false; }
-            if(stock < qty){ log(TEXTS.notEnough); return false; }
-            var avail = myRes - BUFFER;
-            if(avail <= 0){ log(TEXTS.notEnough); return false; }
-            var final = Math.min(qty, avail);
-            inp.focus();
-            inp.value = final;
-            inp.dispatchEvent(new Event("input",{bubbles:true}));
+            var sel = getSel(r);
+            if(!sel.stock || !sel.cap || !sel.input){ log(r + " not found"); return false; }
+            
+            var marketStock = toNum(sel.stock.textContent);
+            var marketCap = toNum(sel.cap.textContent);
+            var myRes = getMyRes();
+            var myAmt = myRes[r] || 0;
+            
+            var marketNeed = (marketCap - marketStock) - BUFFER;
+            if(marketNeed < 0) marketNeed = 0;
+            
+            var canSell = myAmt - RESOURCE_BUFFER;
+            if(canSell < 0) canSell = 0;
+            
+            var qty = Math.min(marketNeed, canSell);
+            
+            var merchants = getMerchants();
+            if(merchants <= 0){ log(TEXTS.noMerchants); return false; }
+            
+            var maxQty = merchants * MERCHANT_CAPACITY;
+            qty = Math.min(qty, maxQty);
+            
+            if(qty <= 0){ log("qty = 0"); return false; }
+            
+            sel.input.focus();
+            sel.input.value = qty;
+            sel.input.dispatchEvent(new Event("input",{bubbles:true}));
+            
             await sleep(CLICK_DELAY);
+            
             var btn1 = $(".btn-premium-exchange-buy");
             if(!btn1){ log("btn not found"); return false; }
             btn1.click();
+            
             await sleep(CLICK_DELAY);
+            
             var btn2 = $(".btn-confirm-yes") || $("[class*='confirm']");
             if(!btn2){ log("confirm not found"); return false; }
             btn2.click();
+            
             await sleep(CLICK_DELAY);
-            log(TEXTS.done + "! " + final);
+            
+            beep();
+            log(TEXTS.sold + "! " + qty + " " + r);
             return true;
         }
         
-        async function check(){
+        async function autoSellCheck(){
             if(!enabled) return;
             log(TEXTS.checking + "...");
             updRes();
-            clrHl();
-            var res = [
-                {n:"wood", q:woodQty, l:TEXTS.wood},
-                {n:"stone", q:stoneQty, l:TEXTS.stone},
-                {n:"iron", q:ironQty, l:TEXTS.iron}
-            ];
-            for(var i=0; i<res.length; i++){
-                var r = res[i];
-                if(r.q <= 0) continue;
-                var stock = getStock(r.n);
-                log(r.l + ": " + stock + " / " + r.q);
-                if(stock >= r.q){
-                    log(r.l + " " + TEXTS.available + "!");
-                    hl(r.n, true);
+            
+            var list = ["wood", "stone", "iron"];
+            var labels = [TEXTS.wood, TEXTS.stone, TEXTS.iron];
+            
+            for(var i=0; i<list.length; i++){
+                var r = list[i];
+                var val = getMarketVal(r);
+                if(val === null){ log(r + " val not found"); continue; }
+                
+                log(labels[i] + " = " + val + " | " + TEXTS.threshold + " = " + threshold);
+                
+                if(val <= threshold){
+                    log(TEXTS.thresholdMet + " " + labels[i] + "!");
                     beep();
-                    if(autoBuy){
-                        var ok = await buyRes(r.n, r.q);
-                        if(ok){ hl(r.n, false); await sleep(BETWEEN_BUY_DELAY); }
+                    if(autoSell){
+                        var ok = await sellRes(r);
+                        if(ok) await sleep(BETWEEN_SELL_DELAY);
                     }
                 }
             }
             log(TEXTS.done);
+            updRes();
         }
         
-        function resetTimer(){
-            if(timer) clearInterval(timer);
-            timer = setInterval(function(){ if(enabled) check(); }, interval);
+        function startBackgroundTimer(){
+            if(bgWorker) bgWorker.terminate();
+            try {
+                bgWorker = createBackgroundTimer(function(){
+                    if(enabled && autoSell) autoSellCheck();
+                }, interval);
+                log("Web Worker " + TEXTS.background);
+            } catch(e) {
+                console.log("Web Worker failed, using fallback");
+                createFallbackTimer(function(){
+                    if(enabled && autoSell) autoSellCheck();
+                }, interval);
+                log("Fallback timer " + TEXTS.background);
+            }
         }
         
         function buildUI(){
-            if($("#mb-p")) return;
+            if($("#ms-p")) return;
             var css = document.createElement("style");
-            css.textContent = "#mb-p{position:fixed;right:20px;top:20px;z-index:999999;width:280px;padding:10px;border-radius:10px;background:rgba(0,100,0,0.92);color:#fff;font-family:tahoma;direction:rtl;font-size:12px}#mb-p h3{margin:0 0 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:6px;font-size:14px}#mb-p .inf{background:rgba(255,255,255,0.15);padding:5px;border-radius:5px;margin-bottom:6px;text-align:center;font-size:11px}#mb-p .rs{background:rgba(255,255,255,0.1);padding:5px;border-radius:5px;margin-bottom:6px;font-size:11px}#mb-p .rs div{display:flex;justify-content:space-between;padding:2px 0}#mb-p .rw{display:flex;align-items:center;margin:4px 0;gap:5px}#mb-p .rw label{flex:1}#mb-p .rw input[type=number]{width:65px;padding:3px;border:none;border-radius:3px;text-align:center}#mb-p .ck{margin:5px 0}#mb-p button{width:100%;margin:3px 0;padding:6px;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:11px}#mb-p .bt{background:#4CAF50;color:#fff}#mb-p .bt.off{background:#f44336}#mb-p .bn{background:#2196F3;color:#fff}#mb-p .bi{background:#FF9800;color:#fff}#mb-p .bc{background:#666;color:#fff}#mb-p #mb-lg{max-height:80px;overflow-y:auto;background:rgba(255,255,255,0.1);padding:4px;font-size:10px;margin-top:5px;border-radius:3px}";
+            css.textContent = "#ms-p{position:fixed;left:20px;bottom:20px;z-index:999999;width:300px;padding:10px;border-radius:10px;background:rgba(0,0,0,0.9);color:#fff;font-family:tahoma;direction:rtl;font-size:12px}#ms-p h3{margin:0 0 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:6px;font-size:14px}#ms-p .inf{background:rgba(255,255,255,0.15);padding:5px;border-radius:5px;margin-bottom:6px;text-align:center;font-size:11px}#ms-p .bg-status{background:rgba(76,175,80,0.3);color:#8BC34A;padding:3px 6px;border-radius:3px;font-size:10px;display:inline-block;margin-top:4px}#ms-p .rs{background:rgba(255,255,255,0.1);padding:6px;border-radius:5px;margin-bottom:6px;font-size:11px}#ms-p .rs div{display:flex;justify-content:space-between;padding:2px 0}#ms-p .ck{margin:5px 0}#ms-p button{width:100%;margin:3px 0;padding:6px;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:11px}#ms-p .bt{background:#1e88e5;color:#fff}#ms-p .bt.off{background:#f44336}#ms-p .bn{background:#4CAF50;color:#fff}#ms-p .bi{background:#FF9800;color:#fff}#ms-p .bc{background:#666;color:#fff}#ms-p #ms-lg{max-height:100px;overflow-y:auto;background:rgba(255,255,255,0.08);padding:4px;font-size:10px;margin-top:5px;border-radius:3px}";
             document.head.appendChild(css);
             
             var box = document.createElement("div");
-            box.id = "mb-p";
-            box.innerHTML = "<h3>&#128722; " + TEXTS.title + "</h3>" +
-                "<div class='inf'>&#128100; " + USER_NAME + " | &#9203; " + sub.days + " " + TEXTS.day + "</div>" +
-                "<div class='rs'><div><span>&#129717; " + TEXTS.wood + ":</span><span id='mb-w'>" + getRes("wood").toLocaleString() + "</span></div>" +
-                "<div><span>&#129704; " + TEXTS.stone + ":</span><span id='mb-s'>" + getRes("stone").toLocaleString() + "</span></div>" +
-                "<div><span>&#9881; " + TEXTS.iron + ":</span><span id='mb-i'>" + getRes("iron").toLocaleString() + "</span></div></div>" +
-                "<div class='rw'><label>&#129717; " + TEXTS.wood + ":</label><input type='number' id='mb-qw' value='" + woodQty + "'></div>" +
-                "<div class='rw'><label>&#129704; " + TEXTS.stone + ":</label><input type='number' id='mb-qs' value='" + stoneQty + "'></div>" +
-                "<div class='rw'><label>&#9881; " + TEXTS.iron + ":</label><input type='number' id='mb-qi' value='" + ironQty + "'></div>" +
-                "<div class='ck'><label><input type='checkbox' id='mb-au'> &#128722; " + TEXTS.autoBuy + "</label></div>" +
-                "<div class='ck'><label><input type='checkbox' id='mb-sn' checked> &#128266; " + TEXTS.sound + "</label></div>" +
-                "<button class='bt' id='mb-tg'>&#9208; " + TEXTS.stop + "</button>" +
-                "<button class='bi' id='mb-in'>&#9201; " + TEXTS.period + " (" + (interval/1000) + "s)</button>" +
-                "<button class='bn' id='mb-nw'>&#128260; " + TEXTS.check + "</button>" +
-                "<button class='bc' id='mb-cl'>&#10006; " + TEXTS.close + "</button>" +
-                "<div id='mb-lg'>-- " + TEXTS.log + " --</div>";
+            box.id = "ms-p";
+            box.innerHTML = "<h3>&#128176; " + TEXTS.title + " v5</h3>" +
+                "<div class='inf'>&#128100; " + USER_NAME + " | &#9203; " + sub.days + " " + TEXTS.day + "<br><span class='bg-status'>&#9889; " + TEXTS.background + "</span></div>" +
+                "<div class='rs'><div><span>&#129717; " + TEXTS.wood + ":</span><span id='ms-w' style='color:#8BC34A'>" + getMyRes().wood.toLocaleString() + "</span></div>" +
+                "<div><span>&#129704; " + TEXTS.stone + ":</span><span id='ms-s' style='color:#FF9800'>" + getMyRes().stone.toLocaleString() + "</span></div>" +
+                "<div><span>&#9881; " + TEXTS.iron + ":</span><span id='ms-i' style='color:#9E9E9E'>" + getMyRes().iron.toLocaleString() + "</span></div>" +
+                "<div style='font-size:10px;color:#aaa;margin-top:4px'>&#128161; " + TEXTS.reserve + ": " + RESOURCE_BUFFER + "</div></div>" +
+                "<div class='ck'><label><input type='checkbox' id='ms-au' checked> &#128260; " + TEXTS.autoSell + "</label></div>" +
+                "<div class='ck'><label><input type='checkbox' id='ms-sn' checked> &#128266; " + TEXTS.sound + "</label></div>" +
+                "<button class='bt' id='ms-tg'>&#9208; " + TEXTS.stop + "</button>" +
+                "<button class='bn' id='ms-nw'>&#128640; " + TEXTS.runNow + "</button>" +
+                "<button class='bi' id='ms-th'>&#127919; " + TEXTS.threshold + " (" + threshold + ")</button>" +
+                "<button class='bi' id='ms-in'>&#9201; " + TEXTS.period + " (" + (interval/1000) + "s)</button>" +
+                "<button class='bc' id='ms-cl'>&#10006; " + TEXTS.close + "</button>" +
+                "<div id='ms-lg'>-- " + TEXTS.log + " --</div>";
             document.body.appendChild(box);
             
-            logBox = $("#mb-lg");
+            logBox = $("#ms-lg");
             setInterval(updRes, 5000);
             
-            $("#mb-qw").onchange = function(e){ woodQty = Number(e.target.value)||0; };
-            $("#mb-qs").onchange = function(e){ stoneQty = Number(e.target.value)||0; };
-            $("#mb-qi").onchange = function(e){ ironQty = Number(e.target.value)||0; };
-            
-            $("#mb-tg").onclick = function(){
+            $("#ms-tg").onclick = function(){
                 enabled = !enabled;
-                var b = $("#mb-tg");
+                var b = $("#ms-tg");
                 b.innerHTML = enabled ? "&#9208; " + TEXTS.stop : "&#9654; " + TEXTS.start;
                 b.className = enabled ? "bt" : "bt off";
-                if(enabled) resetTimer(); else { clearInterval(timer); clrHl(); }
             };
             
-            $("#mb-nw").onclick = function(){ check(); };
+            $("#ms-nw").onclick = function(){ autoSellCheck(); };
             
-            $("#mb-in").onclick = function(){
+            $("#ms-th").onclick = function(){
+                var v = prompt(TEXTS.threshold + ":", threshold);
+                if(v){ threshold = Number(v); $("#ms-th").innerHTML = "&#127919; " + TEXTS.threshold + " (" + threshold + ")"; }
+            };
+            
+            $("#ms-in").onclick = function(){
                 var v = prompt(TEXTS.period + " (s):", interval/1000);
-                if(v){ interval = Number(v)*1000; $("#mb-in").innerHTML = "&#9201; " + TEXTS.period + " (" + (interval/1000) + "s)"; if(enabled) resetTimer(); }
+                if(v){ 
+                    interval = Number(v)*1000; 
+                    $("#ms-in").innerHTML = "&#9201; " + TEXTS.period + " (" + (interval/1000) + "s)"; 
+                    startBackgroundTimer();
+                }
             };
             
-            $("#mb-au").onchange = function(e){ autoBuy = e.target.checked; };
-            $("#mb-sn").onchange = function(e){ sound = e.target.checked; };
+            $("#ms-au").onchange = function(e){ autoSell = e.target.checked; };
+            $("#ms-sn").onchange = function(e){ sound = e.target.checked; };
             
-            $("#mb-cl").onclick = function(){
-                clearInterval(timer);
+            $("#ms-cl").onclick = function(){
+                if(bgWorker) bgWorker.terminate();
                 box.remove();
-                window.__MB_RUN__ = false;
+                window.__MS_RUN__ = false;
             };
         }
         
         buildUI();
-        resetTimer();
+        startBackgroundTimer();
         log(TEXTS.running + "!");
     });
 })();
     `;
     
-    // تحويل الكود إلى Bookmarklet
     const encoded = 'javascript:' + encodeURIComponent(bookmarkletCode.replace(/\s+/g, ' ').trim());
     document.getElementById('bookmarklet-link').href = encoded;
     </script>
