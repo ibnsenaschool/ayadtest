@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Market Buy - تثبيت البوت</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card h2 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .steps {
+            list-style: none;
+            counter-reset: step;
+        }
+        
+        .steps li {
+            counter-increment: step;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            position: relative;
+            padding-right: 60px;
+        }
+        
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #1a1a2e;
+        }
+        
+        .bookmarklet-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            color: #1a1a2e;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 10px;
+            margin: 20px 0;
+            cursor: grab;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .bookmarklet-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,212,255,0.3);
+        }
+        
+        .bookmarklet-btn:active {
+            cursor: grabbing;
+        }
+        
+        .warning {
+            background: rgba(255,193,7,0.2);
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .warning-title {
+            color: #ffc107;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .success {
+            background: rgba(76,175,80,0.2);
+            border: 1px solid #4CAF50;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+        }
+        
+        code {
+            background: rgba(0,0,0,0.5);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Auto Market Buy</h1>
+        <p class="subtitle">بوت الشراء التلقائي من السوق</p>
+        
+        <div class="card">
+            <h2>✨ المميزات</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🔄</div>
+                    <div>فحص دوري تلقائي</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔔</div>
+                    <div>تنبيه صوتي</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <div>تمييز العناصر</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div>شراء تلقائي</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>📥 التثبيت</h2>
+            
+            <div class="warning">
+                <div class="warning-title">⚠️ مهم</div>
+                اسحب الزر التالي إلى شريط المفضلة (Bookmarks Bar)
+            </div>
+            
+            <!-- Bookmarklet Button -->
+            <a class="bookmarklet-btn" href="javascript:(function(){const EXPIRY_DATE='2026-12-01';const USER_NAME='مستخدم';const BUFFER=1000;const CLICK_DELAY=1000;const BETWEEN_BUY_DELAY=10000;const DEFAULT_INTERVAL=30000;async function checkSubscription(){try{const response=await fetch('https://worldtimeapi.org/api/ip');const data=await response.json();const currentDate=new Date(data.datetime);const expiryDate=new Date(EXPIRY_DATE);if(currentDate>expiryDate){return{valid:false}}else{const daysLeft=Math.ceil((expiryDate-currentDate)/(1000*60*60*24));return{valid:true,daysLeft:daysLeft}}}catch(e){const currentDate=new Date();const expiryDate=new Date(EXPIRY_DATE);if(currentDate>expiryDate){return{valid:false}}else{const daysLeft=Math.ceil((expiryDate-currentDate)/(1000*60*60*24));return{valid:true,daysLeft:daysLeft}}}}function showExpired(){const box=document.createElement('div');box.innerHTML='<div style=\"position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999999;background:linear-gradient(135deg,#ff4444,#cc0000);color:white;padding:40px;border-radius:15px;text-align:center;font-family:tahoma;direction:rtl;box-shadow:0 10px 40px rgba(0,0,0,0.5);min-width:350px;\"><h2 style=\"margin:0 0 20px 0;font-size:24px;\">⛔ انتهى الاشتراك</h2><p>عزيزي <strong>'+USER_NAME+'</strong></p><p>انتهت صلاحية اشتراكك</p><p style=\"margin-top:20px;padding:15px;background:rgba(255,255,255,0.2);border-radius:8px;\">📱 للتجديد تواصل معنا</p></div>';document.body.appendChild(box)}async function startBot(){const sub=await checkSubscription();if(!sub.valid){showExpired();return}if(window.__MB_RUNNING__){alert('البوت يعمل بالفعل!');return}window.__MB_RUNNING__=true;let mbEnabled=true;let mbAutoBuy=false;let mbSound=true;let mbInterval=DEFAULT_INTERVAL;let mbWoodQty=1000;let mbStoneQty=1000;let mbIronQty=1000;let timer=null;let logBox=null;const $=(s,p=document)=>p.querySelector(s);function sleep(ms){return new Promise(r=>setTimeout(r,ms))}function log(msg){const t=new Date().toLocaleTimeString();console.log('[MB]',t,msg);if(logBox){const div=document.createElement('div');div.textContent='['+t+'] '+msg;logBox.prepend(div);while(logBox.childElementCount>30)logBox.lastChild.remove()}}function beep(){if(!mbSound)return;try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.type='sine';osc.frequency.value=700;gain.gain.value=0.15;osc.connect(gain);gain.connect(ctx.destination);osc.start();setTimeout(()=>osc.stop(),200)}catch(e){}}function toNum(t){return Number(String(t||'0').replace(/[^\\d]/g,''))}function getMyResource(r){const el=$('#'+r);return el?toNum(el.textContent):0}function getStock(r){const el=$('#premium_exchange_stock_'+r);return el?toNum(el.textContent):0}function getStockEl(r){return $('#premium_exchange_stock_'+r)}function getBuyInput(r){return $('input[name=\"buy_'+r+'\"]')||$('input[data-resource=\"'+r+'\"][data-type=\"buy\"]')}function highlight(r,on){const el=getStockEl(r);if(el)el.style.backgroundColor=on?'#add8e6':''}function clearHighlights(){['wood','stone','iron'].forEach(r=>highlight(r,false))}function updateRes(){const w=$('#mb-my-wood');const s=$('#mb-my-stone');const i=$('#mb-my-iron');if(w)w.textContent=getMyResource('wood').toLocaleString();if(s)s.textContent=getMyResource('stone').toLocaleString();if(i)i.textContent=getMyResource('iron').toLocaleString()}async function buyResource(r,qty){log('محاولة شراء '+qty+' من '+r);const stock=getStock(r);const myRes=getMyResource(r);const input=getBuyInput(r);if(!input){log('حقل غير موجود');return false}if(stock<qty){log('المخزون غير كافٍ');return false}const available=myRes-BUFFER;if(available<=0){log('مواردك غير كافية');return false}const finalQty=Math.min(qty,available);input.focus();input.value=finalQty;input.dispatchEvent(new Event('input',{bubbles:true}));log('كتابة: '+finalQty);await sleep(CLICK_DELAY);const computeBtn=$('.btn-premium-exchange-buy');if(!computeBtn){log('زر غير موجود');return false}computeBtn.click();await sleep(CLICK_DELAY);const confirmBtn=$('.btn-confirm-yes')||$('[class*=\"confirm\"]');if(!confirmBtn){log('زر تأكيد غير موجود');return false}confirmBtn.click();await sleep(CLICK_DELAY);log('✅ تم الشراء!');return true}async function check(){if(!mbEnabled)return;log('🔄 فحص...');updateRes();clearHighlights();const res=[{name:'wood',qty:mbWoodQty,label:'خشب'},{name:'stone',qty:mbStoneQty,label:'حجر'},{name:'iron',qty:mbIronQty,label:'حديد'}];for(let r of res){if(r.qty<=0)continue;const stock=getStock(r.name);log(r.label+': '+stock+' / '+r.qty);if(stock>=r.qty){log('🔥 '+r.label+' متاح!');highlight(r.name,true);beep();if(mbAutoBuy){const ok=await buyResource(r.name,r.qty);if(ok){highlight(r.name,false);await sleep(BETWEEN_BUY_DELAY)}}}}log('✔️ انتهى')}function resetTimer(){if(timer)clearInterval(timer);timer=setInterval(()=>{if(mbEnabled)check()},mbInterval);log('⏱️ فحص كل '+(mbInterval/1000)+'ث')}function buildUI(){if($('#mb-panel'))return;const style=document.createElement('style');style.textContent='#mb-panel{position:fixed;right:20px;top:20px;z-index:999999;width:300px;padding:12px;border-radius:10px;background:rgba(0,100,0,0.9);color:white;font-family:tahoma;direction:rtl}#mb-panel h3{margin:0 0 10px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:8px}#mb-panel .info{background:rgba(255,255,255,0.15);padding:6px;border-radius:6px;margin-bottom:8px;font-size:11px;text-align:center}#mb-panel .res{background:rgba(255,255,255,0.1);padding:6px;border-radius:6px;margin-bottom:8px;font-size:11px}#mb-panel .res div{display:flex;justify-content:space-between;padding:2px 0}#mb-panel .row{display:flex;align-items:center;margin:5px 0;gap:6px}#mb-panel .row label{flex:1;font-size:12px}#mb-panel .row input[type=number]{width:70px;padding:4px;border:none;border-radius:4px;text-align:center}#mb-panel .chk{margin:6px 0;font-size:12px}#mb-panel button{width:100%;margin:4px 0;padding:7px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;font-size:12px}#mb-panel #mb-toggle{background:#4CAF50;color:white}#mb-panel #mb-toggle.off{background:#f44336}#mb-panel #mb-now{background:#2196F3;color:white}#mb-panel #mb-int{background:#FF9800;color:white}#mb-panel #mb-close{background:#666;color:white}#mb-log{max-height:100px;overflow-y:auto;background:rgba(255,255,255,0.1);padding:5px;font-size:10px;margin-top:6px;border-radius:4px}';document.head.appendChild(style);const box=document.createElement('div');box.id='mb-panel';box.innerHTML='<h3>🛒 شراء تلقائي</h3><div class=\"info\">👤 '+USER_NAME+' | ⏳ '+sub.daysLeft+' يوم</div><div class=\"res\"><div><span>🪵 خشب:</span><span id=\"mb-my-wood\">'+getMyResource('wood').toLocaleString()+'</span></div><div><span>🪨 طمي:</span><span id=\"mb-my-stone\">'+getMyResource('stone').toLocaleString()+'</span></div><div><span>⚙️ حديد:</span><span id=\"mb-my-iron\">'+getMyResource('iron').toLocaleString()+'</span></div></div><div class=\"row\"><label>🪵 خشب:</label><input type=\"number\" id=\"mb-wood\" value=\"'+mbWoodQty+'\"></div><div class=\"row\"><label>🪨 حجر:</label><input type=\"number\" id=\"mb-stone\" value=\"'+mbStoneQty+'\"></div><div class=\"row\"><label>⚙️ حديد:</label><input type=\"number\" id=\"mb-iron\" value=\"'+mbIronQty+'\"></div><div class=\"chk\"><label><input type=\"checkbox\" id=\"mb-auto\"> 🛒 شراء تلقائي</label></div><div class=\"chk\"><label><input type=\"checkbox\" id=\"mb-sound\" checked> 🔊 صوت</label></div><button id=\"mb-toggle\">⏸️ إيقاف</button><button id=\"mb-int\">⏱️ الفترة ('+mbInterval/1000+'ث)</button><button id=\"mb-now\">🔄 فحص الآن</button><button id=\"mb-close\">✖️ إغلاق</button><div id=\"mb-log\">— السجل —</div>';document.body.appendChild(box);logBox=$('#mb-log');setInterval(updateRes,5000);$('#mb-wood').onchange=e=>{mbWoodQty=Number(e.target.value)||0;log('خشب: '+mbWoodQty)};$('#mb-stone').onchange=e=>{mbStoneQty=Number(e.target.value)||0;log('حجر: '+mbStoneQty)};$('#mb-iron').onchange=e=>{mbIronQty=Number(e.target.value)||0;log('حديد: '+mbIronQty)};$('#mb-toggle').onclick=()=>{mbEnabled=!mbEnabled;const btn=$('#mb-toggle');btn.textContent=mbEnabled?'⏸️ إيقاف':'▶️ تشغيل';btn.classList.toggle('off',!mbEnabled);if(mbEnabled)resetTimer();else{clearInterval(timer);clearHighlights()}log(mbEnabled?'✔️ تشغيل':'⛔ إيقاف')};$('#mb-now').onclick=()=>check();$('#mb-int').onclick=()=>{const v=prompt('الفترة بالثواني:',mbInterval/1000);if(v){mbInterval=Number(v)*1000;$('#mb-int').textContent='⏱️ الفترة ('+(mbInterval/1000)+'ث)';if(mbEnabled)resetTimer()}};$('#mb-auto').onchange=e=>{mbAutoBuy=e.target.checked;log(mbAutoBuy?'✔️ شراء تلقائي':'⛔ تنبيه فقط')};$('#mb-sound').onchange=e=>{mbSound=e.target.checked};$('#mb-close').onclick=()=>{clearInterval(timer);box.remove();window.__MB_RUNNING__=false;log('تم الإغلاق')}}buildUI();resetTimer();log('✔️ البوت يعمل')}startBot()})();">
+                🛒 اسحبني للمفضلة - Auto Buy
+            </a>
+            
+            <ol class="steps">
+                <li>تأكد من ظهور <strong>شريط المفضلة</strong> في متصفحك (Ctrl+Shift+B)</li>
+                <li><strong>اسحب الزر الأخضر</strong> أعلاه وأفلته في شريط المفضلة</li>
+                <li>افتح صفحة <strong>السوق</strong> في اللعبة (mode=exchange)</li>
+                <li>اضغط على الزر في المفضلة لتشغيل البوت</li>
+            </ol>
+            
+            <div class="success">
+                <strong>✅ جاهز!</strong> البوت سيظهر في أعلى يمين الشاشة عند التشغيل
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>📖 طريقة الاستخدام</h2>
+            <ul class="steps">
+                <li>أدخل الكمية المطلوبة لكل مورد (خشب، حجر، حديد)</li>
+                <li>فعّل <code>🔊 صوت</code> للتنبيه عند توفر الموارد</li>
+                <li>فعّل <code>🛒 شراء تلقائي</code> للشراء تلقائياً</li>
+                <li>البوت يفحص كل 30 ثانية (قابل للتغيير)</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>⚠️ ملاحظات</h2>
+            <div class="warning">
+                <ul style="list-style: disc; padding-right: 20px; line-height: 2;">
+                    <li>يجب الضغط على الزر في كل مرة تفتح فيها صفحة السوق</li>
+                    <li>لا تغلق صفحة السوق أثناء عمل البوت</li>
+                    <li>الكمية المشتراة = مواردك - 1000 (للأمان)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>📱 للدعم والتجديد: @YourTelegram</p>
+            <p style="margin-top: 10px; font-size: 12px;">Auto Market Buy v4.0</p>
+        </div>
+    </div>
+</body>
+</html>
