@@ -42,7 +42,7 @@
     var BUFFER = 500;
     var RESOURCE_BUFFER = 1000;
     var DEFAULT_INTERVAL = 30000;
-    var DEFAULT_THRESHOLD = 101;
+    var DEFAULT_THRESHOLD =64;
     
     var TEXTS = {
         title: "بيع تلقائي",
