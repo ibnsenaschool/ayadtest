@@ -3,27 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Market Sell - تثبيت البوت</title>
+    <title>Auto Market Sell Bot</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
             padding: 20px;
         }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
+        .container { max-width: 800px; width: 100%; }
         h1 {
             text-align: center;
             margin-bottom: 10px;
@@ -31,14 +24,9 @@
             background: linear-gradient(45deg, #ff6b6b, #ffc107);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
-        .subtitle {
-            text-align: center;
-            color: #888;
-            margin-bottom: 30px;
-        }
-        
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
         .card {
             background: rgba(255,255,255,0.1);
             border-radius: 15px;
@@ -46,20 +34,8 @@
             margin-bottom: 20px;
             backdrop-filter: blur(10px);
         }
-        
-        .card h2 {
-            color: #ffc107;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .steps {
-            list-style: none;
-            counter-reset: step;
-        }
-        
+        .card h2 { color: #ffc107; margin-bottom: 15px; font-size: 1.3em; }
+        .steps { list-style: none; counter-reset: step; }
         .steps li {
             counter-increment: step;
             padding: 15px;
@@ -69,7 +45,6 @@
             position: relative;
             padding-right: 60px;
         }
-        
         .steps li::before {
             content: counter(step);
             position: absolute;
@@ -86,7 +61,6 @@
             font-weight: bold;
             color: #1a1a2e;
         }
-        
         .bookmarklet-btn {
             display: block;
             width: 100%;
@@ -100,18 +74,12 @@
             border-radius: 10px;
             margin: 20px 0;
             cursor: grab;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        
         .bookmarklet-btn:hover {
             transform: scale(1.02);
             box-shadow: 0 10px 30px rgba(255,107,107,0.3);
         }
-        
-        .bookmarklet-btn:active {
-            cursor: grabbing;
-        }
-        
         .warning {
             background: rgba(255,193,7,0.2);
             border: 1px solid #ffc107;
@@ -119,13 +87,6 @@
             padding: 15px;
             margin: 15px 0;
         }
-        
-        .warning-title {
-            color: #ffc107;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
         .success {
             background: rgba(76,175,80,0.2);
             border: 1px solid #4CAF50;
@@ -133,80 +94,67 @@
             padding: 15px;
             margin: 15px 0;
         }
-        
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
             margin-top: 15px;
         }
-        
         .feature {
             background: rgba(0,0,0,0.3);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
         }
-        
-        .feature-icon {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        
+        .feature-icon { font-size: 2em; margin-bottom: 10px; }
+        .feature-text { font-size: 0.9em; color: #ccc; }
         .footer {
             text-align: center;
             margin-top: 30px;
             color: #666;
+            font-size: 0.9em;
         }
-        
-        code {
-            background: rgba(0,0,0,0.5);
+        .new-tag {
+            background: #4CAF50;
+            color: white;
             padding: 2px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-        
-        .new-feature {
-            background: rgba(76,175,80,0.3);
-            border: 1px solid #4CAF50;
-            padding: 3px 8px;
             border-radius: 4px;
             font-size: 10px;
             margin-right: 5px;
-        }
-        
-        .important-note {
-            background: rgba(244, 67, 54, 0.2);
-            border: 1px solid #f44336;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>💰 Auto Market Sell</h1>
-        <p class="subtitle">بوت البيع التلقائي في السوق <span class="new-feature">🔥 v5.2</span></p>
+        <p class="subtitle">بوت البيع التلقائي <span class="new-tag">v5.5</span></p>
         
         <div class="card">
             <h2>✨ المميزات</h2>
             <div class="features">
                 <div class="feature">
-                    <div class="feature-icon">📊</div>
-                    <div>فحص العتبة تلقائياً</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🔔</div>
-                    <div>تنبيه صوتي</div>
+                    <div class="feature-icon">🔐</div>
+                    <div class="feature-text">نظام اشتراك</div>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">🔄</div>
-                    <div>يعمل في الخلفية</div>
+                    <div class="feature-text">يعمل في الخلفية</div>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🔐</div>
-                    <div>نظام اشتراك</div>
+                    <div class="feature-icon">💾</div>
+                    <div class="feature-text">يحفظ المستخدم</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">بيع تلقائي</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔊</div>
+                    <div class="feature-text">تنبيهات صوتية</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⏱</div>
+                    <div class="feature-text">عداد تنازلي</div>
                 </div>
             </div>
         </div>
@@ -214,527 +162,42 @@
         <div class="card">
             <h2>📥 التثبيت</h2>
             
-            <div class="important-note">
-                <div class="warning-title">🔐 نظام الاشتراك</div>
-                عند تشغيل البوت سيطلب منك إدخال اسم المستخدم الخاص بك للتحقق من الاشتراك
-            </div>
-            
             <div class="warning">
-                <div class="warning-title">⚠️ مهم</div>
-                اسحب الزر التالي إلى شريط المفضلة (Bookmarks Bar)
+                <strong>⚠️ مهم:</strong> اسحب الزر التالي إلى شريط المفضلة (لا تضغط عليه!)
             </div>
             
-            <!-- Bookmarklet Button -->
-            <a class="bookmarklet-btn" id="bookmarklet-link" href="#">
-                 Auto Sell
+            <a class="bookmarklet-btn" href="javascript:(function(){var s=document.createElement('script');s.src='https://ibnsenaschool.github.io/ayadtest/bot.js?t='+Date.now();document.body.appendChild(s);})();">
+                💰 اسحبني للمفضلة - Auto Sell
             </a>
             
             <ol class="steps">
-                <li>تأكد من ظهور <strong>شريط المفضلة</strong> في متصفحك (Ctrl+Shift+B)</li>
-                <li><strong>اسحب الزر البرتقالي</strong> أعلاه وأفلته في شريط المفضلة</li>
-                <li>افتح صفحة <strong>السوق</strong> في اللعبة (mode=exchange)</li>
-                <li>اضغط على الزر في المفضلة وأدخل <strong>اسم المستخدم</strong></li>
+                <li>اضغط <strong>Ctrl+Shift+B</strong> لإظهار شريط المفضلة</li>
+                <li><strong>اسحب الزر البرتقالي</strong> أعلاه إلى شريط المفضلة</li>
+                <li>افتح صفحة <strong>السوق</strong> في اللعبة</li>
+                <li>اضغط على الزر في المفضلة</li>
+                <li>أدخل <strong>كلمة المرور</strong> ثم <strong>اسم المستخدم</strong></li>
             </ol>
             
             <div class="success">
-                <strong>✅ جاهز!</strong> البوت سيتحقق من اشتراكك ثم يبدأ العمل تلقائياً
+                <strong>✅ جاهز!</strong> البوت سيتحقق من اشتراكك ويبدأ البيع تلقائياً
             </div>
         </div>
         
         <div class="card">
-            <h2>📖 طريقة الاستخدام</h2>
-            <ul class="steps">
-                <li>أدخل <strong>اسم المستخدم</strong> الذي حصلت عليه عند الاشتراك</li>
-                <li>حدد <strong>العتبة</strong> - البوت يبيع عندما تكون قيمة السوق أقل أو تساوي العتبة</li>
-                <li>البوت يبدأ الفحص تلقائياً كل 30 ثانية</li>
+            <h2>⚙️ كيفية الاستخدام</h2>
+            <ul style="list-style: none; line-height: 2;">
+                <li>🎯 <strong>العتبة:</strong> يبيع عندما يكون سعر السوق ≤ العتبة</li>
+                <li>⏱ <strong>الفترة:</strong> الوقت بين كل فحص للسوق</li>
+                <li>💡 <strong>الاحتياطي:</strong> كمية الموارد التي لن يبيعها</li>
+                <li>🔊 <strong>الصوت:</strong> تنبيه عند البيع</li>
+                <li>🚪 <strong>تسجيل الخروج:</strong> يمسح المستخدم المحفوظ</li>
             </ul>
         </div>
         
-        <div class="card">
-            <h2>⚠️ ملاحظات</h2>
-            <div class="warning">
-                <ul style="list-style: disc; padding-right: 20px; line-height: 2;">
-                    <li>يجب أن يكون لديك <strong>اشتراك ساري</strong> لاستخدام البوت</li>
-                    <li>البوت يعمل في الخلفية - يمكنك العمل على تبويبات أخرى</li>
-                    <li>لا تغلق تبويب السوق</li>
-                </ul>
-            </div>
-        </div>
-        
         <div class="footer">
-            <p>📱 للاشتراك والدعم: @YourTelegram</p>
-            <p style="margin-top: 10px; font-size: 12px;">Auto Market Sell v5.2</p>
+            <p>📱 للدعم والاشتراك: <strong>@YourTelegram</strong></p>
+            <p style="margin-top: 10px; color: #444;">v5.5 | 2024</p>
         </div>
     </div>
-    
-    <script>
-    // ============================================
-    // 🔴 مهم: غيّر هذا الرابط إلى رابط ملف subscribers.json على GitHub
-    // ============================================
-    const SUBSCRIBERS_URL = "https://ibnsenaschool.github.io/ayadtest/subscribers.json";
-    
-    const bookmarkletCode = `
-(function(){
-    var SUBS_URL = "${SUBSCRIBERS_URL}";
-    var CLICK_DELAY = 1000;
-    var BETWEEN_SELL_DELAY = 10000;
-    var MERCHANT_CAPACITY = 1000;
-    var BUFFER = 500;
-    var RESOURCE_BUFFER = 1000;
-    var DEFAULT_INTERVAL = 30000;
-    var DEFAULT_THRESHOLD = 101;
-    
-    var TEXTS = {
-        title: decodeURIComponent("%D8%A8%D9%8A%D8%B9%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A"),
-        enterUsername: decodeURIComponent("%D8%A3%D8%AF%D8%AE%D9%84%20%D8%A7%D8%B3%D9%85%20%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%AE%D8%AF%D9%85"),
-        checking: decodeURIComponent("%D8%AC%D8%A7%D8%B1%D9%8A%20%D8%A7%D9%84%D8%AA%D8%AD%D9%82%D9%82"),
-        userNotFound: decodeURIComponent("%D8%A7%D8%B3%D9%85%20%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%20%D8%BA%D9%8A%D8%B1%20%D9%85%D9%88%D8%AC%D9%88%D8%AF"),
-        expired: decodeURIComponent("%D8%A7%D9%86%D8%AA%D9%87%D9%89%20%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%D9%83"),
-        renewSub: decodeURIComponent("%D9%8A%D8%B1%D8%AC%D9%89%20%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83"),
-        welcome: decodeURIComponent("%D9%85%D8%B1%D8%AD%D8%A8%D8%A7"),
-        wood: decodeURIComponent("%D8%AE%D8%B4%D8%A8"),
-        stone: decodeURIComponent("%D8%B7%D9%85%D9%8A"),
-        iron: decodeURIComponent("%D8%AD%D8%AF%D9%8A%D8%AF"),
-        autoSell: decodeURIComponent("%D8%A8%D9%8A%D8%B9%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A"),
-        sound: decodeURIComponent("%D8%B5%D9%88%D8%AA"),
-        stop: decodeURIComponent("%D8%A5%D9%8A%D9%82%D8%A7%D9%81"),
-        start: decodeURIComponent("%D8%AA%D8%B4%D8%BA%D9%8A%D9%84"),
-        runNow: decodeURIComponent("%D8%AA%D8%B4%D8%BA%D9%8A%D9%84%20%D8%A7%D9%84%D8%A2%D9%86"),
-        close: decodeURIComponent("%D8%A5%D8%BA%D9%84%D8%A7%D9%82"),
-        period: decodeURIComponent("%D8%A7%D9%84%D9%81%D8%AA%D8%B1%D8%A9"),
-        threshold: decodeURIComponent("%D8%A7%D9%84%D8%B9%D8%AA%D8%A8%D8%A9"),
-        log: decodeURIComponent("%D8%A7%D9%84%D8%B3%D8%AC%D9%84"),
-        day: decodeURIComponent("%D9%8A%D9%88%D9%85"),
-        days: decodeURIComponent("%D8%A3%D9%8A%D8%A7%D9%85"),
-        reserve: decodeURIComponent("%D8%A7%D8%AD%D8%AA%D9%8A%D8%A7%D8%B7%D9%8A"),
-        running: decodeURIComponent("%D8%A7%D9%84%D8%A8%D9%88%D8%AA%20%D9%8A%D8%B9%D9%85%D9%84"),
-        noMerchants: decodeURIComponent("%D9%84%D8%A7%20%D9%8A%D9%88%D8%AC%D8%AF%20%D8%AA%D8%AC%D8%A7%D8%B1"),
-        done: decodeURIComponent("%D8%AA%D9%85"),
-        checkNow: decodeURIComponent("%D9%81%D8%AD%D8%B5"),
-        sold: decodeURIComponent("%D8%AA%D9%85%20%D8%A7%D9%84%D8%A8%D9%8A%D8%B9"),
-        thresholdMet: decodeURIComponent("%D8%A7%D9%84%D8%B9%D8%AA%D8%A8%D8%A9%20%D8%AA%D8%AD%D9%82%D9%82%D8%AA"),
-        background: decodeURIComponent("%D9%8A%D8%B9%D9%85%D9%84%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AE%D9%84%D9%81%D9%8A%D8%A9"),
-        nextCheck: decodeURIComponent("%D8%A7%D9%84%D9%81%D8%AD%D8%B5%20%D8%A7%D9%84%D9%82%D8%A7%D8%AF%D9%85"),
-        seconds: decodeURIComponent("%D8%AB%D8%A7%D9%86%D9%8A%D8%A9"),
-        plan: decodeURIComponent("%D8%A7%D9%84%D8%A8%D8%A7%D9%82%D8%A9"),
-        expiryDate: decodeURIComponent("%D8%AA%D8%A7%D8%B1%D9%8A%D8%AE%20%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%87%D8%A7%D8%A1"),
-        connectionError: decodeURIComponent("%D8%AE%D8%B7%D8%A3%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84"),
-        tryAgain: decodeURIComponent("%D8%AD%D8%A7%D9%88%D9%84%20%D9%85%D8%B1%D8%A9%20%D8%A3%D8%AE%D8%B1%D9%89")
-    };
-    
-    function showLoginDialog(callback) {
-        var overlay = document.createElement("div");
-        overlay.id = "ms-login-overlay";
-        overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999998;display:flex;align-items:center;justify-content:center;";
-        
-        var dialog = document.createElement("div");
-        dialog.style.cssText = "background:linear-gradient(135deg,#1a1a2e,#16213e);padding:30px;border-radius:15px;text-align:center;font-family:tahoma;direction:rtl;color:white;min-width:350px;box-shadow:0 10px 40px rgba(0,0,0,0.5);";
-        dialog.innerHTML = "<h2 style='margin:0 0 20px;color:#ffc107;'>&#128176; " + TEXTS.title + "</h2>" +
-            "<p style='margin-bottom:15px;'>" + TEXTS.enterUsername + ":</p>" +
-            "<input type='text' id='ms-username' style='width:100%;padding:12px;border:none;border-radius:8px;font-size:16px;text-align:center;margin-bottom:15px;' placeholder='username'>" +
-            "<div id='ms-login-error' style='color:#ff6b6b;margin-bottom:10px;min-height:20px;'></div>" +
-            "<button id='ms-login-btn' style='width:100%;padding:12px;background:linear-gradient(45deg,#ff6b6b,#ffc107);border:none;border-radius:8px;color:#1a1a2e;font-weight:bold;font-size:16px;cursor:pointer;'>" + TEXTS.checking + "...</button>" +
-            "<button id='ms-cancel-btn' style='width:100%;padding:10px;background:#666;border:none;border-radius:8px;color:white;margin-top:10px;cursor:pointer;'>" + TEXTS.close + "</button>";
-        
-        overlay.appendChild(dialog);
-        document.body.appendChild(overlay);
-        
-        var input = document.getElementById("ms-username");
-        var btn = document.getElementById("ms-login-btn");
-        var cancelBtn = document.getElementById("ms-cancel-btn");
-        var errorDiv = document.getElementById("ms-login-error");
-        
-        btn.textContent = TEXTS.checking.replace("...", "");
-        
-        input.focus();
-        
-        function doLogin() {
-            var username = input.value.trim().toLowerCase();
-            if(!username) {
-                errorDiv.textContent = TEXTS.enterUsername;
-                return;
-            }
-            btn.textContent = TEXTS.checking + "...";
-            btn.disabled = true;
-            errorDiv.textContent = "";
-            callback(username, overlay);
-        }
-        
-        btn.onclick = doLogin;
-        input.onkeypress = function(e) { if(e.key === "Enter") doLogin(); };
-        cancelBtn.onclick = function() { overlay.remove(); };
-    }
-    
-    function showExpiredDialog(userName, expiryDate, contact) {
-        var overlay = document.createElement("div");
-        overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999999;display:flex;align-items:center;justify-content:center;";
-        
-        var dialog = document.createElement("div");
-        dialog.style.cssText = "background:linear-gradient(135deg,#ff4444,#cc0000);padding:40px;border-radius:15px;text-align:center;font-family:tahoma;direction:rtl;color:white;min-width:400px;box-shadow:0 10px 40px rgba(0,0,0,0.5);";
-        dialog.innerHTML = "<h2 style='margin:0 0 20px;font-size:24px;'>&#9940; " + TEXTS.expired + "</h2>" +
-            "<p style='font-size:18px;margin-bottom:10px;'>" + TEXTS.welcome + " <strong>" + userName + "</strong></p>" +
-            "<p style='margin-bottom:20px;'>" + TEXTS.expiryDate + ": <strong>" + expiryDate + "</strong></p>" +
-            "<p style='font-size:20px;color:#ffeb3b;margin-bottom:20px;'>" + TEXTS.renewSub + "</p>" +
-            "<div style='background:rgba(255,255,255,0.2);padding:15px;border-radius:8px;'>" +
-            "<p>&#128222; " + contact + "</p></div>" +
-            "<button onclick='this.parentElement.parentElement.remove()' style='margin-top:20px;padding:10px 30px;background:white;color:#cc0000;border:none;border-radius:8px;font-weight:bold;cursor:pointer;'>" + TEXTS.close + "</button>";
-        
-        overlay.appendChild(dialog);
-        document.body.appendChild(overlay);
-    }
-    
-    function showError(message, overlay) {
-        var errorDiv = document.getElementById("ms-login-error");
-        var btn = document.getElementById("ms-login-btn");
-        if(errorDiv) errorDiv.textContent = message;
-        if(btn) {
-            btn.textContent = TEXTS.tryAgain;
-            btn.disabled = false;
-        }
-    }
-    
-    function checkSubscription(username, overlay) {
-        fetch(SUBS_URL + "?t=" + Date.now())
-        .then(function(r) { 
-            if(!r.ok) throw new Error("HTTP " + r.status);
-            return r.json(); 
-        })
-        .then(function(data) {
-            var user = data.users[username];
-            
-            if(!user) {
-                showError(TEXTS.userNotFound, overlay);
-                return;
-            }
-            
-            var now = new Date();
-            var expiry = new Date(user.expiry);
-            
-            fetch("https://worldtimeapi.org/api/ip")
-            .then(function(r){ return r.json(); })
-            .then(function(timeData){
-                now = new Date(timeData.datetime);
-                checkExpiry(now, expiry, user, data.settings, overlay);
-            })
-            .catch(function(){
-                checkExpiry(now, expiry, user, data.settings, overlay);
-            });
-        })
-        .catch(function(err) {
-            console.error("Fetch error:", err);
-            showError(TEXTS.connectionError + ": " + err.message, overlay);
-        });
-    }
-    
-    function checkExpiry(now, expiry, user, settings, overlay) {
-        if(now > expiry) {
-            overlay.remove();
-            showExpiredDialog(user.name, user.expiry, settings.contact);
-            return;
-        }
-        
-        var daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
-        overlay.remove();
-        startBot(user, daysLeft, settings);
-    }
-    
-    function startBot(user, daysLeft, settings) {
-        if(window.__MS_RUN__){ alert(TEXTS.running + "!"); return; }
-        window.__MS_RUN__ = true;
-        
-        var enabled = true;
-        var autoSell = true;
-        var sound = true;
-        var interval = DEFAULT_INTERVAL;
-        var threshold = DEFAULT_THRESHOLD;
-        var timerWorker = null;
-        var countdownTimer = null;
-        var countdown = interval / 1000;
-        var logBox = null;
-        
-        function $(s){ return document.querySelector(s); }
-        function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
-        
-        function log(m){
-            var t = new Date().toLocaleTimeString();
-            console.log("[MS]", t, m);
-            if(logBox){
-                var d = document.createElement("div");
-                d.textContent = "[" + t + "] " + m;
-                logBox.insertBefore(d, logBox.firstChild);
-                while(logBox.children.length > 30) logBox.lastChild.remove();
-            }
-        }
-        
-        function beep(){
-            if(!sound) return;
-            try{
-                var ctx = new (window.AudioContext || window.webkitAudioContext)();
-                var osc = ctx.createOscillator();
-                var gain = ctx.createGain();
-                osc.type = "sine";
-                osc.frequency.value = 550;
-                gain.gain.value = 0.1;
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                setTimeout(function(){ osc.stop(); }, 180);
-            }catch(e){}
-        }
-        
-        function toNum(t){ return Number(String(t||"0").replace(/[^0-9]/g,"")); }
-        
-        function getMyRes(){
-            return {
-                wood: toNum($("#wood") ? $("#wood").textContent : 0),
-                stone: toNum($("#stone") ? $("#stone").textContent : 0),
-                iron: toNum($("#iron") ? $("#iron").textContent : 0)
-            };
-        }
-        
-        function getMarketVal(r){
-            var divs = document.querySelectorAll(".premium-exchange-sep");
-            for(var i=0; i<divs.length; i++){
-                var d = divs[i];
-                var img = d.querySelector("img");
-                if(!img) continue;
-                var src = img.src;
-                if(r === "wood" && src.indexOf("wood_") !== -1) return toNum(d.textContent);
-                if(r === "stone" && src.indexOf("stone_") !== -1) return toNum(d.textContent);
-                if(r === "iron" && src.indexOf("iron_") !== -1) return toNum(d.textContent);
-            }
-            return null;
-        }
-        
-        function getMerchants(){
-            var el = $("#market_merchant_available_count");
-            return el ? toNum(el.textContent) : 0;
-        }
-        
-        function getSel(r){
-            return {
-                stock: $("#premium_exchange_stock_" + r),
-                cap: $("#premium_exchange_capacity_" + r),
-                input: $("input[name='sell_" + r + "']") || $("input[data-resource='" + r + "'][data-type='sell']")
-            };
-        }
-        
-        function updRes(){
-            var res = getMyRes();
-            var w = $("#ms-w"); var s = $("#ms-s"); var i = $("#ms-i");
-            if(w) w.textContent = res.wood.toLocaleString();
-            if(s) s.textContent = res.stone.toLocaleString();
-            if(i) i.textContent = res.iron.toLocaleString();
-        }
-        
-        function updateCountdown(){
-            var el = $("#ms-countdown");
-            if(el && enabled){
-                el.textContent = countdown + " " + TEXTS.seconds;
-                countdown--;
-                if(countdown < 0) countdown = interval / 1000;
-            }
-        }
-        
-        async function sellRes(r){
-            log(TEXTS.checkNow + " " + r + "...");
-            var sel = getSel(r);
-            if(!sel.stock || !sel.cap || !sel.input){ log(r + " not found"); return false; }
-            
-            var marketStock = toNum(sel.stock.textContent);
-            var marketCap = toNum(sel.cap.textContent);
-            var myRes = getMyRes();
-            var myAmt = myRes[r] || 0;
-            
-            var marketNeed = (marketCap - marketStock) - BUFFER;
-            if(marketNeed < 0) marketNeed = 0;
-            
-            var canSell = myAmt - RESOURCE_BUFFER;
-            if(canSell < 0) canSell = 0;
-            
-            var qty = Math.min(marketNeed, canSell);
-            
-            var merchants = getMerchants();
-            if(merchants <= 0){ log(TEXTS.noMerchants); return false; }
-            
-            var maxQty = merchants * MERCHANT_CAPACITY;
-            qty = Math.min(qty, maxQty);
-            
-            if(qty <= 0){ log("qty = 0"); return false; }
-            
-            sel.input.focus();
-            sel.input.value = qty;
-            sel.input.dispatchEvent(new Event("input",{bubbles:true}));
-            
-            await sleep(CLICK_DELAY);
-            
-            var btn1 = $(".btn-premium-exchange-buy");
-            if(!btn1){ log("btn not found"); return false; }
-            btn1.click();
-            
-            await sleep(CLICK_DELAY);
-            
-            var btn2 = $(".btn-confirm-yes") || $("[class*='confirm']");
-            if(!btn2){ log("confirm not found"); return false; }
-            btn2.click();
-            
-            await sleep(CLICK_DELAY);
-            
-            beep();
-            log(TEXTS.sold + "! " + qty + " " + r);
-            return true;
-        }
-        
-        async function autoSellCheck(){
-            if(!enabled) return;
-            countdown = interval / 1000;
-            log(TEXTS.checkNow + "...");
-            updRes();
-            
-            var list = ["wood", "stone", "iron"];
-            var labels = [TEXTS.wood, TEXTS.stone, TEXTS.iron];
-            
-            for(var i=0; i<list.length; i++){
-                var r = list[i];
-                var val = getMarketVal(r);
-                if(val === null){ log(r + " val not found"); continue; }
-                
-                log(labels[i] + " = " + val + " | " + TEXTS.threshold + " = " + threshold);
-                
-                if(val <= threshold){
-                    log(TEXTS.thresholdMet + " " + labels[i] + "!");
-                    beep();
-                    if(autoSell){
-                        var ok = await sellRes(r);
-                        if(ok) await sleep(BETWEEN_SELL_DELAY);
-                    }
-                }
-            }
-            log(TEXTS.done);
-            updRes();
-        }
-        
-        function startTimer(){
-            if(timerWorker) timerWorker.terminate();
-            if(countdownTimer) clearInterval(countdownTimer);
-            
-            countdown = interval / 1000;
-            
-            try {
-                var workerCode = "var t=" + interval + ";setInterval(function(){postMessage('tick');},t);";
-                var blob = new Blob([workerCode], {type: "application/javascript"});
-                timerWorker = new Worker(URL.createObjectURL(blob));
-                timerWorker.onmessage = function(e) {
-                    if(e.data === "tick" && enabled) {
-                        autoSellCheck();
-                    }
-                };
-            } catch(e) {
-                setInterval(function(){
-                    if(enabled) autoSellCheck();
-                }, interval);
-            }
-            
-            countdownTimer = setInterval(updateCountdown, 1000);
-        }
-        
-        function stopTimer(){
-            if(timerWorker) timerWorker.terminate();
-            if(countdownTimer) clearInterval(countdownTimer);
-            timerWorker = null;
-        }
-        
-        function buildUI(){
-            if($("#ms-p")) return;
-            var css = document.createElement("style");
-            css.textContent = "#ms-p{position:fixed;left:20px;bottom:20px;z-index:999999;width:320px;padding:10px;border-radius:10px;background:rgba(0,0,0,0.92);color:#fff;font-family:tahoma;direction:rtl;font-size:12px;box-shadow:0 5px 25px rgba(0,0,0,0.5)}#ms-p h3{margin:0 0 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:6px;font-size:14px}#ms-p .inf{background:rgba(255,255,255,0.15);padding:8px;border-radius:5px;margin-bottom:6px;text-align:center;font-size:11px}#ms-p .user-info{color:#ffc107;font-weight:bold;font-size:13px}#ms-p .plan-info{color:#8BC34A;font-size:10px;margin-top:4px}#ms-p .days-left{background:rgba(76,175,80,0.3);color:#8BC34A;padding:3px 8px;border-radius:10px;font-size:10px;display:inline-block;margin-top:4px}#ms-p .days-left.warning{background:rgba(255,152,0,0.3);color:#FFB74D}#ms-p .days-left.danger{background:rgba(244,67,54,0.3);color:#ef5350}#ms-p .countdown-box{background:rgba(33,150,243,0.3);color:#64B5F6;padding:5px 8px;border-radius:5px;margin:6px 0;text-align:center;font-size:12px}#ms-p .rs{background:rgba(255,255,255,0.1);padding:6px;border-radius:5px;margin-bottom:6px;font-size:11px}#ms-p .rs div{display:flex;justify-content:space-between;padding:2px 0}#ms-p .ck{margin:5px 0}#ms-p button{width:100%;margin:3px 0;padding:6px;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:11px;transition:opacity 0.2s}#ms-p button:hover{opacity:0.9}#ms-p .bt{background:#1e88e5;color:#fff}#ms-p .bt.off{background:#f44336}#ms-p .bn{background:#4CAF50;color:#fff}#ms-p .bi{background:#FF9800;color:#fff}#ms-p .bc{background:#666;color:#fff}#ms-p #ms-lg{max-height:100px;overflow-y:auto;background:rgba(255,255,255,0.08);padding:4px;font-size:10px;margin-top:5px;border-radius:3px}";
-            document.head.appendChild(css);
-            
-            var daysClass = "days-left";
-            if(daysLeft <= 7) daysClass += " danger";
-            else if(daysLeft <= 30) daysClass += " warning";
-            
-            var box = document.createElement("div");
-            box.id = "ms-p";
-            box.innerHTML = "<h3>&#128176; " + TEXTS.title + " v5.2</h3>" +
-                "<div class='inf'><div class='user-info'>&#128100; " + user.name + "</div>" +
-                "<div class='plan-info'>&#127873; " + TEXTS.plan + ": " + user.plan + "</div>" +
-                "<span class='" + daysClass + "'>&#9203; " + daysLeft + " " + TEXTS.days + " " + TEXTS.running.split(" ")[0] + "</span></div>" +
-                "<div class='countdown-box'>&#9201; " + TEXTS.nextCheck + ": <span id='ms-countdown'>" + countdown + " " + TEXTS.seconds + "</span></div>" +
-                "<div class='rs'><div><span>&#129717; " + TEXTS.wood + ":</span><span id='ms-w' style='color:#8BC34A'>" + getMyRes().wood.toLocaleString() + "</span></div>" +
-                "<div><span>&#129704; " + TEXTS.stone + ":</span><span id='ms-s' style='color:#FF9800'>" + getMyRes().stone.toLocaleString() + "</span></div>" +
-                "<div><span>&#9881; " + TEXTS.iron + ":</span><span id='ms-i' style='color:#9E9E9E'>" + getMyRes().iron.toLocaleString() + "</span></div>" +
-                "<div style='font-size:10px;color:#aaa;margin-top:4px'>&#128161; " + TEXTS.reserve + ": " + RESOURCE_BUFFER + "</div></div>" +
-                "<div class='ck'><label><input type='checkbox' id='ms-au' checked> &#128260; " + TEXTS.autoSell + "</label></div>" +
-                "<div class='ck'><label><input type='checkbox' id='ms-sn' checked> &#128266; " + TEXTS.sound + "</label></div>" +
-                "<button class='bt' id='ms-tg'>&#9208; " + TEXTS.stop + "</button>" +
-                "<button class='bn' id='ms-nw'>&#128640; " + TEXTS.runNow + "</button>" +
-                "<button class='bi' id='ms-th'>&#127919; " + TEXTS.threshold + " (" + threshold + ")</button>" +
-                "<button class='bi' id='ms-in'>&#9201; " + TEXTS.period + " (" + (interval/1000) + "s)</button>" +
-                "<button class='bc' id='ms-cl'>&#10006; " + TEXTS.close + "</button>" +
-                "<div id='ms-lg'>-- " + TEXTS.log + " --</div>";
-            document.body.appendChild(box);
-            
-            logBox = $("#ms-lg");
-            setInterval(updRes, 5000);
-            
-            $("#ms-tg").onclick = function(){
-                enabled = !enabled;
-                var b = $("#ms-tg");
-                b.innerHTML = enabled ? "&#9208; " + TEXTS.stop : "&#9654; " + TEXTS.start;
-                b.className = enabled ? "bt" : "bt off";
-                if(enabled){
-                    startTimer();
-                    log(TEXTS.start);
-                } else {
-                    stopTimer();
-                    log(TEXTS.stop);
-                }
-            };
-            
-            $("#ms-nw").onclick = function(){ autoSellCheck(); };
-            
-            $("#ms-th").onclick = function(){
-                var v = prompt(TEXTS.threshold + ":", threshold);
-                if(v){ threshold = Number(v); $("#ms-th").innerHTML = "&#127919; " + TEXTS.threshold + " (" + threshold + ")"; log(TEXTS.threshold + " = " + threshold); }
-            };
-            
-            $("#ms-in").onclick = function(){
-                var v = prompt(TEXTS.period + " (s):", interval/1000);
-                if(v){ 
-                    interval = Number(v)*1000; 
-                    countdown = interval / 1000;
-                    $("#ms-in").innerHTML = "&#9201; " + TEXTS.period + " (" + (interval/1000) + "s)"; 
-                    if(enabled) startTimer();
-                    log(TEXTS.period + " = " + (interval/1000) + "s");
-                }
-            };
-            
-            $("#ms-au").onchange = function(e){ autoSell = e.target.checked; log(TEXTS.autoSell + " = " + (autoSell ? "ON" : "OFF")); };
-            $("#ms-sn").onchange = function(e){ sound = e.target.checked; };
-            
-            $("#ms-cl").onclick = function(){
-                stopTimer();
-                box.remove();
-                window.__MS_RUN__ = false;
-            };
-        }
-        
-        buildUI();
-        log(TEXTS.welcome + " " + user.name + "!");
-        
-        setTimeout(function(){
-            autoSellCheck();
-            startTimer();
-        }, 1000);
-    }
-    
-    showLoginDialog(checkSubscription);
-})();
-    `;
-    
-    const encoded = 'javascript:' + encodeURIComponent(bookmarkletCode.replace(/\s+/g, ' ').trim());
-    document.getElementById('bookmarklet-link').href = encoded;
-    </script>
 </body>
 </html>
