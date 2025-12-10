@@ -2,27 +2,25 @@
     "users": {
         "ahmed": {
             "name": "أحمد محمد",
+            "password": "ahmed123",
             "expiry": "2025-12-01",
             "plan": "شهري"
         },
         "mohammad": {
             "name": "محمد علي",
-            "expiry": "2026-06-15",
-            "plan": "سنوي"
-        },
-        "ali": {
-            "name": "علي حسن",
-            "expiry": "2024-01-01",
-            "plan": "تجريبي"
+            "password": "moh456",
+            "expiry": "2025-06-15",
+            "plan": "3 أشهر"
         },
         "test": {
             "name": "مستخدم تجريبي",
+            "password": "test",
             "expiry": "2030-12-31",
             "plan": "مدى الحياة"
         }
     },
     "settings": {
         "contact": "@YourTelegram",
-        "version": "5.2"
+        "version": "5.6"
     }
 }
