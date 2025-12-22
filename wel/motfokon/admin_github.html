@@ -631,6 +631,7 @@
                 <button class="btn btn-primary" onclick="saveDataWithoutPhotos()" id="saveWithoutPhotosBtn" disabled>💾 حفظ بدون صور</button>
                 <button class="btn btn-warning" onclick="loadFromGitHub()" id="loadBtn" disabled>📥 تحميل من GitHub</button>
                 <button class="btn btn-secondary" onclick="downloadBackup()">📥 تنزيل نسخة احتياطية</button>
+                <button class="btn btn-warning" onclick="convertOldData()" style="font-size: 0.9em;">🔄 تحويل بيانات قديمة</button>
             </div>
         </div>
 
@@ -980,13 +981,43 @@
 
                 const data = await response.json();
                 const content = atob(data.content);
-                currentData = JSON.parse(content);
+                const loadedData = JSON.parse(content);
+
+                // التحقق من نوع البيانات وتحويلها إلى مصفوفة إذا لزم الأمر
+                if (Array.isArray(loadedData)) {
+                    // البيانات بالصيغة الجديدة (مصفوفة)
+                    currentData = loadedData;
+                } else if (typeof loadedData === 'object' && loadedData !== null) {
+                    // البيانات بالصيغة القديمة (كائن) - تحويلها إلى مصفوفة
+                    console.log('Converting old format to new format...');
+                    currentData = [];
+                    for (let className in loadedData) {
+                        const student = loadedData[className];
+                        currentData.push({
+                            id: Date.now() + '-' + Math.random().toString(36).substring(2, 11),
+                            className: className,
+                            name: student.name,
+                            average: student.average,
+                            photo: student.photo || '',
+                            addedDate: new Date().toISOString()
+                        });
+                    }
+                    showMessage('✅ تم تحويل البيانات من الصيغة القديمة', 'info');
+                } else {
+                    // البيانات غير صالحة
+                    currentData = [];
+                }
 
                 updateStudentsTable();
                 showMessage('✅ تم تحميل البيانات من GitHub بنجاح!', 'success');
             } catch (error) {
                 console.error('Error loading from GitHub:', error);
                 showMessage('❌ خطأ في تحميل البيانات: ' + error.message, 'error');
+                // في حالة الخطأ، تأكد من أن currentData مصفوفة
+                if (!Array.isArray(currentData)) {
+                    currentData = [];
+                    updateStudentsTable();
+                }
             }
         }
 
@@ -1159,6 +1190,52 @@
             }
         }
 
+        // دالة تحويل البيانات من الصيغة القديمة إلى الجديدة
+        function convertOldData() {
+            if (Array.isArray(currentData)) {
+                showMessage('✅ البيانات بالفعل بالصيغة الجديدة (مصفوفة)', 'info');
+                return;
+            }
+
+            if (typeof currentData !== 'object' || currentData === null) {
+                showMessage('❌ لا توجد بيانات للتحويل', 'error');
+                return;
+            }
+
+            if (!confirm('🔄 هل تريد تحويل البيانات من الصيغة القديمة إلى الجديدة؟\n\nالصيغة الجديدة تسمح بإضافة طلاب متعددين بنفس الصف.')) {
+                return;
+            }
+
+            try {
+                console.log('Converting old data format...');
+                const newData = [];
+                
+                for (let className in currentData) {
+                    const student = currentData[className];
+                    newData.push({
+                        id: Date.now() + '-' + Math.random().toString(36).substring(2, 11),
+                        className: className,
+                        name: student.name || 'غير محدد',
+                        average: student.average || '0',
+                        photo: student.photo || '',
+                        addedDate: new Date().toISOString()
+                    });
+                }
+
+                currentData = newData;
+                updateStudentsTable();
+                
+                showMessage(`✅ تم تحويل ${newData.length} طالب إلى الصيغة الجديدة!`, 'success');
+                
+                setTimeout(() => {
+                    showMessage('💡 لا تنسى حفظ البيانات إلى GitHub', 'info');
+                }, 3000);
+            } catch (error) {
+                console.error('Error converting data:', error);
+                showMessage('❌ خطأ في تحويل البيانات: ' + error.message, 'error');
+            }
+        }
+
         // Photo handling
         function handlePhotoUpload(input) {
             const file = input.files[0];
@@ -1287,6 +1364,12 @@
         function addStudent() {
             try {
                 console.log('Starting addStudent function...');
+                
+                // التأكد من أن currentData مصفوفة
+                if (!Array.isArray(currentData)) {
+                    console.warn('currentData is not an array, converting...');
+                    currentData = [];
+                }
                 
                 const className = document.getElementById('studentClass').value;
                 const name = document.getElementById('studentName').value.trim();
