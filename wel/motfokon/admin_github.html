@@ -801,7 +801,15 @@
                 if (!response.ok) throw new Error('فشل التحميل');
 
                 const data = await response.json();
-                const content = atob(data.content);
+                // إصلاح: فك تشفير base64 بشكل صحيح للأحرف العربية
+                const content = decodeURIComponent(
+                    atob(data.content)
+                        .split('')
+                        .map(function(c) {
+                            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                        })
+                        .join('')
+                );
                 const loadedData = JSON.parse(content);
 
                 if (Array.isArray(loadedData)) {
@@ -846,7 +854,11 @@
                 showMessage('⏳ جاري الحفظ...', 'info');
 
                 const jsonData = JSON.stringify(currentData, null, 2);
-                const content = btoa(unescape(encodeURIComponent(jsonData)));
+                // إصلاح: استخدام encodeURIComponent بشكل صحيح
+                const content = btoa(encodeURIComponent(jsonData).replace(/%([0-9A-F]{2})/g,
+                    function toSolidBytes(match, p1) {
+                        return String.fromCharCode('0x' + p1);
+                    }));
                 
                 let sha = null;
                 try {
