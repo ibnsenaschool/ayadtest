@@ -263,153 +263,60 @@
         .photo-preview::before {
             content: '';
             position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
             border-radius: 50%;
-            border: 3px dashed rgba(102, 126, 234, 0.3);
-            animation: rotate 20s linear infinite;
+            background: radial-gradient(circle, transparent 60%, rgba(102, 126, 234, 0.1) 100%);
+            animation: pulse 3s ease-in-out infinite;
         }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
         }
 
         .photo-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 50%;
         }
 
-        .motivational-text {
-            flex: 1;
-            max-width: 280px;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .motivational-text.left {
-            text-align: right;
-        }
-
-        .motivational-text.right {
-            text-align: left;
-        }
-
-        .motivational-quote {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 10px;
-            line-height: 1.6;
-            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
-            transition: all 0.5s ease-in-out;
-        }
-
-        .motivational-subtext {
-            font-size: 1em;
-            color: #555;
-            font-style: italic;
-            line-height: 1.5;
-            transition: all 0.5s ease-in-out;
-        }
-
-        .star-decoration {
-            display: inline-block;
-            color: #ffd700;
-            font-size: 1.5em;
-            margin: 0 5px;
-            animation: sparkle 2s ease-in-out infinite;
-        }
-
-        @keyframes sparkle {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.2); }
-        }
-
-        .photo-upload-wrapper {
+        .upload-controls {
             display: flex;
             flex-direction: column;
-            align-items: center;
             gap: 15px;
         }
 
-        .file-input-wrapper {
-            position: relative;
-        }
-
-        .file-input-wrapper input[type="file"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .file-input-label {
-            display: inline-block;
-            padding: 12px 30px;
+        .upload-btn {
             background: #667eea;
             color: white;
+            padding: 15px 30px;
             border-radius: 10px;
             cursor: pointer;
+            text-align: center;
             font-weight: bold;
+            font-size: 1.1em;
             transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
-        .file-input-label:hover {
+        .upload-btn:hover {
             background: #5568d3;
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
-        /* Students List */
-        .students-list-section {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .students-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .students-table th {
-            background: #667eea;
-            color: white;
-            padding: 15px;
-            text-align: right;
-            font-weight: bold;
-        }
-
-        .students-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .students-table tr:hover {
-            background: #f5f5f5;
-        }
-
-        .student-photo-small {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .no-photo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5em;
+        .upload-btn input[type="file"] {
+            display: none;
         }
 
         /* Cropper Modal */
@@ -420,7 +327,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 3000;
             justify-content: center;
             align-items: center;
@@ -434,12 +341,12 @@
             background: white;
             padding: 30px;
             border-radius: 20px;
-            max-width: 600px;
+            max-width: 500px;
             width: 90%;
-            text-align: center;
         }
 
         .cropper-header {
+            text-align: center;
             margin-bottom: 20px;
         }
 
@@ -449,18 +356,30 @@
         }
 
         .crop-container {
+            position: relative;
             width: 400px;
             height: 400px;
-            max-width: 100%;
-            margin: 0 auto;
-            position: relative;
+            margin: 0 auto 20px;
+            background: #f5f5f5;
+            border-radius: 20px;
             overflow: hidden;
-            border-radius: 50%;
-            border: 3px solid #667eea;
-            background: #f0f0f0;
         }
 
-        .crop-container img {
+        .crop-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            border: 3px solid #667eea;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .crop-image {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -468,24 +387,23 @@
             max-width: none;
             cursor: move;
             user-select: none;
-            -webkit-user-drag: none;
         }
 
         .zoom-control {
-            margin: 20px 0;
+            margin-bottom: 20px;
         }
 
         .zoom-control label {
             display: block;
-            margin-bottom: 10px;
             font-weight: bold;
-            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
         .zoom-slider {
             width: 100%;
-            height: 6px;
-            border-radius: 3px;
+            height: 8px;
+            border-radius: 4px;
             background: #ddd;
             outline: none;
             -webkit-appearance: none;
@@ -493,6 +411,7 @@
 
         .zoom-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
+            appearance: none;
             width: 20px;
             height: 20px;
             border-radius: 50%;
@@ -509,66 +428,154 @@
             border: none;
         }
 
-        .cropper-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
+        .student-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        /* Students Table */
+        .students-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
         }
 
-        .message {
+        .students-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: right;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .students-table th:first-child {
+            border-radius: 0 10px 0 0;
+        }
+
+        .students-table th:last-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        .students-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: right;
+        }
+
+        .students-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .student-photo-small {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #667eea;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .no-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            border: 3px solid #667eea;
+        }
+
+        /* Message notification */
+        .message-notification {
             position: fixed;
             top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 30px;
+            right: 20px;
+            padding: 20px 30px;
             border-radius: 10px;
             font-weight: bold;
-            z-index: 4000;
-            opacity: 0;
-            transition: opacity 0.3s;
+            font-size: 1.1em;
+            z-index: 9999;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            max-width: 400px;
         }
 
-        .message.show {
-            opacity: 1;
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
-        .message.success {
+        .message-notification.success {
             background: #d4edda;
             color: #155724;
+            border: 2px solid #28a745;
         }
 
-        .message.error {
+        .message-notification.error {
             background: #f8d7da;
             color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        .message-notification.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 2px solid #17a2b8;
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
             .header h1 {
                 font-size: 1.8em;
             }
 
-            .crop-container {
-                width: 300px;
-                height: 300px;
-            }
-
-            .students-table {
-                font-size: 0.9em;
-            }
-
-            .btn {
-                padding: 10px 20px;
-                font-size: 1em;
-            }
-
             .photo-upload {
                 flex-direction: column;
-                gap: 20px;
-            }
-
-            .motivational-text {
-                max-width: 100%;
             }
 
             .photo-preview {
@@ -576,12 +583,22 @@
                 height: 200px;
             }
 
-            .motivational-quote {
-                font-size: 1.1em;
+            .student-info {
+                grid-template-columns: 1fr;
             }
 
-            .motivational-subtext {
+            .crop-container {
+                width: 100%;
+                height: 300px;
+            }
+
+            .students-table {
                 font-size: 0.9em;
+            }
+
+            .student-photo-small {
+                width: 50px;
+                height: 50px;
             }
         }
     </style>
@@ -590,127 +607,80 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🏆 إدارة الطلاب المتميزين</h1>
-            <p>نظام مبسط لإدارة بيانات الطلاب المتفوقين</p>
+            <h1>🌟 إدارة بيانات الطلاب المتميزين</h1>
+            <p>نظام متقدم للإدارة والحفظ عبر GitHub</p>
             <div id="githubStatus" class="github-status disconnected">
-                ⚠️ لم يتم ربط GitHub بعد
+                ⚠️ غير متصل بـ GitHub
             </div>
             <div class="actions">
                 <button class="btn btn-secondary" onclick="openSettings()">⚙️ إعدادات GitHub</button>
-                <button class="btn btn-primary" onclick="saveToGitHub()" id="saveBtn" disabled>💾 حفظ البيانات</button>
-                <button class="btn btn-warning" onclick="loadFromGitHub()" id="loadBtn" disabled>🔄 تحميل البيانات</button>
+                <button class="btn btn-primary" onclick="saveData()" id="saveBtn" disabled>💾 حفظ إلى GitHub</button>
+                <button class="btn btn-warning" onclick="loadFromGitHub()" id="loadBtn" disabled>📥 تحميل من GitHub</button>
             </div>
         </div>
 
-        <!-- Add Student Form -->
+        <!-- Add Student Section -->
         <div class="add-student-section">
             <h2 class="section-title">➕ إضافة طالب جديد</h2>
             
+            <!-- Photo Upload -->
             <div class="photo-upload">
-                <!-- العبارة اليمنى -->
-                <div class="motivational-text left">
-                    <div class="motivational-quote">
-                        <span class="star-decoration">⭐</span>
-                        النجاح ليس صدفة
-                        <span class="star-decoration">⭐</span>
-                    </div>
-                    <div class="motivational-subtext">
-                        بالجهد والمثابرة نحقق أحلامنا
-                    </div>
-                </div>
-
-                <!-- الصورة والزر -->
-                <div class="photo-upload-wrapper">
-                    <div class="photo-preview" id="newStudentPreview">
-                        👤
-                    </div>
-                    <div class="file-input-wrapper">
+                <div id="newStudentPreview" class="photo-preview">👤</div>
+                <div class="upload-controls">
+                    <label class="upload-btn">
+                        📷 اختر صورة الطالب
                         <input type="file" id="studentPhoto" accept="image/*" onchange="handlePhotoUpload(this)">
-                        <label for="studentPhoto" class="file-input-label">
-                            📷 اختر صورة الطالب
-                        </label>
-                    </div>
-                </div>
-
-                <!-- العبارة اليسرى -->
-                <div class="motivational-text right">
-                    <div class="motivational-quote">
-                        <span class="star-decoration">🌟</span>
-                        التفوق رحلة
-                        <span class="star-decoration">🌟</span>
-                    </div>
-                    <div class="motivational-subtext">
-                        كل خطوة تقربنا من القمة
-                    </div>
+                    </label>
+                    <p style="color: #666; text-align: center;">صورة دائرية عالية الجودة<br>مع إمكانية التكبير والتحريك</p>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">الصف:</label>
-                <select class="form-select" id="studentClass">
-                    <option value="">-- اختر الصف --</option>
-                    <optgroup label="الصف الثالث">
-                        <option value="الثالث 1">الثالث 1</option>
-                        <option value="الثالث 2">الثالث 2</option>
-                        <option value="الثالث 3">الثالث 3</option>
-                        <option value="الثالث 4">الثالث 4</option>
+            <!-- Student Info -->
+            <div class="student-info">
+                <div class="form-group">
+                    <label class="form-label">الصف:</label>
+                    <select id="studentClass" class="form-select">
+                        <option value="">اختر الصف</option>
+                        <option value="3-1">3-1</option>
+                        <option value="3-2">3-2</option>
+                        <option value="3-3">3-3</option>
+                        <option value="4-1">4-1</option>
+                        <option value="4-2">4-2</option>
+                        <option value="4-3">4-3</option>
+                        <option value="5-1">5-1</option>
+                        <option value="5-2">5-2</option>
+                        <option value="5-3">5-3</option>
+                        <option value="6-1">6-1</option>
+                        <option value="6-2">6-2</option>
+                        <option value="6-3">6-3</option>
+                    </select>
+                </div>
 
-                    </optgroup>
-                    <optgroup label="الصف الرابع">
-                        <option value="الرابع 1">الرابع 1</option>
-                        <option value="الرابع 2">الرابع 2</option>
-                        <option value="الرابع 3">الرابع 3</option>
-                        <option value="الرابع 4">الرابع 4</option>
-                        <option value="الرابع 5">الرابع 5</option>
+                <div class="form-group">
+                    <label class="form-label">المعدل (%):</label>
+                    <input type="number" id="studentAverage" class="form-input" placeholder="مثال: 95" min="0" max="100" step="0.01">
+                </div>
 
-                    </optgroup>
-                    <optgroup label="الصف الخامس">
-                        <option value="الخامس 1">الخامس 1</option>
-                        <option value="الخامس 2">الخامس 2</option>
-                        <option value="الخامس 3">الخامس 3</option>
-                        <option value="الخامس 4">الخامس 4</option>
-                     
-                       
-                    </optgroup>
-                    <optgroup label="الصف الخامس">
-                        <option value="السادس 1">السادس 1</option>
-                        <option value="السادس 2">السادس 2</option>
-                        <option value="السادس 3">السادس 3</option>
-                        <option value="السادس 4">السادس 4</option>
-                        <option value="السادس ج">السادس ج</option>
-                     
-                    </optgroup>
-
-                    
-                </select>
+                <div class="form-group full-width">
+                    <label class="form-label">اسم الطالب:</label>
+                    <input type="text" id="studentName" class="form-input" placeholder="أدخل اسم الطالب الكامل">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">اسم الطالب:</label>
-                <input type="text" class="form-input" id="studentName" placeholder="أدخل اسم الطالب">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">المعدل العام (%):</label>
-                <input type="number" class="form-input" id="studentAverage" placeholder="مثال: 95" min="0" max="100">
-            </div>
-
-            <div style="text-align: center;">
-                <button class="btn btn-primary" onclick="addStudent()">✅ إضافة الطالب</button>
-            </div>
+            <button class="submit-btn" onclick="addStudent()">✅ إضافة الطالب</button>
         </div>
 
         <!-- Students List -->
-        <div class="students-list-section">
-            <h2 class="section-title">📋 قائمة الطلاب المضافين</h2>
-            <table class="students-table" id="studentsTable">
+        <div class="students-section">
+            <h2 class="section-title">📋 قائمة الطلاب المتميزين</h2>
+            <table class="students-table">
                 <thead>
                     <tr>
                         <th>الصورة</th>
                         <th>الصف</th>
-                        <th>الاسم</th>
+                        <th>اسم الطالب</th>
                         <th>المعدل</th>
-                        <th>الإجراء</th>
+                        <th>الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody id="studentsTableBody">
@@ -725,37 +695,38 @@
     </div>
 
     <!-- Settings Modal -->
-    <div class="settings-modal" id="settingsModal">
+    <div id="settingsModal" class="settings-modal">
         <div class="settings-content">
             <div class="settings-header">
                 <h2>⚙️ إعدادات GitHub</h2>
-                <p class="help-text">قم بإدخال بيانات حسابك على GitHub لحفظ وتحميل البيانات</p>
+                <p>قم بإعداد الاتصال مع GitHub لحفظ البيانات</p>
             </div>
 
             <div class="form-group">
                 <label class="form-label">GitHub Token:</label>
-                <input type="password" class="form-input" id="githubToken" placeholder="ghp_xxxxxxxxxxxxx">
+                <input type="password" id="githubToken" class="form-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxx">
                 <p class="help-text">
-                    <a href="https://github.com/settings/tokens/new" target="_blank" class="help-link">
-                        احصل على Token من هنا
-                    </a>
-                    (اختر scope: repo)
+                    احصل على Token من: 
+                    <a href="https://github.com/settings/tokens" target="_blank" class="help-link">GitHub Settings</a>
+                    <br>الصلاحيات المطلوبة: repo
                 </p>
             </div>
 
             <div class="form-group">
-                <label class="form-label">اسم المستودع (مثل: username/repo-name):</label>
-                <input type="text" class="form-input" id="githubRepo" placeholder="username/repo-name">
+                <label class="form-label">اسم المستودع (Repository):</label>
+                <input type="text" id="githubRepo" class="form-input" placeholder="username/repository-name">
+                <p class="help-text">مثال: ayad/students-data</p>
             </div>
 
             <div class="form-group">
-                <label class="form-label">اسم الفرع:</label>
-                <input type="text" class="form-input" id="githubBranch" value="main" placeholder="main">
+                <label class="form-label">اسم الفرع (Branch):</label>
+                <input type="text" id="githubBranch" class="form-input" placeholder="main" value="main">
             </div>
 
             <div class="form-group">
                 <label class="form-label">مسار الملف:</label>
-                <input type="text" class="form-input" id="githubFilePath" value="students_data.json" placeholder="students_data.json">
+                <input type="text" id="githubFilePath" class="form-input" placeholder="students.json" value="students.json">
+                <p class="help-text">مثال: data/students.json</p>
             </div>
 
             <div class="actions">
@@ -766,188 +737,121 @@
     </div>
 
     <!-- Cropper Modal -->
-    <div class="cropper-modal" id="cropperModal">
+    <div id="cropperModal" class="cropper-modal">
         <div class="cropper-content">
             <div class="cropper-header">
                 <h2>✂️ تعديل الصورة</h2>
-                <p class="help-text">اسحب الصورة لتحريكها واستخدم المؤشر لتكبيرها أو تصغيرها</p>
+                <p>اسحب الصورة لتحريكها، واستخدم الشريط للتكبير والتصغير</p>
             </div>
-            
+
             <div class="crop-container">
-                <img id="cropImage" src="" alt="Crop">
+                <div class="crop-area"></div>
+                <img id="cropImage" class="crop-image" src="" alt="Crop">
             </div>
-            
+
             <div class="zoom-control">
-                <label>🔍 تكبير/تصغير:</label>
-                <input type="range" class="zoom-slider" id="zoomSlider" min="10" max="300" value="100">
+                <label>🔍 التكبير / التصغير</label>
+                <input type="range" id="zoomSlider" class="zoom-slider" min="50" max="200" value="100">
             </div>
-            
-            <div class="cropper-actions">
+
+            <div class="actions">
                 <button class="btn btn-primary" onclick="applyCrop()">✅ تطبيق</button>
                 <button class="btn btn-secondary" onclick="closeCropper()">❌ إلغاء</button>
             </div>
         </div>
     </div>
 
-    <!-- Message Toast -->
-    <div class="message" id="messageToast"></div>
-
     <script>
         // Global variables
-        let currentData = {};
-        let githubSettings = {
-            token: '',
-            repo: '',
-            branch: 'main',
-            filePath: 'students_data.json'
-        };
-        
+        let currentData = [];
+        let githubSettings = null;
         let currentImageData = null;
         let imageScale = 1;
         let imagePosition = { x: 0, y: 0 };
         let isDragging = false;
         let dragStart = { x: 0, y: 0 };
 
-        // Motivational quotes
-        const motivationalQuotes = [
-            {
-                right: { main: "النجاح ليس صدفة", sub: "بالجهد والمثابرة نحقق أحلامنا" },
-                left: { main: "التفوق رحلة", sub: "كل خطوة تقربنا من القمة" }
-            },
-            {
-                right: { main: "التميز سلوك", sub: "ليس حظاً بل عملاً وإصراراً" },
-                left: { main: "أنت قادر", sub: "على تحقيق المستحيل بالإرادة" }
-            },
-            {
-                right: { main: "الطموح لا حدود له", sub: "ارسم أهدافك واعمل على تحقيقها" },
-                left: { main: "التفوق يبدأ بقرار", sub: "وينتهي بإنجاز يفخر به الجميع" }
-            },
-            {
-                right: { main: "العلم نور", sub: "والاجتهاد طريق النجاح والتفوق" },
-                left: { main: "المثابرة سر التميز", sub: "لا تستسلم أبداً مهما كانت الصعوبات" }
-            },
-            {
-                right: { main: "كن مثلهم", sub: "متفوقاً بالعلم والأخلاق معاً" },
-                left: { main: "النجاح بالعمل", sub: "وليس بالأماني والتمنيات فقط" }
-            }
-        ];
-
-        // Change motivational quotes periodically
-        function rotateMotivationalQuotes() {
-            const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
-            const quotes = motivationalQuotes[randomIndex];
-            
-            const leftQuote = document.querySelector('.motivational-text.left .motivational-quote');
-            const leftSub = document.querySelector('.motivational-text.left .motivational-subtext');
-            const rightQuote = document.querySelector('.motivational-text.right .motivational-quote');
-            const rightSub = document.querySelector('.motivational-text.right .motivational-subtext');
-            
-            if (leftQuote && leftSub && rightQuote && rightSub) {
-                // Fade out
-                [leftQuote, leftSub, rightQuote, rightSub].forEach(el => {
-                    el.style.opacity = '0';
-                    el.style.transform = 'translateY(-10px)';
-                });
-                
-                // Change content and fade in
-                setTimeout(() => {
-                    leftQuote.innerHTML = `<span class="star-decoration">⭐</span>${quotes.right.main}<span class="star-decoration">⭐</span>`;
-                    leftSub.textContent = quotes.right.sub;
-                    rightQuote.innerHTML = `<span class="star-decoration">🌟</span>${quotes.left.main}<span class="star-decoration">🌟</span>`;
-                    rightSub.textContent = quotes.left.sub;
-                    
-                    [leftQuote, leftSub, rightQuote, rightSub].forEach(el => {
-                        el.style.opacity = '1';
-                        el.style.transform = 'translateY(0)';
-                    });
-                }, 500);
-            }
-        }
-
-        // Start rotating quotes every 8 seconds
-        setInterval(rotateMotivationalQuotes, 8000);
-
-        // Show message
-        function showMessage(text, type) {
-            const message = document.getElementById('messageToast');
-            message.textContent = text;
-            message.className = `message ${type}`;
-            message.classList.add('show');
-            
-            setTimeout(() => {
-                message.classList.remove('show');
-            }, 3000);
-        }
-
-        // Settings management
+        // Settings functions
         function openSettings() {
-            document.getElementById('settingsModal').classList.add('show');
+            const modal = document.getElementById('settingsModal');
+            modal.classList.add('show');
+            
+            if (githubSettings) {
+                document.getElementById('githubToken').value = githubSettings.token;
+                document.getElementById('githubRepo').value = githubSettings.repo;
+                document.getElementById('githubBranch').value = githubSettings.branch;
+                document.getElementById('githubFilePath').value = githubSettings.filePath;
+            }
         }
 
         function closeSettings() {
-            document.getElementById('settingsModal').classList.remove('show');
+            const modal = document.getElementById('settingsModal');
+            modal.classList.remove('show');
         }
 
         function saveSettings() {
-            githubSettings.token = document.getElementById('githubToken').value.trim();
-            githubSettings.repo = document.getElementById('githubRepo').value.trim();
-            githubSettings.branch = document.getElementById('githubBranch').value.trim() || 'main';
-            githubSettings.filePath = document.getElementById('githubFilePath').value.trim() || 'students_data.json';
+            const token = document.getElementById('githubToken').value.trim();
+            const repo = document.getElementById('githubRepo').value.trim();
+            const branch = document.getElementById('githubBranch').value.trim();
+            const filePath = document.getElementById('githubFilePath').value.trim();
 
-            if (!githubSettings.token || !githubSettings.repo) {
-                showMessage('❌ الرجاء إدخال Token واسم المستودع', 'error');
+            if (!token || !repo || !branch || !filePath) {
+                showMessage('❌ الرجاء ملء جميع الحقول', 'error');
                 return;
             }
 
+            githubSettings = { token, repo, branch, filePath };
             localStorage.setItem('githubSettings', JSON.stringify(githubSettings));
-            updateGitHubStatus(true);
-            showMessage('✅ تم حفظ الإعدادات بنجاح!', 'success');
+
+            document.getElementById('saveBtn').disabled = false;
+            document.getElementById('loadBtn').disabled = false;
+            document.getElementById('githubStatus').className = 'github-status connected';
+            document.getElementById('githubStatus').textContent = '✅ متصل بـ GitHub';
+
             closeSettings();
+            showMessage('✅ تم حفظ الإعدادات بنجاح!', 'success');
         }
 
         function loadSettings() {
             const saved = localStorage.getItem('githubSettings');
             if (saved) {
                 githubSettings = JSON.parse(saved);
-                document.getElementById('githubToken').value = githubSettings.token;
-                document.getElementById('githubRepo').value = githubSettings.repo;
-                document.getElementById('githubBranch').value = githubSettings.branch;
-                document.getElementById('githubFilePath').value = githubSettings.filePath;
-                updateGitHubStatus(true);
+                document.getElementById('saveBtn').disabled = false;
+                document.getElementById('loadBtn').disabled = false;
+                document.getElementById('githubStatus').className = 'github-status connected';
+                document.getElementById('githubStatus').textContent = '✅ متصل بـ GitHub';
                 return true;
             }
             return false;
         }
 
-        function updateGitHubStatus(connected) {
-            const status = document.getElementById('githubStatus');
-            const saveBtn = document.getElementById('saveBtn');
-            const loadBtn = document.getElementById('loadBtn');
-            
-            if (connected) {
-                status.className = 'github-status connected';
-                status.textContent = '✅ متصل بـ GitHub';
-                saveBtn.disabled = false;
-                loadBtn.disabled = false;
-            } else {
-                status.className = 'github-status disconnected';
-                status.textContent = '⚠️ لم يتم ربط GitHub بعد';
-                saveBtn.disabled = true;
-                loadBtn.disabled = true;
+        function showMessage(message, type) {
+            const existingMessage = document.querySelector('.message-notification');
+            if (existingMessage) {
+                existingMessage.remove();
             }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message-notification ${type}`;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => messageDiv.remove(), 300);
+            }, 3000);
         }
 
-        // GitHub operations
+        // GitHub functions
         async function loadFromGitHub() {
-            if (!githubSettings.token || !githubSettings.repo) {
+            if (!githubSettings) {
                 showMessage('❌ الرجاء إعداد GitHub أولاً', 'error');
-                openSettings();
                 return;
             }
 
             try {
-                showMessage('🔄 جاري تحميل البيانات من GitHub...', 'success');
-                
+                showMessage('⏳ جاري تحميل البيانات من GitHub...', 'info');
+
                 const url = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
                 const response = await fetch(url, {
                     headers: {
@@ -956,57 +860,33 @@
                     }
                 });
 
-                if (response.status === 404) {
-                    showMessage('ℹ️ لم يتم العثور على بيانات سابقة', 'error');
-                    currentData = {};
-                    updateStudentsTable();
-                    return;
-                }
-
                 if (!response.ok) {
                     throw new Error('فشل تحميل البيانات من GitHub');
                 }
 
                 const data = await response.json();
-                // Decode base64 and handle UTF-8 properly
-                const base64Content = data.content.replace(/\n/g, '');
-                const binaryString = atob(base64Content);
-                const bytes = new Uint8Array(binaryString.length);
-                for (let i = 0; i < binaryString.length; i++) {
-                    bytes[i] = binaryString.charCodeAt(i);
-                }
-                const decoder = new TextDecoder('utf-8');
-                const content = decoder.decode(bytes);
+                const content = atob(data.content);
                 currentData = JSON.parse(content);
-                
+
                 updateStudentsTable();
-                showMessage('✅ تم تحميل البيانات بنجاح!', 'success');
+                showMessage('✅ تم تحميل البيانات من GitHub بنجاح!', 'success');
             } catch (error) {
                 console.error('Error loading from GitHub:', error);
                 showMessage('❌ خطأ في تحميل البيانات: ' + error.message, 'error');
             }
         }
 
-        async function saveToGitHub() {
-            if (!githubSettings.token || !githubSettings.repo) {
+        async function saveData() {
+            if (!githubSettings) {
                 showMessage('❌ الرجاء إعداد GitHub أولاً', 'error');
-                openSettings();
                 return;
             }
 
             try {
-                showMessage('💾 جاري حفظ البيانات إلى GitHub...', 'success');
+                showMessage('⏳ جاري حفظ البيانات إلى GitHub...', 'info');
 
-                const jsonContent = JSON.stringify(currentData, null, 2);
-                // Encode UTF-8 to base64 properly
-                const encoder = new TextEncoder();
-                const utf8Bytes = encoder.encode(jsonContent);
-                let binaryString = '';
-                for (let i = 0; i < utf8Bytes.length; i++) {
-                    binaryString += String.fromCharCode(utf8Bytes[i]);
-                }
-                const content = btoa(binaryString);
-
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(currentData, null, 2))));
+                
                 let sha = null;
                 try {
                     const getUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
@@ -1174,7 +1054,7 @@
             modal.classList.remove('show');
         }
 
-        // Add student
+        // Add student - الدالة المعدلة لإضافة طلاب متعددين
         function addStudent() {
             const className = document.getElementById('studentClass').value;
             const name = document.getElementById('studentName').value.trim();
@@ -1198,11 +1078,18 @@
                 return;
             }
 
-            currentData[className] = {
+            // إنشاء معرف فريد للطالب
+            const studentId = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+
+            // إضافة الطالب إلى المصفوفة
+            currentData.push({
+                id: studentId,
+                className: className,
                 name: name,
                 average: average,
-                photo: photo
-            };
+                photo: photo,
+                addedDate: new Date().toISOString()
+            });
 
             updateStudentsTable();
             clearForm();
@@ -1217,9 +1104,10 @@
             document.getElementById('newStudentPreview').innerHTML = '👤';
         }
 
-        function deleteStudent(className) {
-            if (confirm(`هل أنت متأكد من حذف طالب ${className}؟`)) {
-                delete currentData[className];
+        function deleteStudent(studentId) {
+            const student = currentData.find(s => s.id === studentId);
+            if (student && confirm(`هل أنت متأكد من حذف الطالب ${student.name} من ${student.className}؟`)) {
+                currentData = currentData.filter(s => s.id !== studentId);
                 updateStudentsTable();
                 showMessage('✅ تم حذف الطالب بنجاح!', 'success');
             }
@@ -1228,7 +1116,7 @@
         function updateStudentsTable() {
             const tbody = document.getElementById('studentsTableBody');
             
-            if (Object.keys(currentData).length === 0) {
+            if (currentData.length === 0) {
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="5" style="text-align: center; color: #999; padding: 30px;">
@@ -1239,9 +1127,16 @@
                 return;
             }
 
+            // ترتيب الطلاب حسب الصف ثم المعدل
+            const sortedData = [...currentData].sort((a, b) => {
+                if (a.className !== b.className) {
+                    return a.className.localeCompare(b.className);
+                }
+                return parseFloat(b.average) - parseFloat(a.average);
+            });
+
             let html = '';
-            for (let className in currentData) {
-                const student = currentData[className];
+            sortedData.forEach(student => {
                 html += `
                     <tr>
                         <td>
@@ -1250,17 +1145,17 @@
                                 '<div class="no-photo">👤</div>'
                             }
                         </td>
-                        <td><strong>${className}</strong></td>
+                        <td><strong>${student.className}</strong></td>
                         <td>${student.name}</td>
                         <td>${student.average}%</td>
                         <td>
-                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${className}')">
+                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${student.id}')">
                                 🗑️ حذف
                             </button>
                         </td>
                     </tr>
                 `;
-            }
+            });
             
             tbody.innerHTML = html;
         }
