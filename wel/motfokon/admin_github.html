@@ -203,6 +203,16 @@
             text-decoration: underline;
         }
 
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d63384;
+            border: 1px solid #e0e0e0;
+        }
+
         /* Add Student Form */
         .add-student-section {
             background: white;
@@ -672,7 +682,10 @@
                 </div>
             </div>
 
-            <button class="submit-btn" onclick="addStudent()">✅ إضافة الطالب</button>
+            <button class="submit-btn" onclick="addStudent(); return false;">✅ إضافة الطالب</button>
+            
+            <!-- زر اختبار للتأكد من عمل الدالة -->
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;" onclick="testAddStudent(); return false;">🧪 اختبار الزر</button>
         </div>
 
         <!-- Students List -->
@@ -707,20 +720,41 @@
                 <p>قم بإعداد الاتصال مع GitHub لحفظ البيانات</p>
             </div>
 
+            <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9em;">
+                <strong>📌 خطوات سريعة:</strong>
+                <ol style="margin: 10px 0 0 20px; padding: 0;">
+                    <li>أنشئ مستودع جديد في GitHub (يمكن أن يكون خاص)</li>
+                    <li>احصل على Token من: <a href="https://github.com/settings/tokens" target="_blank" class="help-link">GitHub Settings</a></li>
+                    <li>اختر <strong>Generate new token (classic)</strong></li>
+                    <li>حدد صلاحية <strong>repo</strong> (كاملة)</li>
+                    <li>انسخ Token والصقه أدناه</li>
+                    <li>اضغط "اختبار الاتصال" للتأكد</li>
+                </ol>
+            </div>
+
             <div class="form-group">
                 <label class="form-label">GitHub Token:</label>
-                <input type="password" id="githubToken" class="form-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxx">
+                <input type="password" id="githubToken" class="form-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
                 <p class="help-text">
-                    احصل على Token من: 
-                    <a href="https://github.com/settings/tokens" target="_blank" class="help-link">GitHub Settings</a>
-                    <br>الصلاحيات المطلوبة: repo
+                    🔐 احصل على Token من: 
+                    <a href="https://github.com/settings/tokens/new" target="_blank" class="help-link">إنشاء Token جديد</a>
+                    <br>
+                    ⚠️ يجب تحديد صلاحية <strong>repo</strong> الكاملة (ستظهر 8 صلاحيات فرعية)
+                    <br>
+                    💡 Token يبدأ بـ <code>ghp_</code> ويتكون من 40 حرف تقريباً
                 </p>
             </div>
 
             <div class="form-group">
                 <label class="form-label">اسم المستودع (Repository):</label>
-                <input type="text" id="githubRepo" class="form-input" placeholder="username/repository-name">
-                <p class="help-text">مثال: ayad/students-data</p>
+                <input type="text" id="githubRepo" class="form-input" placeholder="username/repository-name" dir="ltr">
+                <p class="help-text">
+                    📝 الصيغة: <code>اسم_المستخدم/اسم_المستودع</code>
+                    <br>
+                    ✅ مثال صحيح: <code>ayad123/students-data</code>
+                    <br>
+                    ❌ مثال خاطئ: <code>github.com/ayad123/students-data</code>
+                </p>
             </div>
 
             <div class="form-group">
@@ -735,6 +769,7 @@
             </div>
 
             <div class="actions">
+                <button class="btn btn-warning" onclick="testConnection()">🔍 اختبار الاتصال</button>
                 <button class="btn btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
                 <button class="btn btn-secondary" onclick="closeSettings()">❌ إلغاء</button>
             </div>
@@ -792,6 +827,78 @@
         function closeSettings() {
             const modal = document.getElementById('settingsModal');
             modal.classList.remove('show');
+        }
+
+        // اختبار الاتصال مع GitHub
+        async function testConnection() {
+            const token = document.getElementById('githubToken').value.trim();
+            const repo = document.getElementById('githubRepo').value.trim();
+
+            if (!token) {
+                showMessage('❌ الرجاء إدخال GitHub Token', 'error');
+                return;
+            }
+
+            if (!repo) {
+                showMessage('❌ الرجاء إدخال اسم المستودع', 'error');
+                return;
+            }
+
+            try {
+                showMessage('⏳ جاري اختبار الاتصال...', 'info');
+
+                // اختبار 1: التحقق من صحة Token
+                const userResponse = await fetch('https://api.github.com/user', {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (userResponse.status === 401) {
+                    showMessage('❌ GitHub Token غير صحيح! تأكد من نسخه بشكل كامل', 'error');
+                    return;
+                }
+
+                if (!userResponse.ok) {
+                    showMessage('❌ خطأ في الاتصال بـ GitHub', 'error');
+                    return;
+                }
+
+                const userData = await userResponse.json();
+                
+                // اختبار 2: التحقق من وجود المستودع
+                const repoResponse = await fetch(`https://api.github.com/repos/${repo}`, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (repoResponse.status === 404) {
+                    showMessage('❌ المستودع غير موجود! تأكد من الاسم: username/repo-name', 'error');
+                    return;
+                }
+
+                if (!repoResponse.ok) {
+                    showMessage('❌ لا يمكن الوصول إلى المستودع', 'error');
+                    return;
+                }
+
+                const repoData = await repoResponse.json();
+
+                // نجح الاختبار
+                showMessage(`✅ الاتصال ناجح!\n👤 المستخدم: ${userData.login}\n📦 المستودع: ${repoData.full_name}`, 'success');
+                
+                // عرض تفاصيل إضافية
+                setTimeout(() => {
+                    showMessage(`✅ صلاحيات الكتابة: ${repoData.permissions?.push ? 'متاحة' : 'غير متاحة'}`, 'info');
+                }, 3500);
+
+            } catch (error) {
+                console.error('Connection test error:', error);
+                showMessage('❌ خطأ في الاتصال: ' + error.message, 'error');
+            }
         }
 
         function saveSettings() {
@@ -1178,44 +1285,70 @@
 
         // Add student - الدالة المعدلة لإضافة طلاب متعددين
         function addStudent() {
-            const className = document.getElementById('studentClass').value;
-            const name = document.getElementById('studentName').value.trim();
-            const average = document.getElementById('studentAverage').value.trim();
-            const preview = document.getElementById('newStudentPreview');
-            const img = preview.querySelector('img');
-            const photo = img ? img.src : '';
+            try {
+                console.log('Starting addStudent function...');
+                
+                const className = document.getElementById('studentClass').value;
+                const name = document.getElementById('studentName').value.trim();
+                const average = document.getElementById('studentAverage').value.trim();
+                const preview = document.getElementById('newStudentPreview');
+                const img = preview.querySelector('img');
+                const photo = img ? img.src : '';
 
-            if (!className) {
-                showMessage('❌ الرجاء اختيار الصف', 'error');
-                return;
+                console.log('Form values:', { className, name, average, hasPhoto: !!photo });
+
+                if (!className) {
+                    showMessage('❌ الرجاء اختيار الصف', 'error');
+                    return;
+                }
+
+                if (!name) {
+                    showMessage('❌ الرجاء إدخال اسم الطالب', 'error');
+                    return;
+                }
+
+                if (!average) {
+                    showMessage('❌ الرجاء إدخال المعدل', 'error');
+                    return;
+                }
+
+                // إنشاء معرف فريد للطالب
+                const studentId = Date.now() + '-' + Math.random().toString(36).substring(2, 11);
+
+                // إضافة الطالب إلى المصفوفة
+                const newStudent = {
+                    id: studentId,
+                    className: className,
+                    name: name,
+                    average: average,
+                    photo: photo,
+                    addedDate: new Date().toISOString()
+                };
+
+                console.log('Adding student:', newStudent);
+                currentData.push(newStudent);
+                console.log('Total students now:', currentData.length);
+
+                updateStudentsTable();
+                clearForm();
+                showMessage('✅ تم إضافة الطالب بنجاح!', 'success');
+            } catch (error) {
+                console.error('Error in addStudent:', error);
+                showMessage('❌ خطأ في إضافة الطالب: ' + error.message, 'error');
             }
+        }
 
-            if (!name) {
-                showMessage('❌ الرجاء إدخال اسم الطالب', 'error');
-                return;
-            }
-
-            if (!average) {
-                showMessage('❌ الرجاء إدخال المعدل', 'error');
-                return;
-            }
-
-            // إنشاء معرف فريد للطالب
-            const studentId = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-
-            // إضافة الطالب إلى المصفوفة
-            currentData.push({
-                id: studentId,
-                className: className,
-                name: name,
-                average: average,
-                photo: photo,
-                addedDate: new Date().toISOString()
-            });
-
-            updateStudentsTable();
-            clearForm();
-            showMessage('✅ تم إضافة الطالب بنجاح!', 'success');
+        // دالة اختبار
+        function testAddStudent() {
+            alert('✅ الزر يعمل بشكل صحيح!\n\nسيتم الآن محاولة إضافة طالب تجريبي...');
+            
+            // تعبئة النموذج بقيم تجريبية
+            document.getElementById('studentClass').value = '3-1';
+            document.getElementById('studentName').value = 'طالب تجريبي';
+            document.getElementById('studentAverage').value = '95';
+            
+            // محاولة الإضافة
+            addStudent();
         }
 
         function clearForm() {
@@ -1306,6 +1439,34 @@
 
         // Initialize on page load
         window.onload = async function() {
+            console.log('Page loaded, initializing...');
+            
+            // التحقق من وجود جميع العناصر المطلوبة
+            const requiredElements = [
+                'studentClass', 
+                'studentName', 
+                'studentAverage', 
+                'studentPhoto',
+                'newStudentPreview',
+                'studentsTableBody',
+                'studentCount',
+                'dataSizeKB'
+            ];
+            
+            const missingElements = [];
+            requiredElements.forEach(id => {
+                if (!document.getElementById(id)) {
+                    missingElements.push(id);
+                }
+            });
+            
+            if (missingElements.length > 0) {
+                console.error('Missing elements:', missingElements);
+                alert('⚠️ خطأ: بعض عناصر الصفحة مفقودة: ' + missingElements.join(', '));
+            } else {
+                console.log('✅ All required elements found');
+            }
+            
             const hasSettings = loadSettings();
             if (hasSettings) {
                 await loadFromGitHub();
@@ -1313,6 +1474,8 @@
                 updateStudentsTable();
                 openSettings();
             }
+            
+            console.log('Initialization complete');
         };
     </script>
 </body>
