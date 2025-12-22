@@ -409,34 +409,105 @@
         let autoPlayInterval;
         const SLIDE_DURATION = 5000; // 5 seconds
 
+        // إعدادات GitHub (اختياري)
+        const GITHUB_CONFIG = {
+            enabled: false, // غير إلى true لتفعيل التحميل من GitHub
+            repo: 'username/repo-name', // ضع اسم المستودع هنا
+            branch: 'main',
+            filePath: 'students.json',
+            token: '' // اختياري - فقط للمستودعات الخاصة
+        };
+
         // Load student data
         async function loadStudents() {
             try {
-                const response = await fetch('students-data.json');
-                if (!response.ok) {
-                    throw new Error('فشل في تحميل البيانات');
-                }
-                const data = await response.json();
+                let data;
                 
-                // Convert object to array
-                students = [];
-                for (const [className, studentData] of Object.entries(data)) {
-                    students.push({
-                        ...studentData,
-                        className: className
-                    });
+                // محاولة التحميل من GitHub إذا كان مفعلاً
+                if (GITHUB_CONFIG.enabled) {
+                    try {
+                        const url = `https://api.github.com/repos/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?ref=${GITHUB_CONFIG.branch}`;
+                        const headers = {
+                            'Accept': 'application/vnd.github.v3+json'
+                        };
+                        if (GITHUB_CONFIG.token) {
+                            headers['Authorization'] = `token ${GITHUB_CONFIG.token}`;
+                        }
+                        
+                        const response = await fetch(url, { headers });
+                        if (response.ok) {
+                            const githubData = await response.json();
+                            const content = decodeURIComponent(
+                                atob(githubData.content)
+                                    .split('')
+                                    .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                                    .join('')
+                            );
+                            data = JSON.parse(content);
+                            console.log('✅ تم تحميل البيانات من GitHub');
+                        }
+                    } catch (githubError) {
+                        console.log('⚠️ فشل التحميل من GitHub، جاري المحاولة محلياً...');
+                    }
+                }
+                
+                // محاولة التحميل من ملف محلي إذا لم ينجح GitHub
+                if (!data) {
+                    const response = await fetch('students.json');
+                    if (!response.ok) {
+                        throw new Error('فشل في تحميل البيانات');
+                    }
+                    data = await response.json();
+                    console.log('✅ تم تحميل البيانات من الملف المحلي');
+                }
+                
+                // التحقق من نوع البيانات ومعالجتها
+                if (Array.isArray(data)) {
+                    // البيانات بالصيغة الجديدة (Array)
+                    students = data.map(student => ({
+                        name: student.name,
+                        className: student.className,
+                        average: student.average,
+                        photo: student.photo || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23667eea" width="200" height="200"/%3E%3Ctext fill="%23ffffff" font-size="80" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3E👤%3C/text%3E%3C/svg%3E'
+                    }));
+                } else if (typeof data === 'object' && data !== null) {
+                    // البيانات بالصيغة القديمة (Object)
+                    students = [];
+                    for (const [className, studentData] of Object.entries(data)) {
+                        students.push({
+                            name: studentData.name,
+                            className: className,
+                            average: studentData.average,
+                            photo: studentData.photo || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23667eea" width="200" height="200"/%3E%3Ctext fill="%23ffffff" font-size="80" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3E👤%3C/text%3E%3C/svg%3E'
+                        });
+                    }
+                } else {
+                    throw new Error('تنسيق البيانات غير صحيح');
                 }
                 
                 if (students.length === 0) {
                     throw new Error('لا توجد بيانات للطلاب');
                 }
                 
+                // ترتيب الطلاب حسب الصف ثم المعدل
+                students.sort((a, b) => {
+                    if (a.className !== b.className) {
+                        return a.className.localeCompare(b.className);
+                    }
+                    return parseFloat(b.average) - parseFloat(a.average);
+                });
+                
+                console.log(`✅ تم تحميل ${students.length} طالب/طالبة`);
                 initSlideshow();
             } catch (error) {
+                console.error('Error loading students:', error);
                 document.getElementById('slideshowContainer').innerHTML = `
                     <div class="error">
                         <p>⚠️ ${error.message}</p>
-                        <p style="font-size: 1rem; margin-top: 10px;">تأكد من وجود ملف students-data.json</p>
+                        <p style="font-size: 1rem; margin-top: 10px;">تأكد من وجود ملف students.json في نفس المجلد</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px; color: #666;">
+                            أو قم بتفعيل التحميل من GitHub في إعدادات GITHUB_CONFIG
+                        </p>
                     </div>
                 `;
             }
