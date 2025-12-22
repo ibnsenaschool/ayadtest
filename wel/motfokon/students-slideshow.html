@@ -434,6 +434,7 @@
                             headers['Authorization'] = `token ${GITHUB_CONFIG.token}`;
                         }
                         
+                        console.log('🔄 جاري التحميل من GitHub:', url);
                         const response = await fetch(url, { headers });
                         if (response.ok) {
                             const githubData = await response.json();
@@ -444,21 +445,38 @@
                                     .join('')
                             );
                             data = JSON.parse(content);
-                            console.log('✅ تم تحميل البيانات من GitHub');
+                            console.log('✅ تم تحميل البيانات من GitHub بنجاح');
+                        } else {
+                            console.error('❌ خطأ في الاستجابة من GitHub:', response.status);
                         }
                     } catch (githubError) {
-                        console.log('⚠️ فشل التحميل من GitHub، جاري المحاولة محلياً...');
+                        console.error('❌ خطأ في التحميل من GitHub:', githubError);
+                        console.log('⚠️ جاري المحاولة محلياً...');
                     }
                 }
                 
                 // محاولة التحميل من ملف محلي إذا لم ينجح GitHub
                 if (!data) {
-                    const response = await fetch('students.json');
-                    if (!response.ok) {
-                        throw new Error('فشل في تحميل البيانات');
+                    try {
+                        const response = await fetch('students-data.json');
+                        if (response.ok) {
+                            data = await response.json();
+                            console.log('✅ تم تحميل البيانات من الملف المحلي');
+                        } else {
+                            // محاولة الاسم البديل
+                            const response2 = await fetch('students.json');
+                            if (response2.ok) {
+                                data = await response2.json();
+                                console.log('✅ تم تحميل البيانات من students.json');
+                            }
+                        }
+                    } catch (localError) {
+                        console.error('❌ خطأ في التحميل المحلي:', localError);
                     }
-                    data = await response.json();
-                    console.log('✅ تم تحميل البيانات من الملف المحلي');
+                }
+                
+                if (!data) {
+                    throw new Error('فشل في تحميل البيانات من GitHub والملف المحلي');
                 }
                 
                 // التحقق من نوع البيانات ومعالجتها
@@ -501,13 +519,33 @@
                 initSlideshow();
             } catch (error) {
                 console.error('Error loading students:', error);
+                const fileUrl = `https://github.com/${GITHUB_CONFIG.repo}/blob/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.filePath}`;
                 document.getElementById('slideshowContainer').innerHTML = `
                     <div class="error">
-                        <p>⚠️ ${error.message}</p>
-                        <p style="font-size: 1rem; margin-top: 10px;">تأكد من وجود ملف students.json في نفس المجلد</p>
-                        <p style="font-size: 0.9rem; margin-top: 10px; color: #666;">
-                            أو قم بتفعيل التحميل من GitHub في إعدادات GITHUB_CONFIG
-                        </p>
+                        <p style="font-size: 1.5rem; margin-bottom: 20px;">⚠️ ${error.message}</p>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 10px; text-align: right;">
+                            <h3 style="color: #667eea; margin-bottom: 15px;">🔍 تحقق من:</h3>
+                            <ul style="list-style: none; padding: 0; line-height: 2;">
+                                <li>✅ المستودع: <code style="background: #f5f5f5; padding: 5px 10px; border-radius: 5px;">${GITHUB_CONFIG.repo}</code></li>
+                                <li>✅ المسار: <code style="background: #f5f5f5; padding: 5px 10px; border-radius: 5px;">${GITHUB_CONFIG.filePath}</code></li>
+                                <li>✅ الفرع: <code style="background: #f5f5f5; padding: 5px 10px; border-radius: 5px;">${GITHUB_CONFIG.branch}</code></li>
+                            </ul>
+                            
+                            <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px;">
+                                <strong>💡 للتحقق من الملف:</strong><br>
+                                <a href="${fileUrl}" target="_blank" style="color: #667eea; word-break: break-all;">
+                                    ${fileUrl}
+                                </a>
+                            </div>
+                            
+                            <div style="margin-top: 20px; padding: 15px; background: #d1ecf1; border-radius: 8px;">
+                                <strong>📝 لإنشاء الملف:</strong><br>
+                                1. افتح صفحة الإدارة (admin_github_fixed.html)<br>
+                                2. أضف طلاب جدد<br>
+                                3. احفظ إلى GitHub
+                            </div>
+                        </div>
                     </div>
                 `;
             }
