@@ -23,7 +23,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .header {
             background: white;
             padding: 30px;
@@ -61,19 +60,28 @@
             color: #721c24;
         }
 
+        .data-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e7f3ff;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #004085;
+        }
+
         .actions {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
             margin-top: 20px;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 12px 30px;
+            padding: 12px 25px;
             border: none;
             border-radius: 10px;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
@@ -127,8 +135,7 @@
             cursor: not-allowed;
         }
 
-        /* Settings Modal */
-        .settings-modal {
+        .settings-modal, .cropper-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -141,24 +148,26 @@
             align-items: center;
         }
 
-        .settings-modal.show {
+        .settings-modal.show, .cropper-modal.show {
             display: flex;
         }
 
-        .settings-content {
+        .settings-content, .cropper-content {
             background: white;
             padding: 30px;
             border-radius: 20px;
             max-width: 600px;
             width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .settings-header {
+        .settings-header, .cropper-header {
             text-align: center;
             margin-bottom: 25px;
         }
 
-        .settings-header h2 {
+        .settings-header h2, .cropper-header h2 {
             color: #667eea;
             margin-bottom: 10px;
         }
@@ -213,7 +222,6 @@
             border: 1px solid #e0e0e0;
         }
 
-        /* Add Student Form */
         .add-student-section {
             background: white;
             padding: 30px;
@@ -242,62 +250,31 @@
             padding: 30px;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             border-radius: 20px;
-            position: relative;
         }
 
         .photo-preview {
-            width: 250px;
-            height: 250px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             overflow: hidden;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 6em;
-            border: 8px solid #fff;
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4),
-                        0 0 0 12px rgba(102, 126, 234, 0.1),
-                        inset 0 -5px 20px rgba(0, 0, 0, 0.1);
-            position: relative;
+            font-size: 5em;
+            border: 6px solid #fff;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
             transition: all 0.3s;
         }
 
         .photo-preview:hover {
             transform: scale(1.05);
-            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5),
-                        0 0 0 15px rgba(102, 126, 234, 0.15),
-                        inset 0 -5px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .photo-preview::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            right: -20px;
-            bottom: -20px;
-            border-radius: 50%;
-            background: radial-gradient(circle, transparent 60%, rgba(102, 126, 234, 0.1) 100%);
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
         }
 
         .photo-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 50%;
         }
 
         .upload-controls {
@@ -322,47 +299,10 @@
         .upload-btn:hover {
             background: #5568d3;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
         .upload-btn input[type="file"] {
             display: none;
-        }
-
-        /* Cropper Modal */
-        .cropper-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .cropper-modal.show {
-            display: flex;
-        }
-
-        .cropper-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-        }
-
-        .cropper-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .cropper-header h2 {
-            color: #667eea;
-            margin-bottom: 10px;
         }
 
         .crop-container {
@@ -466,10 +406,8 @@
         .submit-btn:hover {
             background: #218838;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
         }
 
-        /* Students Table */
         .students-section {
             background: white;
             padding: 30px;
@@ -489,7 +427,6 @@
             padding: 15px;
             text-align: right;
             font-weight: bold;
-            border-radius: 10px 10px 0 0;
         }
 
         .students-table th:first-child {
@@ -531,7 +468,6 @@
             border: 3px solid #667eea;
         }
 
-        /* Message notification */
         .message-notification {
             position: fixed;
             top: 20px;
@@ -589,8 +525,8 @@
             }
 
             .photo-preview {
-                width: 200px;
-                height: 200px;
+                width: 150px;
+                height: 150px;
             }
 
             .student-info {
@@ -602,44 +538,39 @@
                 height: 300px;
             }
 
-            .students-table {
-                font-size: 0.9em;
+            .actions {
+                flex-direction: column;
             }
 
-            .student-photo-small {
-                width: 50px;
-                height: 50px;
+            .btn {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <h1>🌟 إدارة بيانات الطلاب المتميزين</h1>
             <p>نظام متقدم للإدارة والحفظ عبر GitHub</p>
             <div id="githubStatus" class="github-status disconnected">
                 ⚠️ غير متصل بـ GitHub
             </div>
-            <div id="dataSize" style="margin-top: 10px; padding: 8px; background: #e7f3ff; border-radius: 8px; font-size: 0.9em; color: #004085;">
-                📊 عدد الطلاب: <strong id="studentCount">0</strong> | حجم البيانات التقريبي: <strong id="dataSizeKB">0</strong> KB
+            <div id="dataInfo" class="data-info">
+                📊 عدد الطلاب: <strong id="studentCount">0</strong> | 
+                حجم البيانات: <strong id="dataSizeKB">0</strong> KB
             </div>
             <div class="actions">
-                <button class="btn btn-secondary" onclick="openSettings()">⚙️ إعدادات GitHub</button>
-                <button class="btn btn-primary" onclick="saveData()" id="saveBtn" disabled>💾 حفظ إلى GitHub</button>
-                <button class="btn btn-primary" onclick="saveDataWithoutPhotos()" id="saveWithoutPhotosBtn" disabled>💾 حفظ بدون صور</button>
-                <button class="btn btn-warning" onclick="loadFromGitHub()" id="loadBtn" disabled>📥 تحميل من GitHub</button>
-                <button class="btn btn-secondary" onclick="downloadBackup()">📥 تنزيل نسخة احتياطية</button>
-                <button class="btn btn-warning" onclick="convertOldData()" style="font-size: 0.9em;">🔄 تحويل بيانات قديمة</button>
+                <button class="btn btn-secondary" onclick="openSettings()">⚙️ إعدادات</button>
+                <button class="btn btn-primary" onclick="saveData()" id="saveBtn" disabled>💾 حفظ</button>
+                <button class="btn btn-warning" onclick="loadFromGitHub()" id="loadBtn" disabled>📥 تحميل</button>
+                <button class="btn btn-secondary" onclick="downloadBackup()">📥 نسخة احتياطية</button>
             </div>
         </div>
 
-        <!-- Add Student Section -->
         <div class="add-student-section">
             <h2 class="section-title">➕ إضافة طالب جديد</h2>
             
-            <!-- Photo Upload -->
             <div class="photo-upload">
                 <div id="newStudentPreview" class="photo-preview">👤</div>
                 <div class="upload-controls">
@@ -647,11 +578,10 @@
                         📷 اختر صورة الطالب
                         <input type="file" id="studentPhoto" accept="image/*" onchange="handlePhotoUpload(this)">
                     </label>
-                    <p style="color: #666; text-align: center;">صورة دائرية عالية الجودة<br>مع إمكانية التكبير والتحريك</p>
+                    <p style="color: #666; text-align: center; font-size: 0.9em;">صورة دائرية مع تكبير وتحريك</p>
                 </div>
             </div>
 
-            <!-- Student Info -->
             <div class="student-info">
                 <div class="form-group">
                     <label class="form-label">الصف:</label>
@@ -683,13 +613,9 @@
                 </div>
             </div>
 
-            <button class="submit-btn" onclick="addStudent(); return false;">✅ إضافة الطالب</button>
-            
-            <!-- زر اختبار للتأكد من عمل الدالة -->
-            <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;" onclick="testAddStudent(); return false;">🧪 اختبار الزر</button>
+            <button class="submit-btn" onclick="addStudent()">✅ إضافة الطالب</button>
         </div>
 
-        <!-- Students List -->
         <div class="students-section">
             <h2 class="section-title">📋 قائمة الطلاب المتميزين</h2>
             <table class="students-table">
@@ -713,76 +639,55 @@
         </div>
     </div>
 
-    <!-- Settings Modal -->
     <div id="settingsModal" class="settings-modal">
         <div class="settings-content">
             <div class="settings-header">
                 <h2>⚙️ إعدادات GitHub</h2>
-                <p>قم بإعداد الاتصال مع GitHub لحفظ البيانات</p>
+                <p>قم بإعداد الاتصال مع GitHub</p>
             </div>
 
             <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9em;">
                 <strong>📌 خطوات سريعة:</strong>
-                <ol style="margin: 10px 0 0 20px; padding: 0;">
-                    <li>أنشئ مستودع جديد في GitHub (يمكن أن يكون خاص)</li>
-                    <li>احصل على Token من: <a href="https://github.com/settings/tokens" target="_blank" class="help-link">GitHub Settings</a></li>
-                    <li>اختر <strong>Generate new token (classic)</strong></li>
-                    <li>حدد صلاحية <strong>repo</strong> (كاملة)</li>
-                    <li>انسخ Token والصقه أدناه</li>
-                    <li>اضغط "اختبار الاتصال" للتأكد</li>
+                <ol style="margin: 10px 0 0 20px;">
+                    <li>أنشئ مستودع في GitHub</li>
+                    <li>احصل على Token من <a href="https://github.com/settings/tokens/new" target="_blank" class="help-link">هنا</a></li>
+                    <li>حدد صلاحية <strong>repo</strong></li>
                 </ol>
             </div>
 
             <div class="form-group">
                 <label class="form-label">GitHub Token:</label>
-                <input type="password" id="githubToken" class="form-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
-                <p class="help-text">
-                    🔐 احصل على Token من: 
-                    <a href="https://github.com/settings/tokens/new" target="_blank" class="help-link">إنشاء Token جديد</a>
-                    <br>
-                    ⚠️ يجب تحديد صلاحية <strong>repo</strong> الكاملة (ستظهر 8 صلاحيات فرعية)
-                    <br>
-                    💡 Token يبدأ بـ <code>ghp_</code> ويتكون من 40 حرف تقريباً
-                </p>
+                <input type="password" id="githubToken" class="form-input" placeholder="ghp_xxxxxxxxxxxx">
             </div>
 
             <div class="form-group">
-                <label class="form-label">اسم المستودع (Repository):</label>
-                <input type="text" id="githubRepo" class="form-input" placeholder="username/repository-name" dir="ltr">
-                <p class="help-text">
-                    📝 الصيغة: <code>اسم_المستخدم/اسم_المستودع</code>
-                    <br>
-                    ✅ مثال صحيح: <code>ayad123/students-data</code>
-                    <br>
-                    ❌ مثال خاطئ: <code>github.com/ayad123/students-data</code>
-                </p>
+                <label class="form-label">اسم المستودع:</label>
+                <input type="text" id="githubRepo" class="form-input" placeholder="username/repo-name" dir="ltr">
+                <p class="help-text">مثال: <code>ayad123/students</code></p>
             </div>
 
             <div class="form-group">
-                <label class="form-label">اسم الفرع (Branch):</label>
-                <input type="text" id="githubBranch" class="form-input" placeholder="main" value="main">
+                <label class="form-label">الفرع:</label>
+                <input type="text" id="githubBranch" class="form-input" value="main">
             </div>
 
             <div class="form-group">
                 <label class="form-label">مسار الملف:</label>
-                <input type="text" id="githubFilePath" class="form-input" placeholder="students.json" value="students.json">
-                <p class="help-text">مثال: data/students.json</p>
+                <input type="text" id="githubFilePath" class="form-input" value="students.json">
             </div>
 
             <div class="actions">
-                <button class="btn btn-warning" onclick="testConnection()">🔍 اختبار الاتصال</button>
-                <button class="btn btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+                <button class="btn btn-primary" onclick="saveSettings()">💾 حفظ</button>
                 <button class="btn btn-secondary" onclick="closeSettings()">❌ إلغاء</button>
             </div>
         </div>
     </div>
 
-    <!-- Cropper Modal -->
     <div id="cropperModal" class="cropper-modal">
         <div class="cropper-content">
             <div class="cropper-header">
                 <h2>✂️ تعديل الصورة</h2>
-                <p>اسحب الصورة لتحريكها، واستخدم الشريط للتكبير والتصغير</p>
+                <p>اسحب لتحريك، استخدم الشريط للتكبير</p>
             </div>
 
             <div class="crop-container">
@@ -803,7 +708,6 @@
     </div>
 
     <script>
-        // Global variables
         let currentData = [];
         let githubSettings = null;
         let currentImageData = null;
@@ -812,11 +716,8 @@
         let isDragging = false;
         let dragStart = { x: 0, y: 0 };
 
-        // Settings functions
         function openSettings() {
-            const modal = document.getElementById('settingsModal');
-            modal.classList.add('show');
-            
+            document.getElementById('settingsModal').classList.add('show');
             if (githubSettings) {
                 document.getElementById('githubToken').value = githubSettings.token;
                 document.getElementById('githubRepo').value = githubSettings.repo;
@@ -826,80 +727,7 @@
         }
 
         function closeSettings() {
-            const modal = document.getElementById('settingsModal');
-            modal.classList.remove('show');
-        }
-
-        // اختبار الاتصال مع GitHub
-        async function testConnection() {
-            const token = document.getElementById('githubToken').value.trim();
-            const repo = document.getElementById('githubRepo').value.trim();
-
-            if (!token) {
-                showMessage('❌ الرجاء إدخال GitHub Token', 'error');
-                return;
-            }
-
-            if (!repo) {
-                showMessage('❌ الرجاء إدخال اسم المستودع', 'error');
-                return;
-            }
-
-            try {
-                showMessage('⏳ جاري اختبار الاتصال...', 'info');
-
-                // اختبار 1: التحقق من صحة Token
-                const userResponse = await fetch('https://api.github.com/user', {
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-
-                if (userResponse.status === 401) {
-                    showMessage('❌ GitHub Token غير صحيح! تأكد من نسخه بشكل كامل', 'error');
-                    return;
-                }
-
-                if (!userResponse.ok) {
-                    showMessage('❌ خطأ في الاتصال بـ GitHub', 'error');
-                    return;
-                }
-
-                const userData = await userResponse.json();
-                
-                // اختبار 2: التحقق من وجود المستودع
-                const repoResponse = await fetch(`https://api.github.com/repos/${repo}`, {
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-
-                if (repoResponse.status === 404) {
-                    showMessage('❌ المستودع غير موجود! تأكد من الاسم: username/repo-name', 'error');
-                    return;
-                }
-
-                if (!repoResponse.ok) {
-                    showMessage('❌ لا يمكن الوصول إلى المستودع', 'error');
-                    return;
-                }
-
-                const repoData = await repoResponse.json();
-
-                // نجح الاختبار
-                showMessage(`✅ الاتصال ناجح!\n👤 المستخدم: ${userData.login}\n📦 المستودع: ${repoData.full_name}`, 'success');
-                
-                // عرض تفاصيل إضافية
-                setTimeout(() => {
-                    showMessage(`✅ صلاحيات الكتابة: ${repoData.permissions?.push ? 'متاحة' : 'غير متاحة'}`, 'info');
-                }, 3500);
-
-            } catch (error) {
-                console.error('Connection test error:', error);
-                showMessage('❌ خطأ في الاتصال: ' + error.message, 'error');
-            }
+            document.getElementById('settingsModal').classList.remove('show');
         }
 
         function saveSettings() {
@@ -917,13 +745,12 @@
             localStorage.setItem('githubSettings', JSON.stringify(githubSettings));
 
             document.getElementById('saveBtn').disabled = false;
-            document.getElementById('saveWithoutPhotosBtn').disabled = false;
             document.getElementById('loadBtn').disabled = false;
             document.getElementById('githubStatus').className = 'github-status connected';
             document.getElementById('githubStatus').textContent = '✅ متصل بـ GitHub';
 
             closeSettings();
-            showMessage('✅ تم حفظ الإعدادات بنجاح!', 'success');
+            showMessage('✅ تم حفظ الإعدادات!', 'success');
         }
 
         function loadSettings() {
@@ -931,7 +758,6 @@
             if (saved) {
                 githubSettings = JSON.parse(saved);
                 document.getElementById('saveBtn').disabled = false;
-                document.getElementById('saveWithoutPhotosBtn').disabled = false;
                 document.getElementById('loadBtn').disabled = false;
                 document.getElementById('githubStatus').className = 'github-status connected';
                 document.getElementById('githubStatus').textContent = '✅ متصل بـ GitHub';
@@ -941,23 +767,20 @@
         }
 
         function showMessage(message, type) {
-            const existingMessage = document.querySelector('.message-notification');
-            if (existingMessage) {
-                existingMessage.remove();
-            }
+            const existing = document.querySelector('.message-notification');
+            if (existing) existing.remove();
 
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message-notification ${type}`;
-            messageDiv.textContent = message;
-            document.body.appendChild(messageDiv);
+            const div = document.createElement('div');
+            div.className = `message-notification ${type}`;
+            div.textContent = message;
+            document.body.appendChild(div);
 
             setTimeout(() => {
-                messageDiv.style.animation = 'slideIn 0.3s ease-out reverse';
-                setTimeout(() => messageDiv.remove(), 300);
+                div.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => div.remove(), 300);
             }, 3000);
         }
 
-        // GitHub functions
         async function loadFromGitHub() {
             if (!githubSettings) {
                 showMessage('❌ الرجاء إعداد GitHub أولاً', 'error');
@@ -965,7 +788,7 @@
             }
 
             try {
-                showMessage('⏳ جاري تحميل البيانات من GitHub...', 'info');
+                showMessage('⏳ جاري التحميل...', 'info');
 
                 const url = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
                 const response = await fetch(url, {
@@ -975,21 +798,15 @@
                     }
                 });
 
-                if (!response.ok) {
-                    throw new Error('فشل تحميل البيانات من GitHub');
-                }
+                if (!response.ok) throw new Error('فشل التحميل');
 
                 const data = await response.json();
                 const content = atob(data.content);
                 const loadedData = JSON.parse(content);
 
-                // التحقق من نوع البيانات وتحويلها إلى مصفوفة إذا لزم الأمر
                 if (Array.isArray(loadedData)) {
-                    // البيانات بالصيغة الجديدة (مصفوفة)
                     currentData = loadedData;
                 } else if (typeof loadedData === 'object' && loadedData !== null) {
-                    // البيانات بالصيغة القديمة (كائن) - تحويلها إلى مصفوفة
-                    console.log('Converting old format to new format...');
                     currentData = [];
                     for (let className in loadedData) {
                         const student = loadedData[className];
@@ -1002,18 +819,16 @@
                             addedDate: new Date().toISOString()
                         });
                     }
-                    showMessage('✅ تم تحويل البيانات من الصيغة القديمة', 'info');
+                    showMessage('✅ تم تحويل البيانات القديمة', 'info');
                 } else {
-                    // البيانات غير صالحة
                     currentData = [];
                 }
 
                 updateStudentsTable();
-                showMessage('✅ تم تحميل البيانات من GitHub بنجاح!', 'success');
+                showMessage('✅ تم التحميل بنجاح!', 'success');
             } catch (error) {
-                console.error('Error loading from GitHub:', error);
-                showMessage('❌ خطأ في تحميل البيانات: ' + error.message, 'error');
-                // في حالة الخطأ، تأكد من أن currentData مصفوفة
+                console.error('Error:', error);
+                showMessage('❌ خطأ: ' + error.message, 'error');
                 if (!Array.isArray(currentData)) {
                     currentData = [];
                     updateStudentsTable();
@@ -1028,16 +843,9 @@
             }
 
             try {
-                showMessage('⏳ جاري حفظ البيانات إلى GitHub...', 'info');
+                showMessage('⏳ جاري الحفظ...', 'info');
 
-                // حساب حجم البيانات
                 const jsonData = JSON.stringify(currentData, null, 2);
-                const sizeInKB = Math.round((jsonData.length * 0.75) / 1024); // تقدير حجم base64
-                
-                if (sizeInKB > 900) {
-                    showMessage(`⚠️ تحذير: حجم البيانات كبير (${sizeInKB} KB). قد يفشل الحفظ.`, 'info');
-                }
-
                 const content = btoa(unescape(encodeURIComponent(jsonData)));
                 
                 let sha = null;
@@ -1053,9 +861,7 @@
                         const getData = await getResponse.json();
                         sha = getData.sha;
                     }
-                } catch (e) {
-                    console.log('File does not exist yet, will create new');
-                }
+                } catch (e) {}
 
                 const putUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}`;
                 const putResponse = await fetch(putUrl, {
@@ -1066,7 +872,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        message: 'Update students data - ' + new Date().toLocaleString('ar-EG'),
+                        message: 'تحديث بيانات الطلاب - ' + new Date().toLocaleString('ar-EG'),
                         content: content,
                         branch: githubSettings.branch,
                         ...(sha && { sha: sha })
@@ -1075,95 +881,19 @@
 
                 if (!putResponse.ok) {
                     const errorData = await putResponse.json();
-                    console.error('GitHub API Error:', errorData);
-                    throw new Error(`خطأ GitHub (${putResponse.status}): ${errorData.message || 'فشل الحفظ'}`);
+                    throw new Error(`خطأ (${putResponse.status}): ${errorData.message}`);
                 }
 
-                showMessage('✅ تم حفظ البيانات إلى GitHub بنجاح!', 'success');
+                showMessage('✅ تم الحفظ بنجاح!', 'success');
             } catch (error) {
-                console.error('Error saving to GitHub:', error);
-                showMessage('❌ خطأ في حفظ البيانات: ' + error.message, 'error');
-                
-                // اقتراح حلول
-                setTimeout(() => {
-                    showMessage('💡 جرب: استخدم زر "حفظ بدون صور" أو قلل عدد الطلاب', 'info');
-                }, 3500);
+                console.error('Error:', error);
+                showMessage('❌ خطأ: ' + error.message, 'error');
             }
         }
 
-        // دالة الحفظ بدون الصور (للملفات الكبيرة)
-        async function saveDataWithoutPhotos() {
-            if (!githubSettings) {
-                showMessage('❌ الرجاء إعداد GitHub أولاً', 'error');
-                return;
-            }
-
-            if (!confirm('⚠️ سيتم حفظ البيانات بدون الصور. هل تريد المتابعة؟\n\n(يمكنك استخدام هذا الخيار إذا كان حجم البيانات كبيراً)')) {
-                return;
-            }
-
-            try {
-                showMessage('⏳ جاري حفظ البيانات بدون صور...', 'info');
-
-                // إنشاء نسخة من البيانات بدون الصور
-                const dataWithoutPhotos = currentData.map(student => ({
-                    ...student,
-                    photo: '' // حذف الصور
-                }));
-
-                const jsonData = JSON.stringify(dataWithoutPhotos, null, 2);
-                const content = btoa(unescape(encodeURIComponent(jsonData)));
-                
-                let sha = null;
-                try {
-                    const getUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}?ref=${githubSettings.branch}`;
-                    const getResponse = await fetch(getUrl, {
-                        headers: {
-                            'Authorization': `token ${githubSettings.token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    if (getResponse.ok) {
-                        const getData = await getResponse.json();
-                        sha = getData.sha;
-                    }
-                } catch (e) {
-                    console.log('File does not exist yet, will create new');
-                }
-
-                const putUrl = `https://api.github.com/repos/${githubSettings.repo}/contents/${githubSettings.filePath}`;
-                const putResponse = await fetch(putUrl, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${githubSettings.token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: 'Update students data (no photos) - ' + new Date().toLocaleString('ar-EG'),
-                        content: content,
-                        branch: githubSettings.branch,
-                        ...(sha && { sha: sha })
-                    })
-                });
-
-                if (!putResponse.ok) {
-                    const errorData = await putResponse.json();
-                    console.error('GitHub API Error:', errorData);
-                    throw new Error(`خطأ GitHub (${putResponse.status}): ${errorData.message || 'فشل الحفظ'}`);
-                }
-
-                showMessage('✅ تم حفظ البيانات بدون صور بنجاح!', 'success');
-            } catch (error) {
-                console.error('Error saving to GitHub:', error);
-                showMessage('❌ خطأ في حفظ البيانات: ' + error.message, 'error');
-            }
-        }
-
-        // دالة تنزيل نسخة احتياطية محلية
         function downloadBackup() {
             if (currentData.length === 0) {
-                showMessage('❌ لا توجد بيانات للحفظ', 'error');
+                showMessage('❌ لا توجد بيانات', 'error');
                 return;
             }
 
@@ -1174,7 +904,7 @@
                 const a = document.createElement('a');
                 
                 const now = new Date();
-                const filename = `students_backup_${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}-${String(now.getMinutes()).padStart(2,'0')}.json`;
+                const filename = `students_backup_${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}.json`;
                 
                 a.href = url;
                 a.download = filename;
@@ -1183,60 +913,12 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 
-                showMessage('✅ تم تنزيل النسخة الاحتياطية بنجاح!', 'success');
+                showMessage('✅ تم التنزيل!', 'success');
             } catch (error) {
-                console.error('Error downloading backup:', error);
-                showMessage('❌ خطأ في تنزيل النسخة الاحتياطية', 'error');
+                showMessage('❌ خطأ في التنزيل', 'error');
             }
         }
 
-        // دالة تحويل البيانات من الصيغة القديمة إلى الجديدة
-        function convertOldData() {
-            if (Array.isArray(currentData)) {
-                showMessage('✅ البيانات بالفعل بالصيغة الجديدة (مصفوفة)', 'info');
-                return;
-            }
-
-            if (typeof currentData !== 'object' || currentData === null) {
-                showMessage('❌ لا توجد بيانات للتحويل', 'error');
-                return;
-            }
-
-            if (!confirm('🔄 هل تريد تحويل البيانات من الصيغة القديمة إلى الجديدة؟\n\nالصيغة الجديدة تسمح بإضافة طلاب متعددين بنفس الصف.')) {
-                return;
-            }
-
-            try {
-                console.log('Converting old data format...');
-                const newData = [];
-                
-                for (let className in currentData) {
-                    const student = currentData[className];
-                    newData.push({
-                        id: Date.now() + '-' + Math.random().toString(36).substring(2, 11),
-                        className: className,
-                        name: student.name || 'غير محدد',
-                        average: student.average || '0',
-                        photo: student.photo || '',
-                        addedDate: new Date().toISOString()
-                    });
-                }
-
-                currentData = newData;
-                updateStudentsTable();
-                
-                showMessage(`✅ تم تحويل ${newData.length} طالب إلى الصيغة الجديدة!`, 'success');
-                
-                setTimeout(() => {
-                    showMessage('💡 لا تنسى حفظ البيانات إلى GitHub', 'info');
-                }, 3000);
-            } catch (error) {
-                console.error('Error converting data:', error);
-                showMessage('❌ خطأ في تحويل البيانات: ' + error.message, 'error');
-            }
-        }
-
-        // Photo handling
         function handlePhotoUpload(input) {
             const file = input.files[0];
             if (file) {
@@ -1329,7 +1011,7 @@
         function applyCrop() {
             const image = document.getElementById('cropImage');
             const canvas = document.createElement('canvas');
-            const size = 250; // تقليل الحجم لتقليل حجم الملف
+            const size = 250;
             canvas.width = size;
             canvas.height = size;
             const ctx = canvas.getContext('2d');
@@ -1346,7 +1028,6 @@
             
             ctx.drawImage(image, offsetX, offsetY, imgWidth, imgHeight);
             
-            // ضغط أعلى للصورة
             const croppedImage = canvas.toDataURL('image/jpeg', 0.7);
             
             const preview = document.getElementById('newStudentPreview');
@@ -1356,18 +1037,12 @@
         }
 
         function closeCropper() {
-            const modal = document.getElementById('cropperModal');
-            modal.classList.remove('show');
+            document.getElementById('cropperModal').classList.remove('show');
         }
 
-        // Add student - الدالة المعدلة لإضافة طلاب متعددين
         function addStudent() {
             try {
-                console.log('Starting addStudent function...');
-                
-                // التأكد من أن currentData مصفوفة
                 if (!Array.isArray(currentData)) {
-                    console.warn('currentData is not an array, converting...');
                     currentData = [];
                 }
                 
@@ -1377,8 +1052,6 @@
                 const preview = document.getElementById('newStudentPreview');
                 const img = preview.querySelector('img');
                 const photo = img ? img.src : '';
-
-                console.log('Form values:', { className, name, average, hasPhoto: !!photo });
 
                 if (!className) {
                     showMessage('❌ الرجاء اختيار الصف', 'error');
@@ -1395,43 +1068,24 @@
                     return;
                 }
 
-                // إنشاء معرف فريد للطالب
                 const studentId = Date.now() + '-' + Math.random().toString(36).substring(2, 11);
 
-                // إضافة الطالب إلى المصفوفة
-                const newStudent = {
+                currentData.push({
                     id: studentId,
                     className: className,
                     name: name,
                     average: average,
                     photo: photo,
                     addedDate: new Date().toISOString()
-                };
-
-                console.log('Adding student:', newStudent);
-                currentData.push(newStudent);
-                console.log('Total students now:', currentData.length);
+                });
 
                 updateStudentsTable();
                 clearForm();
-                showMessage('✅ تم إضافة الطالب بنجاح!', 'success');
+                showMessage('✅ تم إضافة الطالب!', 'success');
             } catch (error) {
-                console.error('Error in addStudent:', error);
-                showMessage('❌ خطأ في إضافة الطالب: ' + error.message, 'error');
+                console.error('Error:', error);
+                showMessage('❌ خطأ: ' + error.message, 'error');
             }
-        }
-
-        // دالة اختبار
-        function testAddStudent() {
-            alert('✅ الزر يعمل بشكل صحيح!\n\nسيتم الآن محاولة إضافة طالب تجريبي...');
-            
-            // تعبئة النموذج بقيم تجريبية
-            document.getElementById('studentClass').value = '3-1';
-            document.getElementById('studentName').value = 'طالب تجريبي';
-            document.getElementById('studentAverage').value = '95';
-            
-            // محاولة الإضافة
-            addStudent();
         }
 
         function clearForm() {
@@ -1444,36 +1098,34 @@
 
         function deleteStudent(studentId) {
             const student = currentData.find(s => s.id === studentId);
-            if (student && confirm(`هل أنت متأكد من حذف الطالب ${student.name} من ${student.className}؟`)) {
+            if (student && confirm(`هل تريد حذف ${student.name}؟`)) {
                 currentData = currentData.filter(s => s.id !== studentId);
                 updateStudentsTable();
-                showMessage('✅ تم حذف الطالب بنجاح!', 'success');
+                showMessage('✅ تم الحذف!', 'success');
             }
         }
 
         function updateStudentsTable() {
             const tbody = document.getElementById('studentsTableBody');
             
-            // تحديث معلومات الحجم
             const jsonData = JSON.stringify(currentData, null, 2);
             const sizeInKB = Math.round((jsonData.length * 0.75) / 1024);
-            document.getElementById('studentCount').textContent = currentData.length;
-            document.getElementById('dataSizeKB').textContent = sizeInKB;
             
-            // تغيير لون التحذير إذا كان الحجم كبيراً
-            const dataSizeDiv = document.getElementById('dataSize');
-            if (sizeInKB > 900) {
-                dataSizeDiv.style.background = '#fff3cd';
-                dataSizeDiv.style.color = '#856404';
-                dataSizeDiv.innerHTML = `⚠️ عدد الطلاب: <strong>${currentData.length}</strong> | حجم البيانات: <strong>${sizeInKB} KB</strong> (كبير! استخدم "حفظ بدون صور")`;
-            } else if (sizeInKB > 500) {
-                dataSizeDiv.style.background = '#fff3cd';
-                dataSizeDiv.style.color = '#856404';
-                dataSizeDiv.innerHTML = `⚠️ عدد الطلاب: <strong>${currentData.length}</strong> | حجم البيانات: <strong>${sizeInKB} KB</strong> (متوسط)`;
-            } else {
-                dataSizeDiv.style.background = '#e7f3ff';
-                dataSizeDiv.style.color = '#004085';
-                dataSizeDiv.innerHTML = `📊 عدد الطلاب: <strong>${currentData.length}</strong> | حجم البيانات: <strong>${sizeInKB} KB</strong> (جيد)`;
+            const countEl = document.getElementById('studentCount');
+            const sizeEl = document.getElementById('dataSizeKB');
+            const infoEl = document.getElementById('dataInfo');
+            
+            if (countEl) countEl.textContent = currentData.length;
+            if (sizeEl) sizeEl.textContent = sizeInKB;
+            
+            if (infoEl) {
+                if (sizeInKB > 900) {
+                    infoEl.style.background = '#fff3cd';
+                    infoEl.style.color = '#856404';
+                } else {
+                    infoEl.style.background = '#e7f3ff';
+                    infoEl.style.color = '#004085';
+                }
             }
             
             if (currentData.length === 0) {
@@ -1487,7 +1139,6 @@
                 return;
             }
 
-            // ترتيب الطلاب حسب الصف ثم المعدل
             const sortedData = [...currentData].sort((a, b) => {
                 if (a.className !== b.className) {
                     return a.className.localeCompare(b.className);
@@ -1520,45 +1171,13 @@
             tbody.innerHTML = html;
         }
 
-        // Initialize on page load
         window.onload = async function() {
-            console.log('Page loaded, initializing...');
-            
-            // التحقق من وجود جميع العناصر المطلوبة
-            const requiredElements = [
-                'studentClass', 
-                'studentName', 
-                'studentAverage', 
-                'studentPhoto',
-                'newStudentPreview',
-                'studentsTableBody',
-                'studentCount',
-                'dataSizeKB'
-            ];
-            
-            const missingElements = [];
-            requiredElements.forEach(id => {
-                if (!document.getElementById(id)) {
-                    missingElements.push(id);
-                }
-            });
-            
-            if (missingElements.length > 0) {
-                console.error('Missing elements:', missingElements);
-                alert('⚠️ خطأ: بعض عناصر الصفحة مفقودة: ' + missingElements.join(', '));
-            } else {
-                console.log('✅ All required elements found');
-            }
-            
             const hasSettings = loadSettings();
             if (hasSettings) {
                 await loadFromGitHub();
             } else {
                 updateStudentsTable();
-                openSettings();
             }
-            
-            console.log('Initialization complete');
         };
     </script>
 </body>
