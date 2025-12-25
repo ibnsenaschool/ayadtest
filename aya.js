@@ -1418,7 +1418,25 @@ function selectType(type) {
 
     }
 }
+/* This is some notes just for me so I know what I'm working with data wise
 
+Structure of the array:
+scavengInfo[i].
 
+village_id
+player_id
+village_name
+res :{wood,stone,iron}
+res_rate:{wood,stone,iron}
+storage_max
+unit_counts_home:{spear,sword, etc}
+unit_carry_factor
+has_rally_point (true or false)
 
-
+options[1]
+base_id: 1
+village_id
+is_locked: (true or false)
+unlock_time: null
+scavenging_squad: null
+*/
