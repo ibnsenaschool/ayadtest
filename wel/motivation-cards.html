@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بطاقات تحفيزية - أهلاً بعودتكم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BA;
+            --deep-blue: #1a237e;
+            --royal-purple: #4a148c;
+            --emerald: #00695c;
+            --warm-orange: #e65100;
+            --crimson: #b71c1c;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            position: relative;
+        }
+
+        /* خلفية النجوم المتحركة */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* العنوان الرئيسي */
+        .main-header {
+            text-align: center;
+            padding: 30px 20px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .welcome-text {
+            font-family: 'Amiri', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+            animation: shimmer 3s ease-in-out infinite;
+            margin-bottom: 10px;
+        }
+
+        .sub-header {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        /* حاوية البطاقات */
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 180px);
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card {
+            position: absolute;
+            width: 85vw;
+            max-width: 900px;
+            min-height: 400px;
+            border-radius: 30px;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+            animation: shine 4s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .card.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .card-icon {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .card-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .card-subtitle {
+            font-size: 1.6rem;
+            font-weight: 500;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        /* تصميمات البطاقات المختلفة */
+        .card-1 {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+            color: white;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .card-2 {
+            background: linear-gradient(135deg, #00695c 0%, #00897b 50%, #26a69a 100%);
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-3 {
+            background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 50%, #8e24aa 100%);
+            color: white;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .card-4 {
+            background: linear-gradient(135deg, #e65100 0%, #f57c00 50%, #ff9800 100%);
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card-5 {
+            background: linear-gradient(135deg, #b71c1c 0%, #c62828 50%, #d32f2f 100%);
+            color: white;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .card-6 {
+            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%);
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-7 {
+            background: linear-gradient(135deg, #2e7d32 0%, #388e3c 50%, #43a047 100%);
+            color: white;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .card-8 {
+            background: linear-gradient(135deg, #37474f 0%, #455a64 50%, #546e7a 100%);
+            color: white;
+            border: 3px solid var(--gold);
+        }
+
+        .card-9 {
+            background: linear-gradient(135deg, #6d4c41 0%, #795548 50%, #8d6e63 100%);
+            color: white;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .card-10 {
+            background: linear-gradient(135deg, #ad1457 0%, #c2185b 50%, #d81b60 100%);
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* مؤشر التقدم */
+        .progress-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 20;
+        }
+
+        .progress-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .progress-dot.active {
+            background: var(--gold);
+            transform: scale(1.3);
+            box-shadow: 0 0 20px var(--gold);
+        }
+
+        /* زخارف إضافية */
+        .decoration {
+            position: fixed;
+            font-size: 3rem;
+            opacity: 0.1;
+            animation: rotate 20s linear infinite;
+        }
+
+        .decoration-1 { top: 10%; left: 5%; }
+        .decoration-2 { top: 20%; right: 8%; animation-direction: reverse; }
+        .decoration-3 { bottom: 15%; left: 10%; }
+        .decoration-4 { bottom: 25%; right: 5%; animation-direction: reverse; }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* التاريخ */
+        .date-display {
+            position: fixed;
+            top: 20px;
+            left: 30px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            z-index: 20;
+        }
+
+        .school-name {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            color: var(--gold);
+            font-size: 1.3rem;
+            font-weight: 700;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+    <!-- النجوم -->
+    <div class="stars" id="stars"></div>
+
+    <!-- زخارف -->
+    <div class="decoration decoration-1">✦</div>
+    <div class="decoration decoration-2">✧</div>
+    <div class="decoration decoration-3">⭐</div>
+    <div class="decoration decoration-4">✦</div>
+
+    <!-- التاريخ واسم المدرسة -->
+    <div class="date-display" id="dateDisplay"></div>
+    <div class="school-name">مدرسة ابن سينا الابتدائية</div>
+
+    <!-- العنوان -->
+    <header class="main-header">
+        <h1 class="welcome-text">أهلاً بعودتكم</h1>
+        <p class="sub-header">عام دراسي مليء بالنجاح والتفوق ✨</p>
+    </header>
+
+    <!-- البطاقات -->
+    <div class="cards-container">
+        <div class="card card-1" data-index="0">
+            <div class="card-icon">🚀</div>
+            <h2 class="card-title">شُدّوا الهِمَم</h2>
+            <p class="card-subtitle">الطريق إلى القمة يبدأ بخطوة واحدة<br>فاجعلوا كل يوم خطوة نحو النجاح</p>
+        </div>
+
+        <div class="card card-2" data-index="1">
+            <div class="card-icon">⭐</div>
+            <h2 class="card-title">النجاح يبدأ من هنا</h2>
+            <p class="card-subtitle">كل طالب فيكم نجم ساطع<br>يستحق أن يضيء سماء التفوق</p>
+        </div>
+
+        <div class="card card-3" data-index="2">
+            <div class="card-icon">💪</div>
+            <h2 class="card-title">أنتم قادرون</h2>
+            <p class="card-subtitle">الإرادة القوية تصنع المستحيل<br>وأنتم أصحاب إرادة لا تُقهر</p>
+        </div>
+
+        <div class="card card-4" data-index="3">
+            <div class="card-icon">🏆</div>
+            <h2 class="card-title">التفوق عادة</h2>
+            <p class="card-subtitle">من اجتهد اليوم حصد غداً<br>فازرعوا الاجتهاد تحصدوا التفوق</p>
+        </div>
+
+        <div class="card card-5" data-index="4">
+            <div class="card-icon">📚</div>
+            <h2 class="card-title">العلم نور</h2>
+            <p class="card-subtitle">اطلبوا العلم من المهد إلى اللحد<br>فالعلم يرفع صاحبه درجات</p>
+        </div>
+
+        <div class="card card-6" data-index="5">
+            <div class="card-icon">🎯</div>
+            <h2 class="card-title">حدد هدفك</h2>
+            <p class="card-subtitle">من عرف هدفه سهل عليه الطريق<br>فاجعل النجاح هدفك الأول</p>
+        </div>
+
+        <div class="card card-7" data-index="6">
+            <div class="card-icon">🌟</div>
+            <h2 class="card-title">تميّز واختلف</h2>
+            <p class="card-subtitle">كن مختلفاً وتميّز عن الآخرين<br>فالتميز سمة الناجحين</p>
+        </div>
+
+        <div class="card card-8" data-index="7">
+            <div class="card-icon">💡</div>
+            <h2 class="card-title">الإبداع طريقك</h2>
+            <p class="card-subtitle">فكّر خارج الصندوق<br>وابتكر طرقاً جديدة للتعلم</p>
+        </div>
+
+        <div class="card card-9" data-index="8">
+            <div class="card-icon">🤝</div>
+            <h2 class="card-title">معاً نحو القمة</h2>
+            <p class="card-subtitle">التعاون سر النجاح<br>فلنتعاون جميعاً لنصل للقمة</p>
+        </div>
+
+        <div class="card card-10" data-index="9">
+            <div class="card-icon">❤️</div>
+            <h2 class="card-title">نحبكم ونؤمن بكم</h2>
+            <p class="card-subtitle">أنتم فخرنا وأملنا<br>ونثق أنكم ستحققون أحلامكم</p>
+        </div>
+    </div>
+
+    <!-- مؤشر التقدم -->
+    <div class="progress-container" id="progressContainer"></div>
+
+    <script>
+        // إنشاء النجوم
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.width = Math.random() * 3 + 1 + 'px';
+            star.style.height = star.style.width;
+            starsContainer.appendChild(star);
+        }
+
+        // عرض التاريخ
+        const dateDisplay = document.getElementById('dateDisplay');
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateDisplay.textContent = today.toLocaleDateString('ar-SA', options);
+
+        // البطاقات
+        const cards = document.querySelectorAll('.card');
+        const progressContainer = document.getElementById('progressContainer');
+        let currentIndex = 0;
+        const totalCards = cards.length;
+        const displayDuration = 8000; // 8 ثواني لكل بطاقة
+
+        // إنشاء مؤشرات التقدم
+        for (let i = 0; i < totalCards; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'progress-dot';
+            dot.addEventListener('click', () => goToCard(i));
+            progressContainer.appendChild(dot);
+        }
+
+        const progressDots = document.querySelectorAll('.progress-dot');
+
+        function showCard(index) {
+            cards.forEach((card, i) => {
+                card.classList.remove('active');
+                progressDots[i].classList.remove('active');
+            });
+            
+            cards[index].classList.add('active');
+            progressDots[index].classList.add('active');
+        }
+
+        function goToCard(index) {
+            currentIndex = index;
+            showCard(currentIndex);
+        }
+
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % totalCards;
+            showCard(currentIndex);
+        }
+
+        // بدء العرض
+        showCard(0);
+        setInterval(nextCard, displayDuration);
+
+        // التنقل بالكيبورد
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                currentIndex = (currentIndex - 1 + totalCards) % totalCards;
+                showCard(currentIndex);
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                currentIndex = (currentIndex + 1) % totalCards;
+                showCard(currentIndex);
+            }
+        });
+    </script>
+</body>
+</html>
