@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بطاقات تحفيزية - أهلاً بعودتكم</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
+    <title>بطاقات الإسراء والمعراج</title>
     <style>
         * {
             margin: 0;
@@ -12,441 +11,483 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --gold: #D4AF37;
-            --gold-light: #F4E4BA;
-            --deep-blue: #1a237e;
-            --royal-purple: #4a148c;
-            --emerald: #00695c;
-            --warm-orange: #e65100;
-            --crimson: #b71c1c;
-        }
-
         body {
-            font-family: 'Tajawal', sans-serif;
-            min-height: 100vh;
-            overflow: hidden;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-            position: relative;
-        }
-
-        /* خلفية النجوم المتحركة */
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .star {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        /* العنوان الرئيسي */
-        .main-header {
-            text-align: center;
-            padding: 30px 20px 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .welcome-text {
-            font-family: 'Amiri', serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
-            animation: shimmer 3s ease-in-out infinite;
-            margin-bottom: 10px;
-        }
-
-        .sub-header {
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-        }
-
-        @keyframes shimmer {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.3); }
-        }
-
-        /* حاوية البطاقات */
-        .cards-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 180px);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
-            position: relative;
-            z-index: 10;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 3em;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
         }
 
         .card {
-            position: absolute;
-            width: 85vw;
-            max-width: 900px;
-            min-height: 400px;
-            border-radius: 30px;
-            padding: 50px 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            opacity: 0;
-            transform: scale(0.8) translateY(50px);
-            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
             overflow: hidden;
         }
 
         .card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
-            animation: shine 4s infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
         }
 
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
-        .card.active {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-
-        .card-icon {
-            font-size: 5rem;
-            margin-bottom: 25px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        .card-number {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .card-title {
-            font-size: 2.8rem;
-            font-weight: 900;
+            color: #667eea;
+            font-size: 1.8em;
             margin-bottom: 20px;
-            line-height: 1.4;
+            margin-top: 10px;
+            font-weight: bold;
+            padding-right: 60px;
         }
 
-        .card-subtitle {
-            font-size: 1.6rem;
-            font-weight: 500;
-            opacity: 0.9;
+        .card-content {
+            color: #333;
+            font-size: 1.2em;
             line-height: 1.8;
+            margin-bottom: 20px;
         }
 
-        /* تصميمات البطاقات المختلفة */
-        .card-1 {
-            background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
-            color: white;
-            border: 3px solid rgba(255, 215, 0, 0.3);
+        .quran-verse {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border-right: 5px solid #667eea;
+            margin-top: 20px;
         }
 
-        .card-2 {
-            background: linear-gradient(135deg, #00695c 0%, #00897b 50%, #26a69a 100%);
-            color: white;
-            border: 3px solid rgba(255, 255, 255, 0.2);
+        .verse-text {
+            color: #2d3748;
+            font-size: 1.3em;
+            line-height: 2;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
 
-        .card-3 {
-            background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 50%, #8e24aa 100%);
-            color: white;
-            border: 3px solid rgba(255, 215, 0, 0.3);
+        .verse-reference {
+            color: #667eea;
+            font-size: 1em;
+            font-weight: bold;
+            text-align: left;
         }
 
-        .card-4 {
-            background: linear-gradient(135deg, #e65100 0%, #f57c00 50%, #ff9800 100%);
-            color: white;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .card-5 {
-            background: linear-gradient(135deg, #b71c1c 0%, #c62828 50%, #d32f2f 100%);
-            color: white;
-            border: 3px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .card-6 {
-            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%);
-            color: white;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .card-7 {
-            background: linear-gradient(135deg, #2e7d32 0%, #388e3c 50%, #43a047 100%);
-            color: white;
-            border: 3px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .card-8 {
-            background: linear-gradient(135deg, #37474f 0%, #455a64 50%, #546e7a 100%);
-            color: white;
-            border: 3px solid var(--gold);
-        }
-
-        .card-9 {
-            background: linear-gradient(135deg, #6d4c41 0%, #795548 50%, #8d6e63 100%);
-            color: white;
-            border: 3px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .card-10 {
-            background: linear-gradient(135deg, #ad1457 0%, #c2185b 50%, #d81b60 100%);
-            color: white;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-
-        /* مؤشر التقدم */
-        .progress-container {
+        .print-btn {
             position: fixed;
             bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 12px;
-            z-index: 20;
-        }
-
-        .progress-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .progress-dot.active {
-            background: var(--gold);
-            transform: scale(1.3);
-            box-shadow: 0 0 20px var(--gold);
-        }
-
-        /* زخارف إضافية */
-        .decoration {
-            position: fixed;
-            font-size: 3rem;
-            opacity: 0.1;
-            animation: rotate 20s linear infinite;
-        }
-
-        .decoration-1 { top: 10%; left: 5%; }
-        .decoration-2 { top: 20%; right: 8%; animation-direction: reverse; }
-        .decoration-3 { bottom: 15%; left: 10%; }
-        .decoration-4 { bottom: 25%; right: 5%; animation-direction: reverse; }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* التاريخ */
-        .date-display {
-            position: fixed;
-            top: 20px;
             left: 30px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 1.1rem;
-            z-index: 20;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
         }
 
-        .school-name {
-            position: fixed;
-            top: 20px;
-            right: 30px;
-            color: var(--gold);
-            font-size: 1.3rem;
-            font-weight: 700;
-            z-index: 20;
+        .print-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+
+            .print-btn {
+                display: none;
+            }
+
+            .card {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                margin-bottom: 20px;
+            }
+
+            .cards-grid {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .card-title {
+                font-size: 1.4em;
+            }
+
+            .card-content {
+                font-size: 1.1em;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- النجوم -->
-    <div class="stars" id="stars"></div>
+    <div class="container">
+        <h1>🌙 الإسراء والمعراج ✨</h1>
+        
+        <div class="cards-grid">
+            <!-- بطاقة 1 -->
+            <div class="card">
+                <div class="card-number">1</div>
+                <h2 class="card-title">تعريف الإسراء والمعراج</h2>
+                <p class="card-content">
+                    الإسراء: رحلة أرضية من المسجد الحرام بمكة إلى المسجد الأقصى بالقدس.
+                    المعراج: رحلة سماوية من المسجد الأقصى إلى السماوات العُلى.
+                    حدثت هذه المعجزة العظيمة قبل الهجرة بعام واحد.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿سُبْحَانَ الَّذِي أَسْرَىٰ بِعَبْدِهِ لَيْلًا مِّنَ الْمَسْجِدِ الْحَرَامِ إِلَى الْمَسْجِدِ الْأَقْصَى الَّذِي بَارَكْنَا حَوْلَهُ﴾</p>
+                    <p class="verse-reference">سورة الإسراء: الآية 1</p>
+                </div>
+            </div>
 
-    <!-- زخارف -->
-    <div class="decoration decoration-1">✦</div>
-    <div class="decoration decoration-2">✧</div>
-    <div class="decoration decoration-3">⭐</div>
-    <div class="decoration decoration-4">✦</div>
+            <!-- بطاقة 2 -->
+            <div class="card">
+                <div class="card-number">2</div>
+                <h2 class="card-title">توقيت الرحلة المباركة</h2>
+                <p class="card-content">
+                    حدثت رحلة الإسراء والمعراج في ليلة واحدة، وكان النبي ﷺ في مكة المكرمة. 
+                    أُسري به ليلاً وعاد في نفس الليلة، وكان فراشه لا يزال دافئاً.
+                    وقعت هذه المعجزة بعد عام الحزن الذي توفيت فيه السيدة خديجة وعمه أبو طالب.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿سُبْحَانَ الَّذِي أَسْرَىٰ بِعَبْدِهِ لَيْلًا﴾</p>
+                    <p class="verse-reference">سورة الإسراء: الآية 1</p>
+                </div>
+            </div>
 
-    <!-- التاريخ واسم المدرسة -->
-    <div class="date-display" id="dateDisplay"></div>
-    <div class="school-name">مدرسة ابن سينا الابتدائية</div>
+            <!-- بطاقة 3 -->
+            <div class="card">
+                <div class="card-number">3</div>
+                <h2 class="card-title">البداية: شق الصدر</h2>
+                <p class="card-content">
+                    جاء جبريل عليه السلام إلى النبي ﷺ وشق صدره الشريف وأخرج قلبه.
+                    غسل القلب بماء زمزم وملأه بالحكمة والإيمان.
+                    هذه المعجزة حدثت لتهيئة النبي ﷺ لرؤية عظمة الله في السماوات.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ﴾</p>
+                    <p class="verse-reference">سورة الشرح: الآية 1</p>
+                </div>
+            </div>
 
-    <!-- العنوان -->
-    <header class="main-header">
-        <h1 class="welcome-text">أهلاً بعودتكم</h1>
-        <p class="sub-header">عام دراسي مليء بالنجاح والتفوق ✨</p>
-    </header>
+            <!-- بطاقة 4 -->
+            <div class="card">
+                <div class="card-number">4</div>
+                <h2 class="card-title">البُراق: الدابة المعجزة</h2>
+                <p class="card-content">
+                    البُراق دابة بيضاء أسرع من البرق، بين الحمار والبغل.
+                    يضع حافره عند منتهى بصره، حملت النبي ﷺ في هذه الرحلة العظيمة.
+                    رافقه جبريل عليه السلام طوال الرحلة من مكة إلى القدس ثم إلى السماء.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿مِّنَ الْمَسْجِدِ الْحَرَامِ إِلَى الْمَسْجِدِ الْأَقْصَى﴾</p>
+                    <p class="verse-reference">سورة الإسراء: الآية 1</p>
+                </div>
+            </div>
 
-    <!-- البطاقات -->
-    <div class="cards-container">
-        <div class="card card-1" data-index="0">
-            <div class="card-icon">🚀</div>
-            <h2 class="card-title">شُدّوا الهِمَم</h2>
-            <p class="card-subtitle">الطريق إلى القمة يبدأ بخطوة واحدة<br>فاجعلوا كل يوم خطوة نحو النجاح</p>
-        </div>
+            <!-- بطاقة 5 -->
+            <div class="card">
+                <div class="card-number">5</div>
+                <h2 class="card-title">الوصول إلى بيت المقدس</h2>
+                <p class="card-content">
+                    وصل النبي ﷺ إلى المسجد الأقصى في القدس الشريف.
+                    ربط البُراق عند باب المسجد حيث يربط الأنبياء دوابهم.
+                    دخل المسجد الأقصى المبارك الذي بارك الله حوله.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿إِلَى الْمَسْجِدِ الْأَقْصَى الَّذِي بَارَكْنَا حَوْلَهُ﴾</p>
+                    <p class="verse-reference">سورة الإسراء: الآية 1</p>
+                </div>
+            </div>
 
-        <div class="card card-2" data-index="1">
-            <div class="card-icon">⭐</div>
-            <h2 class="card-title">النجاح يبدأ من هنا</h2>
-            <p class="card-subtitle">كل طالب فيكم نجم ساطع<br>يستحق أن يضيء سماء التفوق</p>
-        </div>
+            <!-- بطاقة 6 -->
+            <div class="card">
+                <div class="card-number">6</div>
+                <h2 class="card-title">إمامة الأنبياء</h2>
+                <p class="card-content">
+                    جُمع الأنبياء جميعاً في المسجد الأقصى.
+                    صلى النبي محمد ﷺ بهم إماماً، فكان إمام الأنبياء والمرسلين.
+                    هذا يدل على مكانته العظيمة وأنه خاتم النبيين وإمام المرسلين.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿وَمَا أَرْسَلْنَاكَ إِلَّا رَحْمَةً لِّلْعَالَمِينَ﴾</p>
+                    <p class="verse-reference">سورة الأنبياء: الآية 107</p>
+                </div>
+            </div>
 
-        <div class="card card-3" data-index="2">
-            <div class="card-icon">💪</div>
-            <h2 class="card-title">أنتم قادرون</h2>
-            <p class="card-subtitle">الإرادة القوية تصنع المستحيل<br>وأنتم أصحاب إرادة لا تُقهر</p>
-        </div>
+            <!-- بطاقة 7 -->
+            <div class="card">
+                <div class="card-number">7</div>
+                <h2 class="card-title">الاختبار: اللبن والخمر</h2>
+                <p class="card-content">
+                    عُرض على النبي ﷺ إناءان: أحدهما فيه لبن والآخر فيه خمر.
+                    اختار النبي ﷺ اللبن، فقال جبريل: "هُديت للفطرة".
+                    دليل على اختيار الحلال والطهارة والفطرة السليمة.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿فَأَقِمْ وَجْهَكَ لِلدِّينِ حَنِيفًا فِطْرَتَ اللَّهِ الَّتِي فَطَرَ النَّاسَ عَلَيْهَا﴾</p>
+                    <p class="verse-reference">سورة الروم: الآية 30</p>
+                </div>
+            </div>
 
-        <div class="card card-4" data-index="3">
-            <div class="card-icon">🏆</div>
-            <h2 class="card-title">التفوق عادة</h2>
-            <p class="card-subtitle">من اجتهد اليوم حصد غداً<br>فازرعوا الاجتهاد تحصدوا التفوق</p>
-        </div>
+            <!-- بطاقة 8 -->
+            <div class="card">
+                <div class="card-number">8</div>
+                <h2 class="card-title">الصعود إلى السماء الأولى</h2>
+                <p class="card-content">
+                    صعد النبي ﷺ مع جبريل إلى السماء الأولى.
+                    استأذن جبريل فُفتح لهما، ورأى النبي ﷺ آدم عليه السلام.
+                    رحب آدم بالنبي ﷺ وقال: "مرحباً بالابن الصالح والنبي الصالح".
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿وَلَقَدْ رَآهُ نَزْلَةً أُخْرَىٰ * عِندَ سِدْرَةِ الْمُنتَهَىٰ﴾</p>
+                    <p class="verse-reference">سورة النجم: الآيتان 13-14</p>
+                </div>
+            </div>
 
-        <div class="card card-5" data-index="4">
-            <div class="card-icon">📚</div>
-            <h2 class="card-title">العلم نور</h2>
-            <p class="card-subtitle">اطلبوا العلم من المهد إلى اللحد<br>فالعلم يرفع صاحبه درجات</p>
-        </div>
+            <!-- بطاقة 9 -->
+            <div class="card">
+                <div class="card-number">9</div>
+                <h2 class="card-title">السماء الثانية: يحيى وعيسى</h2>
+                <p class="card-content">
+                    في السماء الثانية التقى النبي ﷺ بيحيى وعيسى عليهما السلام.
+                    كانا ابني الخالة، ورحبا بالنبي ﷺ وسلما عليه.
+                    دعيا له بالخير والبركة في رسالته.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿وَزَكَرِيَّا وَيَحْيَىٰ وَعِيسَىٰ وَإِلْيَاسَ كُلٌّ مِّنَ الصَّالِحِينَ﴾</p>
+                    <p class="verse-reference">سورة الأنعام: الآية 85</p>
+                </div>
+            </div>
 
-        <div class="card card-6" data-index="5">
-            <div class="card-icon">🎯</div>
-            <h2 class="card-title">حدد هدفك</h2>
-            <p class="card-subtitle">من عرف هدفه سهل عليه الطريق<br>فاجعل النجاح هدفك الأول</p>
-        </div>
+            <!-- بطاقة 10 -->
+            <div class="card">
+                <div class="card-number">10</div>
+                <h2 class="card-title">السماء الثالثة: يوسف</h2>
+                <p class="card-content">
+                    في السماء الثالثة لقي النبي ﷺ يوسف عليه السلام.
+                    كان يوسف قد أُعطي شطر الحُسن، فكان جميلاً جداً.
+                    رحب بالنبي ﷺ ودعا له بالخير والنجاح في دعوته.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿لَقَدْ كَانَ فِي يُوسُفَ وَإِخْوَتِهِ آيَاتٌ لِّلسَّائِلِينَ﴾</p>
+                    <p class="verse-reference">سورة يوسف: الآية 7</p>
+                </div>
+            </div>
 
-        <div class="card card-7" data-index="6">
-            <div class="card-icon">🌟</div>
-            <h2 class="card-title">تميّز واختلف</h2>
-            <p class="card-subtitle">كن مختلفاً وتميّز عن الآخرين<br>فالتميز سمة الناجحين</p>
-        </div>
+            <!-- بطاقة 11 -->
+            <div class="card">
+                <div class="card-number">11</div>
+                <h2 class="card-title">السماء الرابعة: إدريس</h2>
+                <p class="card-content">
+                    في السماء الرابعة التقى النبي ﷺ بإدريس عليه السلام.
+                    إدريس من الأنبياء الأوائل الذين رفعهم الله مكاناً علياً.
+                    سلم على النبي ﷺ ورحب به وسأل الله له التوفيق.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿وَاذْكُرْ فِي الْكِتَابِ إِدْرِيسَ إِنَّهُ كَانَ صِدِّيقًا نَّبِيًّا * وَرَفَعْنَاهُ مَكَانًا عَلِيًّا﴾</p>
+                    <p class="verse-reference">سورة مريم: الآيتان 56-57</p>
+                </div>
+            </div>
 
-        <div class="card card-8" data-index="7">
-            <div class="card-icon">💡</div>
-            <h2 class="card-title">الإبداع طريقك</h2>
-            <p class="card-subtitle">فكّر خارج الصندوق<br>وابتكر طرقاً جديدة للتعلم</p>
-        </div>
+            <!-- بطاقة 12 -->
+            <div class="card">
+                <div class="card-number">12</div>
+                <h2 class="card-title">السماء الخامسة: هارون</h2>
+                <p class="card-content">
+                    في السماء الخامسة لقي النبي ﷺ هارون عليه السلام.
+                    كان هارون أخا موسى ووزيره وشريكه في الرسالة.
+                    رحب بالنبي محمد ﷺ وبشره بالنصر والتمكين.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿وَوَهَبْنَا لَهُ مِن رَّحْمَتِنَا أَخَاهُ هَارُونَ نَبِيًّا﴾</p>
+                    <p class="verse-reference">سورة مريم: الآية 53</p>
+                </div>
+            </div>
 
-        <div class="card card-9" data-index="8">
-            <div class="card-icon">🤝</div>
-            <h2 class="card-title">معاً نحو القمة</h2>
-            <p class="card-subtitle">التعاون سر النجاح<br>فلنتعاون جميعاً لنصل للقمة</p>
-        </div>
+            <!-- بطاقة 13 -->
+            <div class="card">
+                <div class="card-number">13</div>
+                <h2 class="card-title">السماء السادسة: موسى</h2>
+                <p class="card-content">
+                    في السماء السادسة التقى النبي ﷺ بموسى عليه السلام.
+                    كان موسى كليم الله الذي كلمه الله تكليماً.
+                    بكى موسى لأن أمة محمد ستدخل الجنة أكثر من أمته.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿وَكَلَّمَ اللَّهُ مُوسَىٰ تَكْلِيمًا﴾</p>
+                    <p class="verse-reference">سورة النساء: الآية 164</p>
+                </div>
+            </div>
 
-        <div class="card card-10" data-index="9">
-            <div class="card-icon">❤️</div>
-            <h2 class="card-title">نحبكم ونؤمن بكم</h2>
-            <p class="card-subtitle">أنتم فخرنا وأملنا<br>ونثق أنكم ستحققون أحلامكم</p>
+            <!-- بطاقة 14 -->
+            <div class="card">
+                <div class="card-number">14</div>
+                <h2 class="card-title">السماء السابعة: إبراهيم</h2>
+                <p class="card-content">
+                    في السماء السابعة رأى النبي ﷺ إبراهيم الخليل عليه السلام.
+                    كان إبراهيم مستنداً ظهره إلى البيت المعمور.
+                    رحب بالنبي ﷺ وقال: "مرحباً بالابن الصالح والنبي الصالح".
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿وَاتَّخَذَ اللَّهُ إِبْرَاهِيمَ خَلِيلًا﴾</p>
+                    <p class="verse-reference">سورة النساء: الآية 125</p>
+                </div>
+            </div>
+
+            <!-- بطاقة 15 -->
+            <div class="card">
+                <div class="card-number">15</div>
+                <h2 class="card-title">البيت المعمور</h2>
+                <p class="card-content">
+                    رأى النبي ﷺ البيت المعمور في السماء السابعة.
+                    يدخله سبعون ألف ملك كل يوم يتعبدون فيه ثم لا يعودون إليه.
+                    هو بيت الملائكة كما الكعبة بيت أهل الأرض.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿وَالْبَيْتِ الْمَعْمُورِ﴾</p>
+                    <p class="verse-reference">سورة الطور: الآية 4</p>
+                </div>
+            </div>
+
+            <!-- بطاقة 16 -->
+            <div class="card">
+                <div class="card-number">16</div>
+                <h2 class="card-title">سدرة المنتهى</h2>
+                <p class="card-content">
+                    وصل النبي ﷺ إلى سدرة المنتهى، وهي شجرة عظيمة في السماء السابعة.
+                    تغشاها الملائكة وألوان لا توصف من جمال خلق الله.
+                    عندها ينتهي علم المخلوقات، ولا يتجاوزها أحد إلا بإذن الله.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿عِندَ سِدْرَةِ الْمُنتَهَىٰ * عِندَهَا جَنَّةُ الْمَأْوَىٰ * إِذْ يَغْشَى السِّدْرَةَ مَا يَغْشَىٰ﴾</p>
+                    <p class="verse-reference">سورة النجم: الآيات 14-16</p>
+                </div>
+            </div>
+
+            <!-- بطاقة 17 -->
+            <div class="card">
+                <div class="card-number">17</div>
+                <h2 class="card-title">رؤية الجنة والنار</h2>
+                <p class="card-content">
+                    أُريَ النبي ﷺ الجنة ونعيمها العظيم وما أعده الله للمؤمنين.
+                    ورأى النار وعذابها وما أعده الله للكافرين والعصاة.
+                    رأى أصناف المعذبين وأنواع عذابهم بما كانوا يعملون.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿لَقَدْ رَأَىٰ مِنْ آيَاتِ رَبِّهِ الْكُبْرَىٰ﴾</p>
+                    <p class="verse-reference">سورة النجم: الآية 18</p>
+                </div>
+            </div>
+
+            <!-- بطاقة 18 -->
+            <div class="card">
+                <div class="card-number">18</div>
+                <h2 class="card-title">فرض الصلاة</h2>
+                <p class="card-content">
+                    كلم الله نبيه محمداً ﷺ وفرض عليه خمسين صلاة في اليوم والليلة.
+                    نزل النبي ﷺ فلقيه موسى وأشار عليه بالرجوع والسؤال عن التخفيف.
+                    ظل النبي ﷺ يتردد بين موسى والله حتى خُففت إلى خمس صلوات.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا﴾</p>
+                    <p class="verse-reference">سورة النساء: الآية 103</p>
+                </div>
+            </div>
+
+            <!-- بطاقة 19 -->
+            <div class="card">
+                <div class="card-number">19</div>
+                <h2 class="card-title">أجر الخمس صلوات</h2>
+                <p class="card-content">
+                    قال الله تعالى: "هي خمس صلوات وهن خمسون في الأجر".
+                    كل صلاة بعشر صلوات، فالخمس بخمسين في الميزان.
+                    هذا من فضل الله ورحمته بأمة محمد ﷺ.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿مَن جَاءَ بِالْحَسَنَةِ فَلَهُ عَشْرُ أَمْثَالِهَا﴾</p>
+                    <p class="verse-reference">سورة الأنعام: الآية 160</p>
+                </div>
+            </div>
+
+            <!-- بطاقة 20 -->
+            <div class="card">
+                <div class="card-number">20</div>
+                <h2 class="card-title">العودة إلى مكة</h2>
+                <p class="card-content">
+                    عاد النبي ﷺ إلى مكة في نفس الليلة قبل الفجر.
+                    أخبر قريشاً بما حدث فكذبه الكافرون وصدقه المؤمنون.
+                    وصف لهم بيت المقدس وصفاً دقيقاً فتعجبوا من صدق وصفه.
+                </p>
+                <div class="quran-verse">
+                    <p class="verse-text">﴿مَّا ضَلَّ صَاحِبُكُمْ وَمَا غَوَىٰ * وَمَا يَنطِقُ عَنِ الْهَوَىٰ * إِنْ هُوَ إِلَّا وَحْيٌ يُوحَىٰ﴾</p>
+                    <p class="verse-reference">سورة النجم: الآيات 2-4</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- مؤشر التقدم -->
-    <div class="progress-container" id="progressContainer"></div>
+    <button class="print-btn" onclick="window.print()">🖨️ طباعة البطاقات</button>
 
-    <script>
-        // إنشاء النجوم
-        const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
-            star.style.width = Math.random() * 3 + 1 + 'px';
-            star.style.height = star.style.width;
-            starsContainer.appendChild(star);
-        }
-
-        // عرض التاريخ
-        const dateDisplay = document.getElementById('dateDisplay');
-        const today = new Date();
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        dateDisplay.textContent = today.toLocaleDateString('ar-SA', options);
-
-        // البطاقات
-        const cards = document.querySelectorAll('.card');
-        const progressContainer = document.getElementById('progressContainer');
-        let currentIndex = 0;
-        const totalCards = cards.length;
-        const displayDuration = 8000; // 8 ثواني لكل بطاقة
-
-        // إنشاء مؤشرات التقدم
-        for (let i = 0; i < totalCards; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'progress-dot';
-            dot.addEventListener('click', () => goToCard(i));
-            progressContainer.appendChild(dot);
-        }
-
-        const progressDots = document.querySelectorAll('.progress-dot');
-
-        function showCard(index) {
-            cards.forEach((card, i) => {
-                card.classList.remove('active');
-                progressDots[i].classList.remove('active');
-            });
-            
-            cards[index].classList.add('active');
-            progressDots[index].classList.add('active');
-        }
-
-        function goToCard(index) {
-            currentIndex = index;
-            showCard(currentIndex);
-        }
-
-        function nextCard() {
-            currentIndex = (currentIndex + 1) % totalCards;
-            showCard(currentIndex);
-        }
-
-        // بدء العرض
-        showCard(0);
-        setInterval(nextCard, displayDuration);
-
-        // التنقل بالكيبورد
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-                currentIndex = (currentIndex - 1 + totalCards) % totalCards;
-                showCard(currentIndex);
-            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-                currentIndex = (currentIndex + 1) % totalCards;
-                showCard(currentIndex);
-            }
-        });
-    </script>
 </body>
 </html>
