@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>شاشة رمضان</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family: "Tahoma";
+    background: radial-gradient(circle at center,#0c2b44,#061725,#020b12);
+    color:white;
+    overflow:hidden;
+}
+
+/* العنوان */
+.title{
+    text-align:center;
+    font-size:75px;
+    margin-top:25px;
+    color:#ffd369;
+    text-shadow:0 0 35px gold;
+    font-weight:bold;
+}
+
+/* الهلال */
+.moon{
+    position:absolute;
+    left:60px;
+    top:60px;
+    width:140px;
+    height:140px;
+    border-radius:50%;
+    box-shadow: 30px 0 0 0 #ffd369;
+}
+
+/* نجوم */
+.star{
+    position:absolute;
+    width:3px;
+    height:3px;
+    background:white;
+    border-radius:50%;
+    animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle{
+    from{opacity:0.2;}
+    to{opacity:1;}
+}
+
+/* البطاقة الكبيرة */
+.slide{
+    position:absolute;
+    width:75%;
+    left:50%;
+    top:55%;
+    transform:translate(-50%,-50%);
+    background:rgba(255,255,255,0.07);
+    padding:70px;
+    border-radius:35px;
+    box-shadow:0 0 45px rgba(255,215,0,0.25);
+    backdrop-filter:blur(7px);
+    text-align:center;
+    opacity:0;
+    transition:1.5s;
+}
+
+.slide.active{
+    opacity:1;
+}
+
+/* عنوان البطاقة */
+.slide h2{
+    font-size:60px;
+    color:#ffd369;
+    margin-bottom:35px;
+}
+
+/* النص */
+.slide p{
+    font-size:40px;
+    line-height:2;
+}
+
+/* الآيات */
+.quran{
+    margin-top:35px;
+    font-size:42px;
+    color:#aef3ff;
+    line-height:2.1;
+}
+
+.footer{
+    position:absolute;
+    bottom:15px;
+    width:100%;
+    text-align:center;
+    font-size:26px;
+    color:#ddd;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="moon"></div>
+
+<div class="title">رمضان كريم</div>
+
+<!-- البطاقات -->
+
+<div class="slide active">
+<h2>🌙 فضل الصيام</h2>
+<p>الصيام يربي النفس على الصبر ويقوي الإرادة ويقرّب الإنسان من ربه</p>
+<div class="quran">
+كيف نحقق الطمأنينة؟<br>
+• قراءة القرآن والأذكار<br>
+• الدعاء قبل الإفطار<br>
+• صلاة التراويح مع الجماعة
+</div>
+</div>
+
+<div class="footer">
+مدرستنا تتمنى لكم رمضان مبارك
+</div>
+
+<script>
+
+/* انتقال تلقائي */
+let slides = document.querySelectorAll(".slide");
+let index = 0;
+
+function nextSlide(){
+
+    slides[index].classList.remove("active");
+
+    index++;
+    if(index >= slides.length) index = 0;
+
+    slides[index].classList.add("active");
+}
+
+setInterval(nextSlide, 12000);
+
+/* توليد نجوم */
+for(let i=0;i<80;i++){
+    let s=document.createElement("div");
+    s.className="star";
+    s.style.left=Math.random()*100+"%";
+    s.style.top=Math.random()*100+"%";
+    s.style.animationDuration=(Math.random()*3+1)+"s";
+    document.body.appendChild(s);
+}
+
+</script>
+
+</body>
+</html>
