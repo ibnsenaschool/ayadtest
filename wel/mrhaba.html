@@ -1,193 +1,422 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحة الأزرار الملونة</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رمضان كريم - رسائل للطلاب</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --deep: #0D1B2A;
+    --deep2: #1B2D40;
+    --cream: #FAF3E0;
+    --emerald: #1A6B4A;
+    --moon: #F5E6C8;
+  }
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px;
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 50px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+  body {
+    background: var(--deep);
+    font-family: 'Cairo', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
 
-        .title {
-            text-align: center;
-            color: white;
-            font-size: 42px;
-            font-weight: bold;
-            margin-bottom: 40px;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
-            letter-spacing: 1px;
-        }
+  /* Stars background */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.1; transform: scale(0.8); }
+    to   { opacity: 0.9; transform: scale(1.2); }
+  }
 
-        .buttons-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 25px;
-            max-width: 900px;
-        }
+  /* Moon decoration */
+  .moon {
+    position: fixed;
+    top: 30px;
+    left: 50px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--moon);
+    box-shadow: 0 0 40px rgba(245,230,200,0.4), 0 0 80px rgba(245,230,200,0.15);
+    z-index: 1;
+    animation: moonGlow 4s ease-in-out infinite alternate;
+  }
+  .moon::after {
+    content:'';
+    position:absolute;
+    top:8px; left:12px;
+    width:55px; height:55px;
+    border-radius:50%;
+    background: var(--deep);
+  }
+  @keyframes moonGlow {
+    from { box-shadow: 0 0 30px rgba(245,230,200,0.3); }
+    to   { box-shadow: 0 0 60px rgba(245,230,200,0.6), 0 0 100px rgba(245,230,200,0.2); }
+  }
 
-        .btn {
-            width: 150px;
-            height: 150px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+  /* Lantern decoration */
+  .lantern {
+    position: fixed;
+    right: 60px;
+    top: 20px;
+    z-index: 1;
+    animation: swing 6s ease-in-out infinite;
+    transform-origin: top center;
+  }
+  .lantern-body {
+    width: 40px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--gold), #8B6914);
+    border-radius: 8px 8px 20px 20px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(201,168,76,0.6), inset 0 0 15px rgba(255,200,0,0.3);
+  }
+  .lantern-top {
+    width: 48px;
+    height: 12px;
+    background: var(--gold);
+    border-radius: 4px;
+    margin-left: -4px;
+    margin-bottom: 2px;
+  }
+  .lantern-string {
+    width: 2px;
+    height: 30px;
+    background: var(--gold);
+    margin: 0 auto;
+  }
+  @keyframes swing {
+    0%,100% { transform: rotate(-8deg); }
+    50%      { transform: rotate(8deg); }
+  }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
+  /* Header */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    text-align: center;
+    padding: 20px;
+    z-index: 10;
+  }
+  header h1 {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(201,168,76,0.5);
+    letter-spacing: 2px;
+  }
+  header p {
+    color: var(--moon);
+    font-size: 0.95rem;
+    opacity: 0.8;
+    margin-top: 4px;
+  }
 
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
+  /* Cards Stage */
+  .stage {
+    position: relative;
+    width: min(500px, 90vw);
+    height: min(320px, 55vh);
+    z-index: 5;
+    margin-top: 20px;
+  }
 
-        .btn:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-        }
+  .card {
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(60px) scale(0.9);
+    transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+  }
+  .card.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+  }
+  .card.exit {
+    opacity: 0;
+    transform: translateY(-60px) scale(0.95);
+  }
 
-        .btn:active {
-            transform: translateY(-5px) scale(0.98);
-        }
+  /* Card themes */
+  .card-quran {
+    background: linear-gradient(145deg, rgba(26,107,74,0.85), rgba(13,40,25,0.95));
+    border: 1px solid rgba(201,168,76,0.4);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(26,107,74,0.2), inset 0 1px 0 rgba(201,168,76,0.2);
+  }
+  .card-patience {
+    background: linear-gradient(145deg, rgba(70,30,110,0.9), rgba(20,10,40,0.95));
+    border: 1px solid rgba(201,168,76,0.35);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(70,30,110,0.3), inset 0 1px 0 rgba(201,168,76,0.2);
+  }
+  .card-goodness {
+    background: linear-gradient(145deg, rgba(150,90,20,0.85), rgba(40,20,0,0.95));
+    border: 1px solid rgba(201,168,76,0.4);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(150,90,20,0.25), inset 0 1px 0 rgba(201,168,76,0.2);
+  }
 
-        .btn1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .btn2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .btn3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .btn4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .btn5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-        .btn6 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
-        .btn7 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
-        .btn8 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
-        .btn9 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
-        .btn10 { background: linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%); }
-        .btn11 { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
-        .btn12 { background: linear-gradient(135deg, #f77062 0%, #fe5196 100%); }
-        .btn13 { background: linear-gradient(135deg, #c471f5 0%, #fa71cd 100%); }
-        .btn14 { background: linear-gradient(135deg, #48c6ef 0%, #6f86d6 100%); }
-        .btn15 { background: linear-gradient(135deg, #f857a6 0%, #ff5858 100%); }
+  .card-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    animation: iconFloat 3s ease-in-out infinite;
+  }
+  @keyframes iconFloat {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px;
-            }
-            
-            .title {
-                font-size: 28px;
-                margin-bottom: 30px;
-            }
-            
-            .buttons-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 15px;
-            }
-            
-            .btn {
-                width: 120px;
-                height: 120px;
-            }
-        }
-    </style>
+  .card-label {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+    opacity: 0.8;
+  }
+
+  .card h2 {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    color: var(--gold);
+    line-height: 1.5;
+    margin-bottom: 14px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+
+  .card p {
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    color: var(--moon);
+    line-height: 1.9;
+    opacity: 0.9;
+  }
+
+  /* Progress dots */
+  .dots {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+    z-index: 5;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.3);
+    transition: all 0.4s ease;
+    cursor: pointer;
+  }
+  .dot.active {
+    background: var(--gold);
+    transform: scale(1.3);
+    box-shadow: 0 0 10px var(--gold);
+  }
+
+  /* Timer bar */
+  .timer-bar {
+    position: fixed;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--emerald));
+    width: 0%;
+    transition: width linear;
+    z-index: 20;
+    box-shadow: 0 0 8px var(--gold);
+  }
+
+  /* Footer */
+  footer {
+    position: fixed;
+    bottom: 12px;
+    font-size: 0.75rem;
+    color: rgba(245,230,200,0.4);
+    z-index: 5;
+    letter-spacing: 1px;
+  }
+
+  /* Ornament */
+  .ornament {
+    color: var(--gold);
+    opacity: 0.5;
+    font-size: 1.2rem;
+    margin: 10px 0 0;
+    letter-spacing: 6px;
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">مدرسة ابن سينا الابتدائية</h1>
-        <div class="buttons-grid">
-            <button class="btn btn1" onclick="openLink('link1')"></button>
-            <button class="btn btn2" onclick="openLink('link2')"></button>
-            <button class="btn btn3" onclick="openLink('link3')"></button>
-            <button class="btn btn4" onclick="openLink('link4')"></button>
-            <button class="btn btn5" onclick="openLink('link5')"></button>
-            <button class="btn btn6" onclick="openLink('link6')"></button>
-            <button class="btn btn7" onclick="openLink('link7')"></button>
-            <button class="btn btn8" onclick="openLink('link8')"></button>
-            <button class="btn btn9" onclick="openLink('link9')"></button>
-            <button class="btn btn10" onclick="openLink('link10')"></button>
-            <button class="btn btn11" onclick="openLink('link11')"></button>
-            <button class="btn btn12" onclick="openLink('link12')"></button>
-            <button class="btn btn13" onclick="openLink('link13')"></button>
-            <button class="btn btn14" onclick="openLink('link14')"></button>
-            <button class="btn btn15" onclick="openLink('link15')"></button>
-        </div>
-    </div>
 
-    <script>
-        // قم بتعديل أسماء الأزرار والروابط هنا
-        const buttonData = {
-            link1: { name: 'سوروكا', url: 'https://ibnsenaschool.github.io/ayadtest/wel/all/index.html' },
-            link2: { name: 'ترحيب', url: 'https://ibnsenaschool.github.io/ayadtest/wel/tr7eb/hi.html' },
-            link3: { name: 'العوده للمدرسه', url: 'https://ibnsenaschool.github.io/ayadtest/wel/motivation-cards.html' },
-            link4: { name: 'متفوقين', url: 'https://ibnsenaschool.github.io/ayadtest/wel/motfokon/students-slideshow.html' },
-            link5: { name: 'clean', url: 'https://ibnsenaschool.github.io/ayadtest/wel/clean.html' },
-            link6: { name: 'clean1', url: 'https://ibnsenaschool.github.io/ayadtest/wel/clean1.html' },
-            link7: { name: 'من ذاكرة الزمان', url: 'https://ibnsenaschool.github.io/ayadtest/wel/f3aleat/f3aleat.html' },
-            link8: { name: 'نصائح يوميه', url: 'https://ibnsenaschool.github.io/ayadtest/wel/test/index.html' },
-            link9: { name: 'رمضان', url: 'https://ibnsenaschool.github.io/ayadtest/wel/rmadan.html' },
-            link10: { name: 'أيات', url: 'https://ibnsenaschool.github.io/ayadtest/wel/isl/isl.html' },
-            link11: { name: 'مجلس طلاب', url: 'https://ibnsenaschool.github.io/ayadtest/wel/anth/anth.html' },
-            link12: { name: 'هذا الاسبوع', url: 'https://ibnsenaschool.github.io/ayadtest/wel/calendar.html' },
-            link13: { name: 'حساب', url: 'https://ibnsenaschool.github.io/ayadtest/wel/math/math.html' },
-            link14: { name: 'زيتون', url: 'https://ibnsenaschool.github.io/ayadtest/wel/f3aleat/show.html' },
-            link15: { name: 'لا للعنف', url: 'https://ibnsenaschool.github.io/ayadtest/wel/f3aleat/f3aleat.html' }
-        };
+<div class="stars" id="stars"></div>
+<div class="moon"></div>
 
-        // إضافة أسماء الأزرار عند تحميل الصفحة
-        window.addEventListener('DOMContentLoaded', function() {
-            const buttons = document.querySelectorAll('.btn');
-            buttons.forEach((button, index) => {
-                const linkKey = 'link' + (index + 1);
-                button.textContent = buttonData[linkKey].name;
-            });
-        });
+<div class="lantern">
+  <div class="lantern-string"></div>
+  <div class="lantern-top"></div>
+  <div class="lantern-body"></div>
+</div>
 
-        function openLink(linkKey) {
-            const data = buttonData[linkKey];
-            if (data && data.url) {
-                window.open(data.url, '_blank');
-            }
-        }
-    </script>
+<header>
+  <h1>رمضان كريم 🌙</h1>
+  <p>رسائل مضيئة لكل طالب في هذا الشهر المبارك</p>
+</header>
+
+<div class="stage" id="stage">
+
+  <div class="card card-quran" data-index="0">
+    <div class="card-icon">📖</div>
+    <div class="card-label">القرآن الكريم</div>
+    <h2>اجعل القرآن رفيقك في رمضان</h2>
+    <p>ضع هدفاً يومياً لقراءة حزب أو جزء من القرآن الكريم،<br>فكل حرف تقرؤه نور يضيء قلبك وعقلك.</p>
+    <div class="ornament">✦ ✦ ✦</div>
+  </div>
+
+  <div class="card card-patience" data-index="1">
+    <div class="card-icon">⏳</div>
+    <div class="card-label">الصبر</div>
+    <h2>رمضان مدرسة الصبر والإرادة</h2>
+    <p>حين تصبر على الجوع والعطش، تعلّم أن تصبر على صعوبات الدراسة،<br>فالصبر مفتاح كل نجاح عظيم.</p>
+    <div class="ornament">✦ ✦ ✦</div>
+  </div>
+
+  <div class="card card-goodness" data-index="2">
+    <div class="card-icon">🤲</div>
+    <div class="card-label">فعل الخير</div>
+    <h2>افعل الخير وابدأ بمن حولك</h2>
+    <p>ابتسامة لزميلك، مساعدة لصديقك، وكلمة طيبة لمعلمك،<br>كلها حسنات تتضاعف في هذا الشهر المبارك.</p>
+    <div class="ornament">✦ ✦ ✦</div>
+  </div>
+
+  <div class="card card-quran" data-index="3">
+    <div class="card-icon">🌟</div>
+    <div class="card-label">التلاوة اليومية</div>
+    <h2>ورتّل القرآن ترتيلاً</h2>
+    <p>خصّص عشر دقائق بعد كل صلاة لتلاوة آيات من كتاب الله،<br>ستجد أن فهمك للدراسة يتحسّن وقلبك يطمئن.</p>
+    <div class="ornament">✦ ✦ ✦</div>
+  </div>
+
+  <div class="card card-patience" data-index="4">
+    <div class="card-icon">💪</div>
+    <div class="card-label">الإرادة والعزيمة</div>
+    <h2>رمضان يبني شخصيتك القوية</h2>
+    <p>كل يوم تصوم فيه هو تدريب على ضبط النفس والانضباط،<br>وهذه هي المهارة الأهم في حياة الطالب المتفوق.</p>
+    <div class="ornament">✦ ✦ ✦</div>
+  </div>
+
+  <div class="card card-goodness" data-index="5">
+    <div class="card-icon">❤️</div>
+    <div class="card-label">التكافل</div>
+    <h2>شارك الفرحة مع الجميع</h2>
+    <p>تصدّق ولو بالقليل، وأطعم محتاجاً، وكن سبباً في سعادة أحد،<br>فالعطاء يُعود عليك بالبركة في وقتك وعلمك.</p>
+    <div class="ornament">✦ ✦ ✦</div>
+  </div>
+
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="timer-bar" id="timerBar"></div>
+<footer>رمضان مبارك على جميع الطلاب 🌙</footer>
+
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for(let i=0;i<120;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const size=Math.random()*2.5+0.5;
+    s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${Math.random()*3+2}s;animation-delay:${Math.random()*3}s`;
+    starsEl.appendChild(s);
+  }
+
+  // Cards logic
+  const cards = document.querySelectorAll('.card');
+  const dotsEl = document.getElementById('dots');
+  const timerBar = document.getElementById('timerBar');
+  const DURATION = 5000;
+  let current = 0;
+  let timer = null;
+  let startTime = null;
+  let rafId = null;
+
+  // Build dots
+  cards.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' active':'');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  function getDots(){ return document.querySelectorAll('.dot'); }
+
+  function goTo(index) {
+    cards[current].classList.remove('active');
+    cards[current].classList.add('exit');
+    setTimeout(() => cards[current].classList.remove('exit'), 800);
+
+    getDots()[current].classList.remove('active');
+    current = index;
+    cards[current].classList.add('active');
+    getDots()[current].classList.add('active');
+
+    resetTimer();
+  }
+
+  function next() {
+    goTo((current + 1) % cards.length);
+  }
+
+  function resetTimer() {
+    cancelAnimationFrame(rafId);
+    timerBar.style.transition = 'none';
+    timerBar.style.width = '0%';
+    startTime = performance.now();
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(animate);
+    });
+  }
+
+  function animate(ts) {
+    const elapsed = ts - startTime;
+    const pct = Math.min((elapsed / DURATION) * 100, 100);
+    timerBar.style.transition = 'none';
+    timerBar.style.width = pct + '%';
+    if (pct < 100) {
+      rafId = requestAnimationFrame(animate);
+    } else {
+      next();
+    }
+  }
+
+  // Start
+  cards[0].classList.add('active');
+  resetTimer();
+</script>
 </body>
 </html>
