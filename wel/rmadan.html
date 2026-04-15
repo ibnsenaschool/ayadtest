@@ -3,451 +3,420 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>رمضان كريم - رسائل للطلاب</title>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<title>مدرسة ابن سينا — عودة التعلم</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #E8C97A;
-    --deep: #0D1B2A;
-    --deep2: #1B2D40;
-    --cream: #FAF3E0;
-    --emerald: #1A6B4A;
-    --moon: #F5E6C8;
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --green: #1D9E75; --green-l: #E1F5EE; --green-d: #085041;
+  --blue:  #378ADD; --blue-l:  #E6F1FB; --blue-d:  #185FA5;
+  --amber: #EF9F27; --amber-l: #FAEEDA; --amber-d: #854F0B;
+  --purple:#7F77DD; --purple-l:#EEEDFE; --purple-d:#3C3489;
+  --coral: #D85A30; --coral-l: #FAECE7; --coral-d: #712B13;
+  --pink:  #D4537E; --pink-l:  #FBEAF0; --pink-d:  #72243E;
+  --teal:  #0F6E56; --teal-l:  #E1F5EE; --teal-d:  #04342C;
+}
 
-  body {
-    background: var(--deep);
-    font-family: 'Cairo', sans-serif;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: 'Tajawal', sans-serif;
+  background: #07111f;
+}
 
-  /* Stars background */
-  .stars {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .star {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle var(--d) ease-in-out infinite alternate;
-  }
-  @keyframes twinkle {
-    from { opacity: 0.1; transform: scale(0.8); }
-    to   { opacity: 0.9; transform: scale(1.2); }
-  }
+canvas#bg { position: fixed; inset: 0; z-index: 0; }
 
-  /* Moon decoration */
-  .moon {
-    position: fixed;
-    top: 40px;
-    left: 80px;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: var(--moon);
-    box-shadow: 0 0 60px rgba(245,230,200,0.4), 0 0 120px rgba(245,230,200,0.15);
-    z-index: 1;
-    animation: moonGlow 4s ease-in-out infinite alternate;
-  }
-  .moon::after {
-    content:'';
-    position:absolute;
-    top:16px; left:24px;
-    width:110px; height:110px;
-    border-radius:50%;
-    background: var(--deep);
-  }
-  @keyframes moonGlow {
-    from { box-shadow: 0 0 30px rgba(245,230,200,0.3); }
-    to   { box-shadow: 0 0 60px rgba(245,230,200,0.6), 0 0 100px rgba(245,230,200,0.2); }
-  }
+/* TOP BAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+  height: 8vh; min-height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 4vw;
+  background: rgba(7,17,31,0.65);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
 
-  /* Lantern decoration */
-  .lantern {
-    position: fixed;
-    right: 100px;
-    top: 20px;
-    z-index: 1;
-    animation: swing 6s ease-in-out infinite;
-    transform-origin: top center;
-  }
-  .lantern-body {
-    width: 90px;
-    height: 150px;
-    background: linear-gradient(135deg, var(--gold), #8B6914);
-    border-radius: 16px 16px 45px 45px;
-    position: relative;
-    box-shadow: 0 0 40px rgba(201,168,76,0.6), inset 0 0 30px rgba(255,200,0,0.3);
-  }
-  .lantern-top {
-    width: 106px;
-    height: 24px;
-    background: var(--gold);
-    border-radius: 8px;
-    margin-left: -8px;
-    margin-bottom: 4px;
-  }
-  .lantern-string {
-    width: 4px;
-    height: 60px;
-    background: var(--gold);
-    margin: 0 auto;
-  }
-  @keyframes swing {
-    0%,100% { transform: rotate(-8deg); }
-    50%      { transform: rotate(8deg); }
-  }
+.school-label {
+  display: flex; align-items: center; gap: 12px;
+  font-size: clamp(15px, 2vw, 34px); font-weight: 900; color: #fff;
+}
 
-  /* Header */
-  header {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    text-align: center;
-    padding: 36px 20px 24px;
-    z-index: 10;
-  }
-  header h1 {
-    font-family: 'Amiri', serif;
-    font-size: clamp(3rem, 6vw, 7rem);
-    color: var(--gold);
-    text-shadow: 0 0 40px rgba(201,168,76,0.5);
-    letter-spacing: 4px;
-  }
-  header p {
-    color: var(--moon);
-    font-size: clamp(1.2rem, 2vw, 2.2rem);
-    opacity: 0.8;
-    margin-top: 8px;
-  }
+.live-dot {
+  width: clamp(10px,1.1vw,18px); height: clamp(10px,1.1vw,18px);
+  border-radius: 50%; background: var(--green);
+  animation: livePulse 2s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(29,158,117,.7); }
+  50%      { box-shadow: 0 0 0 clamp(6px,.8vw,14px) rgba(29,158,117,0); }
+}
 
-  /* Cards Stage */
-  .stage {
-    position: relative;
-    width: min(1600px, 88vw);
-    height: min(700px, 62vh);
-    z-index: 5;
-    margin-top: 30px;
-  }
+.card-index {
+  font-size: clamp(14px,1.6vw,28px); font-weight: 700;
+  color: rgba(255,255,255,.5);
+}
+.card-index strong { color: #fff; font-weight: 900; }
 
-  .card {
-    position: absolute;
-    inset: 0;
-    border-radius: 48px;
-    padding: 80px 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(80px) scale(0.9);
-    transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
-    pointer-events: none;
-    backdrop-filter: blur(10px);
-  }
-  .card.active {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: all;
-  }
-  .card.exit {
-    opacity: 0;
-    transform: translateY(-80px) scale(0.95);
-  }
+/* PROGRESS */
+.progress-rail {
+  position: fixed; top: 8vh; top: max(8vh,56px); left: 0; right: 0; z-index: 20;
+  height: 5px; background: rgba(255,255,255,.08);
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--green), #5DCAA5);
+  transition: width .35s ease; border-radius: 0 3px 3px 0;
+}
 
-  /* Card themes */
-  .card-quran {
-    background: linear-gradient(145deg, rgba(26,107,74,0.85), rgba(13,40,25,0.95));
-    border: 1px solid rgba(201,168,76,0.4);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(26,107,74,0.2), inset 0 1px 0 rgba(201,168,76,0.2);
-  }
-  .card-patience {
-    background: linear-gradient(145deg, rgba(70,30,110,0.9), rgba(20,10,40,0.95));
-    border: 1px solid rgba(201,168,76,0.35);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(70,30,110,0.3), inset 0 1px 0 rgba(201,168,76,0.2);
-  }
-  .card-goodness {
-    background: linear-gradient(145deg, rgba(150,90,20,0.85), rgba(40,20,0,0.95));
-    border: 1px solid rgba(201,168,76,0.4);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(150,90,20,0.25), inset 0 1px 0 rgba(201,168,76,0.2);
-  }
+/* STAGE */
+.stage {
+  position: fixed; inset: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+  padding: calc(max(8vh,56px) + 5px) 5vw 11vh;
+}
 
-  .card-icon {
-    font-size: 7rem;
-    margin-bottom: 28px;
-    animation: iconFloat 3s ease-in-out infinite;
-  }
-  @keyframes iconFloat {
-    0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-14px); }
-  }
+.card-wrap { width: 100%; max-width: 1700px; height: 100%; position: relative; }
 
-  .card-label {
-    font-size: clamp(1rem, 1.5vw, 1.8rem);
-    letter-spacing: 4px;
-    color: var(--gold-light);
-    margin-bottom: 20px;
-    opacity: 0.85;
-  }
+/* CARD */
+.card {
+  position: absolute; inset: 0;
+  border-radius: clamp(18px,2.5vw,52px);
+  padding: clamp(24px,3.5vw,80px) clamp(28px,4.5vw,100px);
+  display: flex; flex-direction: column; justify-content: space-between;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(140px) scale(0.93);
+  transition: opacity .65s cubic-bezier(.4,0,.2,1), transform .65s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+}
+.card.active  { opacity: 1; transform: translateX(0) scale(1); pointer-events: all; }
+.card.out-ltr { opacity: 0; transform: translateX(-140px) scale(0.93); }
+.card.out-rtl { opacity: 0; transform: translateX(140px) scale(0.93); }
 
-  .card h2 {
-    font-family: 'Amiri', serif;
-    font-size: clamp(1.8rem, 3.2vw, 4rem);
-    color: var(--gold);
-    line-height: 1.7;
-    margin-bottom: 28px;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
-  }
+/* blobs */
+.card::before, .card::after { content: ''; position: absolute; border-radius: 50%; }
+.card::before { width: 55%; height: 55%; top: -18%; left: -12%; opacity: .09; background: var(--cb); }
+.card::after  { width: 38%; height: 38%; bottom: -10%; right: -6%; opacity: .06; background: var(--cb); }
 
-  .card p {
-    font-size: clamp(1rem, 1.8vw, 2.2rem);
-    color: var(--moon);
-    line-height: 2;
-    opacity: 0.9;
-  }
+/* card header */
+.c-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  position: relative; z-index: 2;
+}
 
-  /* Progress dots */
-  .dots {
-    display: flex;
-    gap: 20px;
-    margin-top: 40px;
-    z-index: 5;
-  }
-  .dot {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: rgba(201,168,76,0.3);
-    transition: all 0.4s ease;
-    cursor: pointer;
-  }
-  .dot.active {
-    background: var(--gold);
-    transform: scale(1.4);
-    box-shadow: 0 0 20px var(--gold);
-  }
+.c-icon {
+  width: clamp(60px,7.5vw,145px); height: clamp(60px,7.5vw,145px);
+  border-radius: clamp(14px,1.8vw,36px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(30px,4.2vw,82px);
+  background: rgba(255,255,255,.17);
+  border: 2px solid rgba(255,255,255,.24);
+}
 
-  /* Timer bar */
-  .timer-bar {
-    position: fixed;
-    bottom: 0; left: 0;
-    height: 6px;
-    background: linear-gradient(90deg, var(--gold), var(--emerald));
-    width: 0%;
-    transition: width linear;
-    z-index: 20;
-    box-shadow: 0 0 14px var(--gold);
-  }
+.c-num {
+  font-size: clamp(52px,9vw,160px); font-weight: 900; line-height: 1;
+  color: rgba(255,255,255,.1); letter-spacing: -4px;
+}
 
-  /* Footer */
-  footer {
-    position: fixed;
-    bottom: 18px;
-    font-size: clamp(1rem, 1.5vw, 1.8rem);
-    color: rgba(245,230,200,0.4);
-    z-index: 5;
-    letter-spacing: 2px;
-  }
+/* card body */
+.c-body {
+  flex: 1; z-index: 2; position: relative;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(16px,2.5vh,60px) 0;
+}
 
-  /* Ornament */
-  .ornament {
-    color: var(--gold);
-    opacity: 0.5;
-    font-size: clamp(1.5rem, 2vw, 2.5rem);
-    margin: 20px 0 0;
-    letter-spacing: 12px;
-  }
+.c-title {
+  font-size: clamp(26px,4.2vw,86px); font-weight: 900; color: #fff;
+  line-height: 1.25; margin-bottom: clamp(12px,1.8vh,38px);
+  animation: up .55s ease .15s both;
+}
+
+.c-line {
+  height: 3px; border-radius: 2px;
+  background: rgba(255,255,255,.2); margin-bottom: clamp(12px,1.8vh,38px);
+  position: relative; z-index: 2;
+  animation: expand .5s ease .25s both;
+}
+@keyframes expand { from { transform: scaleX(0); transform-origin: right; } to { transform: scaleX(1); } }
+
+.c-text {
+  font-size: clamp(15px,2.1vw,42px); color: rgba(255,255,255,.82);
+  line-height: 1.8; max-width: 88%;
+  animation: up .55s ease .3s both;
+}
+
+@keyframes up {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* card footer */
+.c-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; z-index: 2;
+}
+
+.c-tag {
+  font-size: clamp(12px,1.4vw,28px); font-weight: 700;
+  padding: clamp(5px,.7vw,14px) clamp(14px,1.6vw,34px);
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.28);
+  color: #fff;
+  animation: up .55s ease .45s both;
+}
+
+/* ── GRADIENT THEMES ── */
+.c-green  { --cb:#1D9E75; background: linear-gradient(140deg,#062e1f 0%,#0d5e3d 40%,#1D9E75 100%); }
+.c-blue   { --cb:#378ADD; background: linear-gradient(140deg,#050f24 0%,#0d2d5e 40%,#378ADD 100%); }
+.c-amber  { --cb:#EF9F27; background: linear-gradient(140deg,#1e0f00 0%,#6b3f05 40%,#EF9F27 100%); }
+.c-purple { --cb:#7F77DD; background: linear-gradient(140deg,#100e30 0%,#3b3580 40%,#7F77DD 100%); }
+.c-coral  { --cb:#D85A30; background: linear-gradient(140deg,#1c0700 0%,#6b2208 40%,#D85A30 100%); }
+.c-pink   { --cb:#D4537E; background: linear-gradient(140deg,#1a0610 0%,#6b2040 40%,#D4537E 100%); }
+.c-teal   { --cb:#0F6E56; background: linear-gradient(140deg,#031a11 0%,#084530 40%,#0F6E56 100%); }
+
+/* DOTS */
+.dots-bar {
+  position: fixed; bottom: 2.8vh; left: 50%; transform: translateX(-50%); z-index: 20;
+  display: flex; gap: clamp(7px,.9vw,16px); align-items: center;
+  background: rgba(7,17,31,.55); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.09); border-radius: 999px;
+  padding: clamp(7px,.9vh,14px) clamp(14px,1.8vw,30px);
+}
+.dot {
+  width: clamp(8px,.85vw,15px); height: clamp(8px,.85vw,15px);
+  border-radius: 50%; background: rgba(255,255,255,.22);
+  cursor: pointer; transition: background .25s, transform .25s;
+}
+.dot.on { background: var(--green); transform: scale(1.45); }
+
+/* TIMER RING */
+.timer-wrap {
+  position: fixed; bottom: calc(2.8vh + clamp(38px,5vh,72px)); left: 4vw; z-index: 20;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.timer-svg { overflow: visible; }
+.t-track { fill: none; stroke: rgba(255,255,255,.12); stroke-width: 4; }
+.t-fill  { fill: none; stroke: var(--green); stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset .12s linear; }
+.t-num   { font-size: clamp(9px,1vw,17px); color: rgba(255,255,255,.4); font-weight: 500; font-family: 'Tajawal',sans-serif; }
+
+/* NAV ARROWS */
+.nav {
+  position: fixed; top: 50%; transform: translateY(-50%); z-index: 20;
+  width: clamp(42px,4vw,78px); height: clamp(42px,4vw,78px); border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.18); background: rgba(7,17,31,.5);
+  backdrop-filter: blur(10px); color: #fff; cursor: pointer;
+  font-size: clamp(16px,1.9vw,32px);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, border-color .2s, transform .15s;
+}
+.nav:hover { background: var(--green); border-color: var(--green); transform: translateY(-50%) scale(1.1); }
+.nav-r { right: 1.8vw; }
+.nav-l { left: 1.8vw; }
+
+/* PAUSE */
+.pause {
+  position: fixed; bottom: calc(2.8vh + clamp(38px,5vh,72px)); right: 4vw; z-index: 20;
+  width: clamp(42px,3.8vw,70px); height: clamp(42px,3.8vw,70px); border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.18); background: rgba(7,17,31,.5);
+  backdrop-filter: blur(10px); color: rgba(255,255,255,.7); cursor: pointer;
+  font-size: clamp(14px,1.6vw,26px);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, color .2s;
+}
+.pause:hover { background: rgba(255,255,255,.15); color: #fff; }
 </style>
 </head>
 <body>
+<canvas id="bg"></canvas>
 
-<div class="stars" id="stars"></div>
-<div class="moon"></div>
+<div class="topbar">
+  <div class="school-label"><div class="live-dot"></div>مدرسة ابن سينا الابتدائية</div>
+  <div class="card-index">البطاقة <strong id="cn">1</strong> من <strong>15</strong></div>
+</div>
+<div class="progress-rail"><div class="progress-fill" id="pf"></div></div>
 
-<div class="lantern">
-  <div class="lantern-string"></div>
-  <div class="lantern-top"></div>
-  <div class="lantern-body"></div>
+<div class="stage">
+  <div class="card-wrap" id="cw"></div>
 </div>
 
-<header>
-  <h1>رمضان كريم 🌙</h1>
-  <p>أجر مساعدة الوالدين في شهر رمضان المبارك</p>
-</header>
-
-<div class="stage" id="stage">
-
-  <div class="card card-quran" data-index="0">
-    <div class="card-icon">🌟</div>
-    <div class="card-label">البطاقة ١ • رضا الله في رضاهما</div>
-    <h2>مساعدة والديك في رمضان تفتح أبواب الجنة</h2>
-    <p>قال النبي ﷺ: «رِضَا اللهِ في رِضَا الوَالِدَيْنِ، وَسَخَطُ اللهِ في سَخَطِ الوَالِدَيْنِ»<br>فكلُّ مساعدة تُقدِّمها لهما في هذا الشهر هي قربةٌ عظيمة تُرضي ربَّك.</p>
-    <div class="ornament">✦ ✦ ✦</div>
-  </div>
-
-  <div class="card card-patience" data-index="1">
-    <div class="card-icon">🍽️</div>
-    <div class="card-label">البطاقة ٢ • إعداد الإفطار</div>
-    <h2>أعِن أمَّك في إعداد الإفطار وانَل أجر الصائمين</h2>
-    <p>قال ﷺ: «مَن فَطَّرَ صَائِماً كَانَ لَهُ مِثلُ أَجرِهِ»<br>حين تساعد في تحضير مائدة الإفطار تنال أجراً مضاعفاً بإذن الله.</p>
-    <div class="ornament">✦ ✦ ✦</div>
-  </div>
-
-  <div class="card card-goodness" data-index="2">
-    <div class="card-icon">🤲</div>
-    <div class="card-label">البطاقة ٣ • الدعاء لهما</div>
-    <h2>أدعُ لوالديك في رمضان فالدعاء فيه مستجاب</h2>
-    <p>ثلاثة دعوات لا تُرَدّ، منها دعوة الوالد لولده.<br>فادعُ لهما في السحر وعند الإفطار، ففي رمضان تُفتح أبواب القبول.</p>
-    <div class="ornament">✦ ✦ ✦</div>
-  </div>
-
-  <div class="card card-quran" data-index="3">
-    <div class="card-icon">💛</div>
-    <div class="card-label">البطاقة ٤ • الآية الكريمة</div>
-    <h2>﴿ وَقَضَىٰ رَبُّكَ أَلَّا تَعْبُدُوا إِلَّا إِيَّاهُ وَبِالْوَالِدَيْنِ إِحْسَانًا ﴾</h2>
-    <p>قرن الله الإحسان للوالدين بعبادته مباشرةً، فمساعدتهما ليست واجباً عادياً بل هي عبادة بعبادة الله في أفضل شهوره.</p>
-    <div class="ornament">✦ ✦ ✦</div>
-  </div>
-
-  <div class="card card-patience" data-index="4">
-    <div class="card-icon">🕌</div>
-    <div class="card-label">البطاقة ٥ • الأجر المضاعف</div>
-    <h2>كل عمل صالح في رمضان يُضاعَف أجره سبعين ضعفاً</h2>
-    <p>قال ﷺ عن رمضان: «مَن تَقَرَّبَ فيهِ بِخَصلَةٍ مِنَ الخَيرِ كَانَ كَمَن أَدَّى فَريضَةً فِيما سِواهُ»<br>فمساعدتك لوالديك يومياً في رمضان تعادل فريضة كاملة!</p>
-    <div class="ornament">✦ ✦ ✦</div>
-  </div>
-
-  <div class="card card-goodness" data-index="5">
-    <div class="card-icon">☕</div>
-    <div class="card-label">البطاقة ٦ • السحور</div>
-    <h2>أيقِظ والديك للسحور وأنت تكسب حسنات</h2>
-    <p>السحور بركة ورحمة من الله، وحين تنهض لتوقظ والديك وتُعِدَّ لهم السحور تجمع بين بركة السحور وبرّ الوالدين في آنٍ واحد.</p>
-    <div class="ornament">✦ ✦ ✦</div>
-  </div>
-
-  <div class="card card-quran" data-index="6">
-    <div class="card-icon">📿</div>
-    <div class="card-label">البطاقة ٧ • الصلاة معاً</div>
-    <h2>صلِّ التراويح مع والديك وتضاعف الأجر</h2>
-    <p>صلاة الجماعة أفضل من صلاة الفرد بسبع وعشرين درجة.<br>حين تُرافق والديك إلى المسجد أو تصلّي معهم في البيت تنال بركة الصلاة وبركة صحبتهما معاً.</p>
-    <div class="ornament">✦ ✦ ✦</div>
-  </div>
-
-  <div class="card card-patience" data-index="7">
-    <div class="card-icon">🧹</div>
-    <div class="card-label">البطاقة ٨ • خدمة البيت</div>
-    <h2>تخفيف الأعباء عن والديك صدقةٌ وبرٌّ</h2>
-    <p>قال ﷺ: «الصَّدَقَةُ تُطفِئُ الخَطِيئَةَ كَمَا يُطفِئُ المَاءُ النَّارَ»<br>كنس البيت، وترتيبه، وغسل الأطباق في رمضان صدقةٌ جارية تُطفئ الذنوب وتُبهج قلوب والديك.</p>
-    <div class="ornament">✦ ✦ ✦</div>
-  </div>
-
-  <div class="card card-goodness" data-index="8">
-    <div class="card-icon">❤️</div>
-    <div class="card-label">البطاقة ٩ • كلمة طيبة</div>
-    <h2>الكلمة الطيبة لوالديك صدقة تُضاعَف في رمضان</h2>
-    <p>قال ﷺ: «الكَلِمَةُ الطَّيِّبَةُ صَدَقَةٌ»<br>قُل لأمك "أحبك" وشكر أباك على تعبه، فهذه الكلمات البسيطة في رمضان تملأ ميزانك بالحسنات.</p>
-    <div class="ornament">✦ ✦ ✦</div>
-  </div>
-
-  <div class="card card-quran" data-index="9">
-    <div class="card-icon">🌅</div>
-    <div class="card-label">البطاقة ١٠ • الختام</div>
-    <h2>الجنة تحت أقدام الأمهات — فكيف في رمضان؟</h2>
-    <p>قال ﷺ: «الجَنَّةُ تَحتَ أَقدَامِ الأُمَّهَاتِ»<br>استثمر رمضان لتُجدِّد علاقتك بوالديك بالخدمة والمحبة والدعاء، فهذا هو الطريق الأقصر إلى رضوان الله وجنَّته.</p>
-    <div class="ornament">✦ ✦ ✦</div>
-  </div>
-
+<div class="timer-wrap">
+  <svg class="timer-svg" id="tsvg" viewBox="0 0 54 54"
+       style="width:clamp(44px,4.5vw,80px);height:clamp(44px,4.5vw,80px);">
+    <circle class="t-track" cx="27" cy="27" r="22"/>
+    <circle class="t-fill" id="tc" cx="27" cy="27" r="22"
+      stroke-dasharray="138.23" stroke-dashoffset="0"
+      transform="rotate(-90 27 27)"/>
+  </svg>
+  <div class="t-num" id="tl">8</div>
 </div>
 
-<div class="dots" id="dots"></div>
-<div class="timer-bar" id="timerBar"></div>
-<footer>رمضان مبارك على جميع الطلاب 🌙</footer>
+<button class="pause" id="pb">⏸</button>
+<button class="nav nav-r" onclick="nav(1)">&#8592;</button>
+<button class="nav nav-l" onclick="nav(-1)">&#8594;</button>
+<div class="dots-bar" id="db"></div>
 
 <script>
-  // Stars
-  const starsEl = document.getElementById('stars');
-  for(let i=0;i<220;i++){
-    const s=document.createElement('div');
-    s.className='star';
-    const size=Math.random()*5+1;
-    s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${Math.random()*3+2}s;animation-delay:${Math.random()*3}s`;
-    starsEl.appendChild(s);
+const DATA = [
+  {icon:"🧠",title:"عقلك يحتاج للتمرين",text:"الدماغ مثل العضلة — حين لا نستخدمه يضعف. بعد شهرين من الراحة، التعلم المنتظم يُعيد نشاط عقلك ويزيد من قدرتك على التركيز والفهم.",tag:"علم وإثبات",c:"c-green",n:"01"},
+  {icon:"👫",title:"أصدقاؤك ينتظرونك",text:"الفصل ناقص بدونك! التواصل مع الأقران ضروري لنموك النفسي. المدرسة هي المكان الذي تتعلم فيه مهارات الصداقة والتعاون الحقيقي.",tag:"التواصل الاجتماعي",c:"c-blue",n:"02"},
+  {icon:"🏆",title:"حافظ على ما تعلمته",text:"الأبحاث التربوية تُثبت أن الطالب يفقد ما بين 30–50% من مهاراته خلال فترات الانقطاع. العودة للمدرسة تحمي كل جهد بذلته من قبل.",tag:"حافظ على إنجازاتك",c:"c-amber",n:"03"},
+  {icon:"🌱",title:"القيم تُغرس في المدرسة",text:"المدرسة ليست فقط مكاناً للعلم، بل بيئة تُبنى فيها القيم النبيلة كالأمانة والاحترام والتعاون — وهذه القيم تشكّل شخصيتك مدى الحياة.",tag:"التربية والقيم",c:"c-purple",n:"04"},
+  {icon:"🚀",title:"مستقبلك يبدأ اليوم",text:"كل طيار وطبيب ومهندس بدأ تماماً من حيث أنت الآن. كل درس تتعلمه هو لبنة في بناء حلمك. لا تدع الانقطاع يسرق مستقبلك.",tag:"رسالة وهدف",c:"c-coral",n:"05"},
+  {icon:"💡",title:"الفضول يُولد العبقرية",text:"المدرسة تُطلق شرارة الفضول وتُعلمك كيف تسأل وتبحث وتكتشف. العلماء العظام كانوا أطفالاً فضوليين يحبون التعلم تماماً مثلك.",tag:"التفكير الإبداعي",c:"c-pink",n:"06"},
+  {icon:"⚖️",title:"الانضباط يصنع الناجحين",text:"المواظبة على المدرسة تُعلمك الانضباط وإدارة الوقت. الطالب المنتظم يصبح إنساناً ناجحاً منظماً قادراً على تحقيق أهدافه في الحياة.",tag:"مهارات الحياة",c:"c-teal",n:"07"},
+  {icon:"❤️",title:"الصحة النفسية تحتاج روتيناً",text:"الدراسات النفسية تُثبت أن الروتين اليومي يُقلل القلق ويُعزز الشعور بالأمان عند الأطفال. المدرسة توفر هذا الإيقاع الصحي الضروري.",tag:"الصحة النفسية",c:"c-green",n:"08"},
+  {icon:"🤲",title:"العلم واجب ديني مقدس",text:"قال رسولنا الكريم ﷺ: «طلب العلم فريضة على كل مسلم». عودتك للمدرسة هي أداء لواجب ديني وتحقيق لمراد الله منك. ابدأ بنية صادقة.",tag:"القيمة الدينية",c:"c-amber",n:"09"},
+  {icon:"🎨",title:"اكتشف موهبتك الخفية",text:"في المدرسة ستكتشف ما تُبدع فيه — رسم أم رياضيات أم رياضة أم لغة. الموهبة لا تُكتشف في البيت وحده، بل تحتاج بيئة داعمة وفرصة حقيقية.",tag:"اكتشاف الذات",c:"c-purple",n:"10"},
+  {icon:"🗣️",title:"تعلّم كيف تُعبّر عن نفسك",text:"المدرسة تُعلمك مهارات التواصل — كيف تتحدث أمام الآخرين وتدافع عن رأيك وتستمع بإنصاف. هذه المهارة لا توجد في مكان آخر غير الفصل الدراسي.",tag:"مهارات التواصل",c:"c-coral",n:"11"},
+  {icon:"🌍",title:"أنت جزء من مجتمع كبير",text:"المدرسة تُعلمك أنك لست وحدك في هذا العالم. احترام الآخرين والتعاون معهم وتحمّل المسؤولية تجاه مجتمعك — هذا هو الإنسان الحقيقي الكامل.",tag:"المسؤولية المجتمعية",c:"c-pink",n:"12"},
+  {icon:"📖",title:"القراءة تُفتح أبواب العالم",text:"كل كتاب تقرأه يفتح نافذة على عالم جديد لم تره من قبل. الطفل الذي يُحب القراءة يمتلك خيالاً واسعاً وقدرة إبداعية لا حدود لها مدى الحياة.",tag:"حب الاستطلاع",c:"c-teal",n:"13"},
+  {icon:"🌟",title:"أسرتك تفتخر بك كل يوم",text:"حين تذهب للمدرسة وتتعلم وتجتهد، تملأ قلب أمك وأبوك بالفرح والاعتزاز. أهدِهم أجمل هدية في حياتهم: تفوقك واجتهادك ونجاحك.",tag:"فرحة العائلة",c:"c-green",n:"14"},
+  {icon:"✨",title:"اليوم يبدأ فصل جديد بك أنت",text:"الشجرة العظيمة كانت يوماً بذرة صغيرة. أنت الآن في أهم مرحلة حياتك. لا تُضيّع هذه الفرصة الذهبية — ابدأ اليوم واصنع مستقبلاً تفتخر به.",tag:"رسالة ختامية",c:"c-amber",n:"15"}
+];
+
+const CIRC = 2 * Math.PI * 22;
+const DELAY = 8000;
+
+let cur = 0, paused = false, transitioning = false;
+let startTs = null, elapsed = 0, raf = null;
+
+/* BUILD CARDS */
+const cw = document.getElementById('cw');
+DATA.forEach((d,i) => {
+  const el = document.createElement('div');
+  el.className = `card ${d.c}`;
+  el.id = `c${i}`;
+  el.innerHTML = `
+    <div class="c-head">
+      <div class="c-icon">${d.icon}</div>
+      <div class="c-num">${d.n}</div>
+    </div>
+    <div class="c-body">
+      <div class="c-title">${d.title}</div>
+      <div class="c-line"></div>
+      <div class="c-text">${d.text}</div>
+    </div>
+    <div class="c-foot"><div class="c-tag">${d.tag}</div></div>`;
+  cw.appendChild(el);
+});
+
+/* BUILD DOTS */
+const db = document.getElementById('db');
+DATA.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0?' on':'');
+  d.onclick = () => goTo(i);
+  db.appendChild(d);
+});
+
+/* SHOW */
+function show(idx, dir) {
+  if (transitioning) return;
+  transitioning = true;
+  const prev = document.querySelector('.card.active');
+  const next = document.getElementById(`c${idx}`);
+  if (prev) {
+    prev.classList.remove('active');
+    prev.classList.add(dir >= 0 ? 'out-ltr' : 'out-rtl');
+    setTimeout(() => prev.classList.remove('out-ltr','out-rtl'), 700);
   }
-
-  // Cards logic
-  const cards = document.querySelectorAll('.card');
-  const dotsEl = document.getElementById('dots');
-  const timerBar = document.getElementById('timerBar');
-  const DURATION = 5000;
-  let current = 0;
-  let timer = null;
-  let startTime = null;
-  let rafId = null;
-
-  // Build dots
-  cards.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i===0?' active':'');
-    d.addEventListener('click', () => goTo(i));
-    dotsEl.appendChild(d);
+  // re-trigger animations
+  next.querySelectorAll('.c-icon,.c-title,.c-line,.c-text,.c-tag').forEach(e => {
+    e.style.animation = 'none'; e.offsetHeight; e.style.animation = '';
   });
+  next.classList.add('active');
+  cur = idx;
+  document.getElementById('cn').textContent = idx + 1;
+  document.getElementById('pf').style.width = ((idx+1)/DATA.length*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i===idx));
+  setTimeout(() => { transitioning = false; }, 700);
+}
 
-  function getDots(){ return document.querySelectorAll('.dot'); }
-
-  function goTo(index) {
-    cards[current].classList.remove('active');
-    cards[current].classList.add('exit');
-    setTimeout(() => cards[current].classList.remove('exit'), 800);
-
-    getDots()[current].classList.remove('active');
-    current = index;
-    cards[current].classList.add('active');
-    getDots()[current].classList.add('active');
-
-    resetTimer();
-  }
-
-  function next() {
-    goTo((current + 1) % cards.length);
-  }
-
-  function resetTimer() {
-    cancelAnimationFrame(rafId);
-    timerBar.style.transition = 'none';
-    timerBar.style.width = '0%';
-    startTime = performance.now();
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(animate);
-    });
-  }
-
-  function animate(ts) {
-    const elapsed = ts - startTime;
-    const pct = Math.min((elapsed / DURATION) * 100, 100);
-    timerBar.style.transition = 'none';
-    timerBar.style.width = pct + '%';
-    if (pct < 100) {
-      rafId = requestAnimationFrame(animate);
-    } else {
-      next();
-    }
-  }
-
-  // Start
-  cards[0].classList.add('active');
+function goTo(idx, dir) {
+  const d = dir !== undefined ? dir : (idx >= cur ? 1 : -1);
+  show(idx, d);
   resetTimer();
+}
+
+function nav(d) { goTo((cur + d + DATA.length) % DATA.length, d); }
+
+/* TIMER */
+const tc = document.getElementById('tc');
+const tl = document.getElementById('tl');
+tc.setAttribute('stroke-dasharray', CIRC);
+
+function resetTimer() { elapsed = 0; startTs = null; }
+
+function tick(ts) {
+  if (!startTs) startTs = ts;
+  if (!paused) elapsed = ts - startTs;
+  const ratio = Math.min(elapsed / DELAY, 1);
+  tc.setAttribute('stroke-dashoffset', CIRC * ratio);
+  tl.textContent = Math.ceil((DELAY - elapsed) / 1000);
+  if (elapsed >= DELAY && !transitioning) {
+    show((cur + 1) % DATA.length, 1);
+    startTs = ts; elapsed = 0;
+  }
+  raf = requestAnimationFrame(tick);
+}
+
+/* PAUSE */
+const pb = document.getElementById('pb');
+pb.onclick = () => {
+  paused = !paused;
+  pb.textContent = paused ? '▶' : '⏸';
+  if (!paused) {
+    const saved = elapsed;
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(ts => { startTs = ts - saved; raf = requestAnimationFrame(tick); });
+  }
+};
+
+/* KEYBOARD */
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key==='ArrowUp')   nav(1);
+  if (e.key==='ArrowLeft' ||e.key==='ArrowDown')  nav(-1);
+  if (e.key===' ') pb.click();
+});
+
+/* BG CANVAS */
+const cv = document.getElementById('bg');
+const cx = cv.getContext('2d');
+let pts = [];
+
+function resize() { cv.width = innerWidth; cv.height = innerHeight; }
+function initPts() {
+  pts = Array.from({length:60}, () => ({
+    x: Math.random()*cv.width, y: Math.random()*cv.height,
+    r: Math.random()*2.2+.4,
+    vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.25,
+    a: Math.random()*.3+.04
+  }));
+}
+
+function drawBg() {
+  cx.clearRect(0,0,cv.width,cv.height);
+  const g = cx.createLinearGradient(0,0,cv.width,cv.height);
+  g.addColorStop(0,'#040c18'); g.addColorStop(.5,'#07111f'); g.addColorStop(1,'#050f10');
+  cx.fillStyle = g; cx.fillRect(0,0,cv.width,cv.height);
+  pts.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = cv.width; if (p.x > cv.width) p.x = 0;
+    if (p.y < 0) p.y = cv.height; if (p.y > cv.height) p.y = 0;
+    cx.beginPath(); cx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    cx.fillStyle = `rgba(255,255,255,${p.a})`; cx.fill();
+  });
+  requestAnimationFrame(drawBg);
+}
+
+resize(); initPts(); drawBg();
+window.addEventListener('resize', () => { resize(); initPts(); });
+
+/* START */
+show(0, 1);
+raf = requestAnimationFrame(tick);
 </script>
 </body>
 </html>
