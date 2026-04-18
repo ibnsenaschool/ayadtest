@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>بطاقات جدول الضرب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0f172a;
+      --surface:  #1e293b;
+      --surface2: #273449;
+      --accent:   #6366f1;
+      --accent2:  #818cf8;
+      --green:    #22c55e;
+      --green-bg: #14532d;
+      --green-lt: #86efac;
+      --text:     #f1f5f9;
+      --muted:    #94a3b8;
+      --border:   #334155;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3vw;
+      color: var(--text);
+    }
+
+    .page-title {
+      font-size: clamp(1.8rem, 3.5vw, 4rem);
+      font-weight: 700;
+      color: var(--accent2);
+      margin-bottom: clamp(2rem, 4vh, 5rem);
+      letter-spacing: 3px;
+      text-align: center;
+    }
+
+    .card-shell {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 36px;
+      padding: clamp(3rem, 6vw, 8rem) clamp(4rem, 9vw, 12rem);
+      width: min(1000px, 88vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(2rem, 4.5vh, 5rem);
+    }
+
+    .question-wrap {
+      direction: ltr;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1.2rem, 2.5vw, 3.5rem);
+    }
+
+    .num {
+      font-size: clamp(5rem, 12vw, 13rem);
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .op {
+      font-size: clamp(3.5rem, 8vw, 9rem);
+      font-weight: 400;
+      color: var(--accent2);
+      line-height: 1;
+    }
+
+    .eq {
+      font-size: clamp(3.5rem, 8vw, 9rem);
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1;
+    }
+
+    .q-mark {
+      font-size: clamp(5rem, 12vw, 13rem);
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .timer-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(0.6rem, 1.2vh, 1.5rem);
+    }
+
+    .timer-ring {
+      position: relative;
+      width: clamp(90px, 11vw, 160px);
+      height: clamp(90px, 11vw, 160px);
+    }
+
+    .timer-ring svg {
+      transform: rotate(-90deg);
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .timer-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(2rem, 4.5vw, 5.5rem);
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .timer-label {
+      font-size: clamp(1rem, 1.8vw, 2rem);
+      color: var(--muted);
+    }
+
+    .answer-box {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(0.6rem, 1.2vh, 1.5rem);
+      background: var(--green-bg);
+      border: 2.5px solid var(--green);
+      border-radius: 24px;
+      padding: clamp(1.5rem, 3vw, 4rem) clamp(3.5rem, 7vw, 10rem);
+    }
+
+    .answer-label {
+      font-size: clamp(1.2rem, 2.2vw, 2.8rem);
+      color: var(--green-lt);
+      font-weight: 600;
+    }
+
+    .answer-value {
+      direction: ltr;
+      font-size: clamp(5rem, 12vw, 13rem);
+      font-weight: 900;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .bottom-bar {
+      margin-top: clamp(1rem, 2.5vh, 3rem);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 12px;
+    }
+
+    .dot {
+      width: clamp(12px, 1.4vw, 20px);
+      height: clamp(12px, 1.4vw, 20px);
+      border-radius: 50%;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .dot.on { background: var(--accent); }
+
+    .progress-track {
+      display: none;
+      width: min(500px, 65vw);
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--green);
+      width: 100%;
+      transform-origin: left;
+    }
+
+    .counter-txt {
+      font-size: clamp(1rem, 1.6vw, 1.8rem);
+      color: var(--muted);
+    }
+
+    .header-block {
+      width: min(1000px, 88vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(0.8rem, 1.5vh, 1.8rem);
+      margin-bottom: clamp(1.5rem, 3vh, 3.5rem);
+      text-align: center;
+    }
+
+    .school-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 99px;
+      padding: clamp(0.45rem, 0.9vw, 0.9rem) clamp(1.2rem, 2.5vw, 2.8rem);
+    }
+
+    .school-icon {
+      width: clamp(20px, 2.2vw, 32px);
+      height: clamp(20px, 2.2vw, 32px);
+      flex-shrink: 0;
+    }
+
+    .school-name {
+      font-size: clamp(1rem, 1.8vw, 2.2rem);
+      font-weight: 700;
+      color: var(--accent2);
+      letter-spacing: 1px;
+    }
+
+    .divider-line {
+      width: clamp(60px, 8vw, 120px);
+      height: 1.5px;
+      background: var(--border);
+      border-radius: 99px;
+    }
+
+    .importance-text {
+      font-size: clamp(0.95rem, 1.65vw, 2rem);
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 820px;
+    }
+
+    .importance-text strong {
+      color: var(--accent2);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-block">
+    <div class="school-badge">
+      <svg class="school-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="14" width="24" height="15" rx="2" fill="#6366f1" opacity="0.25"/>
+        <rect x="4" y="14" width="24" height="15" rx="2" stroke="#818cf8" stroke-width="1.5"/>
+        <path d="M16 4L2 13h28L16 4z" fill="#6366f1" opacity="0.35" stroke="#818cf8" stroke-width="1.5" stroke-linejoin="round"/>
+        <rect x="12" y="20" width="8" height="9" rx="1" fill="#818cf8" opacity="0.5"/>
+        <rect x="7" y="18" width="5" height="4" rx="1" fill="#818cf8" opacity="0.4"/>
+        <rect x="20" y="18" width="5" height="4" rx="1" fill="#818cf8" opacity="0.4"/>
+      </svg>
+      <span class="school-name">مدرسة ابن سينا</span>
+    </div>
+    <div class="divider-line"></div>
+    <p class="importance-text">
+      جدول الضرب هو <strong>أساس الرياضيات</strong> — إتقانه يفتح أمامك أبواب
+      الحساب والقسمة والكسور والجبر بسهولة ويسر.
+      كلما حفظته جيداً، <strong>أسرعت في التفكير</strong> وحللت المسائل بثقة واقتدار.
+    </p>
+  </div>
+
+  <div class="page-title">&#10006;&nbsp; جدول الضرب</div>
+
+  <div class="card-shell">
+
+    <div class="question-wrap">
+      <span class="num" id="numA">—</span>
+      <span class="op">×</span>
+      <span class="num" id="numB">—</span>
+      <span class="eq">=</span>
+      <span class="q-mark">?</span>
+    </div>
+
+    <div class="timer-wrap" id="timerWrap">
+      <div class="timer-ring">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#334155" stroke-width="7"/>
+          <circle id="ringArc" cx="50" cy="50" r="42" fill="none"
+            stroke="#6366f1" stroke-width="7"
+            stroke-dasharray="263.9" stroke-dashoffset="0"
+            stroke-linecap="round"/>
+        </svg>
+        <div class="timer-text" id="timerText">5</div>
+      </div>
+      <div class="timer-label">ثانية</div>
+    </div>
+
+    <div class="answer-box" id="answerBox">
+      <div class="answer-label">الإجابة الصحيحة هي:</div>
+      <div class="answer-value" id="answerValue">—</div>
+    </div>
+
+  </div>
+
+  <div class="bottom-bar">
+    <div class="dots">
+      <div class="dot" id="d0"></div>
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+    </div>
+    <div class="progress-track" id="progressTrack">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="counter-txt" id="counterTxt">التمرين الأول</div>
+  </div>
+
+  <script>
+    const CIRC = 2 * Math.PI * 42;
+    let timeLeft, ivId, count = 0, dotIdx = 0, curA, curB;
+
+    function rndQ() {
+      let a, b;
+      do {
+        a = Math.floor(Math.random() * 9) + 2;
+        b = Math.floor(Math.random() * 9) + 2;
+      } while (a * b <= 10);
+      return [a, b];
+    }
+
+    function setRing(frac, color) {
+      const arc = document.getElementById('ringArc');
+      arc.setAttribute('stroke-dashoffset', CIRC * (1 - Math.max(frac, 0)));
+      arc.setAttribute('stroke', color);
+    }
+
+    function rotateDot() {
+      [0,1,2].forEach(i => document.getElementById('d'+i).classList.remove('on'));
+      document.getElementById('d' + dotIdx).classList.add('on');
+      dotIdx = (dotIdx + 1) % 3;
+    }
+
+    function startQ() {
+      count++;
+      clearInterval(ivId);
+      [curA, curB] = rndQ();
+
+      document.getElementById('numA').textContent = curA;
+      document.getElementById('numB').textContent = curB;
+      document.getElementById('timerWrap').style.display = 'flex';
+      document.getElementById('answerBox').style.display = 'none';
+      document.getElementById('progressTrack').style.display = 'none';
+      document.getElementById('counterTxt').textContent =
+        count === 1 ? 'التمرين الأول' : 'التمرين رقم ' + count;
+
+      rotateDot();
+      timeLeft = 5;
+      document.getElementById('timerText').textContent = '5';
+      setRing(1, '#6366f1');
+
+      ivId = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timerText').textContent = timeLeft;
+        setRing(timeLeft / 5, timeLeft <= 1 ? '#e24b4a' : '#6366f1');
+        if (timeLeft <= 0) { clearInterval(ivId); showAnswer(); }
+      }, 1000);
+    }
+
+    function showAnswer() {
+      document.getElementById('timerWrap').style.display = 'none';
+      document.getElementById('answerValue').textContent = curA * curB;
+      document.getElementById('answerBox').style.display = 'flex';
+
+      const fill = document.getElementById('progressFill');
+      const track = document.getElementById('progressTrack');
+      fill.style.transition = 'none';
+      fill.style.transform = 'scaleX(1)';
+      track.style.display = 'block';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        fill.style.transition = 'transform 3s linear';
+        fill.style.transform = 'scaleX(0)';
+      }));
+
+      let wait = 3;
+      ivId = setInterval(() => { wait--; if (wait <= 0) { clearInterval(ivId); startQ(); } }, 1000);
+    }
+
+    startQ();
+  </script>
+</body>
+</html>
