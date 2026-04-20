@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قيم التعليم في الإسلام</title>
+    <style>
+        :root {
+            --primary: #1a4731; /* أخضر إسلامي عميق */
+            --gold: #c5a059;
+            --bg: #fdfbf7;
+            --text: #222;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* خلفية زخرفية بسيطة */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0.05;
+            background-image: url('https://www.transparenttextures.com/patterns/islamic-art.png');
+            pointer-events: none;
+        }
+
+        header {
+            text-align: center;
+            z-index: 10;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 4.5rem; /* ضخم ليناسب 75 بوصة */
+            color: var(--primary);
+            margin: 0;
+            border-bottom: 4px solid var(--gold);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        header p {
+            font-size: 2rem;
+            color: #555;
+            margin-top: 15px;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 85%;
+            height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            max-width: 1300px;
+            background: white;
+            border-radius: 40px;
+            padding: 60px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            border-right: 15px solid var(--gold);
+            opacity: 0;
+            transform: scale(0.9) translateX(-50px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            visibility: hidden;
+            text-align: center;
+        }
+
+        .card.active {
+            opacity: 1;
+            transform: scale(1) translateX(0);
+            visibility: visible;
+        }
+
+        .card h2 {
+            font-size: 3.8rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .card .content {
+            font-size: 2.5rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .card .evidence {
+            font-size: 2.2rem;
+            color: var(--primary);
+            font-style: italic;
+            background: #f0f4f2;
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            border-left: 5px solid var(--gold);
+        }
+
+        .dots {
+            display: flex;
+            gap: 12px;
+            margin-top: 40px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 18px;
+            height: 18px;
+            background: #ccc;
+            border-radius: 50%;
+            transition: 0.4s;
+        }
+
+        .dot.active {
+            background: var(--gold);
+            width: 50px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>منارات العلم في الإسلام</h1>
+        <p>موسوعة القيم التعليمية والتربوية</p>
+    </header>
+
+    <div class="slider-container" id="slider">
+        </div>
+
+    <div class="dots" id="dots"></div>
+
+    <script>
+        const data = [
+            { title: "فرضية العلم", text: "العلم ليس ترفاً بل ضرورة دينية لبناء الفرد والمجتمع.", evidence: "حديث: (طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ)" },
+            { title: "رفعة الدرجات", text: "العلم هو المعيار الحقيقي لرفعة الإنسان عند الله وفي الدنيا.", evidence: "قال تعالى: (يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ)" },
+            { title: "أول رسالة", text: "بدأ الإسلام بكلمة 'اقرأ' لتكون القراءة مفتاح الحضارة.", evidence: "قال تعالى: (اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ)" },
+            { title: "الخشية والإنابة", text: "العلم الحقيقي هو الذي يورث التواضع ومعرفة قدر الخالق.", evidence: "قال تعالى: (إِنَّمَا يَخْشَى اللَّهَ مِنْ عِبَادِهِ الْعُلَمَاءُ)" },
+            { title: "طريق الجنة", text: "السعي في طلب العلم هو أقصر الطرق للوصول إلى رضوان الله.", evidence: "حديث: (من سلك طريقاً يلتمس فيه علماً سهل الله له به طريقاً إلى الجنة)" },
+            { title: "زكاة العلم", text: "تعليم الناس والصدقة الجارية بالعلم تستمر حتى بعد الرحيل.", evidence: "حديث: (أو عِلمٍ يُنتفَعُ بهِ)" },
+            { title: "توقير المعلم", text: "احترام أصحاب الفضل وأهل الذكر واجب تربوي.", evidence: "قال تعالى: (فَاسْأَلُوا أَهْلَ الذِّكْرِ إِن كُنتُمْ لَا تَعْلَمُونَ)" },
+            { title: "العلم والعمل", text: "الإسلام ينبذ العلم بلا تطبيق، ويحث على نفع الناس.", evidence: "حديث: (اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عِلْمٍ لَا يَنْفَعُ)" },
+            { title: "تأمل الكون", text: "التعليم الإسلامي يحث على البحث في العلوم الكونية والتدبر.", evidence: "قال تعالى: (قُلِ انظُرُوا مَاذَا فِي السَّمَاوَاتِ وَالْأَرْضِ)" },
+            { title: "الاستزادة الدائمة", text: "مهما بلغ الإنسان من علم، يظل بحاجة للمزيد.", evidence: "قال تعالى: (وَقُل رَّبِّ زِدْنِي عِلْمًا)" },
+            { title: "أمانة النقل", text: "الدقة والموضوعية في نقل المعلومة قيمة إسلامية أصيلة.", evidence: "حديث: (نضَّر اللهُ امرأً سمِع مقالتي فوعاها فأدَّاها كما سمِعها)" },
+            { title: "الحكمة ضالة المؤمن", text: "الانفتاح على علوم الآخرين والاستفادة من كل مفيد.", evidence: "روي في الأثر: (الحكمةُ ضالةُ المؤمنِ، فحيثُ وجدَها فهوَ أحقُّ بها)" },
+            { title: "التفكر والتدبر", text: "إعمال العقل هو أساس التعلم وفهم مقاصد الشريعة.", evidence: "قال تعالى: (أَفَلَا يَتَدَبَّرُونَ الْقُرْآنَ)" },
+            { title: "العدل في التعليم", text: "حق التعليم مكفول للجميع دون تمييز.", evidence: "حديث: (النَّاسُ مَعَادِنُ كَمَعَادِنِ الذَّهَبِ وَالْفِضَّةِ، خِيَارُهُمْ فِي الْجَاهِلِيَّةِ خِيَارُهُمْ فِي الْإِسْلَامِ إِذَا فَقُهُوا)" },
+            { title: "تغيير الواقع", text: "العلم هو الأداة الوحيدة لتغيير حال الأمم إلى الأفضل.", evidence: "قال تعالى: (إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّىٰ يُغَيِّرُوا مَا بِأَنفُسِهِمْ)" }
+        ];
+
+        const slider = document.getElementById('slider');
+        const dotsContainer = document.getElementById('dots');
+        let index = 0;
+
+        // توليد البطاقات
+        data.forEach((item, i) => {
+            const card = document.createElement('div');
+            card.className = `card ${i === 0 ? 'active' : ''}`;
+            card.innerHTML = `
+                <h2>${item.title}</h2>
+                <div class="content">${item.text}</div>
+                <div class="evidence">${item.evidence}</div>
+            `;
+            slider.appendChild(card);
+
+            const dot = document.createElement('div');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            dotsContainer.appendChild(dot);
+        });
+
+        const cards = document.querySelectorAll('.card');
+        const dots = document.querySelectorAll('.dot');
+
+        function rotateCards() {
+            cards[index].classList.remove('active');
+            dots[index].classList.remove('active');
+            
+            index = (index + 1) % data.length;
+            
+            cards[index].classList.add('active');
+            dots[index].classList.add('active');
+        }
+
+        // تبديل كل 7 ثوانٍ (لإعطاء وقت لقراءة النصوص الطويلة)
+        setInterval(rotateCards, 7000);
+    </script>
+</body>
+</html>
