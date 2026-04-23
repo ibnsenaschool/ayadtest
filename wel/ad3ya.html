@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أذكار الصباح والمساء — مدرسة ابن سينا</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:      #D4AF37;
+  --gold-lt:   #F5E37A;
+  --gold-dk:   #8B6914;
+  --gold-glow: rgba(212,175,55,0.18);
+  --cream:     #FDF6E3;
+  --ink:       #1A1208;
+  --bg-deep:   #0C0900;
+  --bg-mid:    #130E00;
+  --emerald:   #1B4D3E;
+  --ruby:      #7B1C2E;
+  --sapphire:  #0D2B4E;
+  --umber:     #3B2000;
+  --plum:      #2D1040;
+  --slate:     #0A1520;
+  --transition: .7s cubic-bezier(.4,0,.2,1);
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: 'Tajawal', sans-serif;
+  background: var(--bg-deep);
+  cursor: default;
+}
+
+/* ══════════════════════════════════════════
+   BACKGROUND LAYERS
+══════════════════════════════════════════ */
+#cvs { position: fixed; inset: 0; z-index: 0; }
+
+.noise {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ══════════════════════════════════════════
+   TOP BAR
+══════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  height: clamp(52px, 8vh, 84px);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(24px, 4vw, 80px);
+  background: linear-gradient(180deg, rgba(12,9,0,.92) 0%, rgba(12,9,0,.0) 100%);
+  backdrop-filter: blur(0px);
+}
+
+.school-brand {
+  display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px);
+}
+
+.brand-emblem {
+  width: clamp(32px,3.5vw,58px); height: clamp(32px,3.5vw,58px);
+  position: relative; flex-shrink: 0;
+}
+
+.brand-emblem svg { width: 100%; height: 100%; }
+
+.brand-text {
+  display: flex; flex-direction: column; gap: 1px;
+}
+
+.brand-name {
+  font-size: clamp(13px,1.6vw,28px); font-weight: 900; color: var(--gold-lt);
+  line-height: 1.1; letter-spacing: .3px;
+}
+
+.brand-sub {
+  font-size: clamp(9px,1vw,17px); color: rgba(212,175,55,.45); font-weight: 400;
+  line-height: 1;
+}
+
+.topbar-right {
+  display: flex; align-items: center; gap: clamp(12px,1.5vw,28px);
+}
+
+.time-display {
+  font-family: 'Amiri', serif;
+  font-size: clamp(14px,1.7vw,30px); color: rgba(212,175,55,.6);
+  letter-spacing: 1px;
+}
+
+.card-counter {
+  font-size: clamp(12px,1.3vw,24px); font-weight: 700;
+  color: rgba(255,255,255,.25);
+  background: rgba(212,175,55,.08);
+  border: 1px solid rgba(212,175,55,.15);
+  border-radius: 999px;
+  padding: clamp(3px,.4vw,7px) clamp(10px,1.2vw,22px);
+}
+.card-counter strong { color: var(--gold); }
+
+/* progress */
+.prog-rail {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 51;
+  height: 3px;
+  background: transparent;
+}
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dk), var(--gold), var(--gold-lt), var(--gold));
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+  transition: width .4s ease;
+  border-radius: 0 2px 2px 0;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ══════════════════════════════════════════
+   STAGE
+══════════════════════════════════════════ */
+.stage {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(52px,8vh,84px) clamp(60px,6vw,140px) clamp(60px,10vh,110px);
+}
+
+.card-wrap { width: 100%; max-width: 1800px; height: 100%; position: relative; }
+
+/* ══════════════════════════════════════════
+   CARD
+══════════════════════════════════════════ */
+.card {
+  position: absolute; inset: 0;
+  border-radius: clamp(20px,2.2vw,48px);
+  overflow: hidden;
+  opacity: 0; pointer-events: none;
+  transform: scale(.96) translateY(18px);
+  transition: opacity var(--transition), transform var(--transition);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.card.active {
+  opacity: 1; pointer-events: all;
+  transform: scale(1) translateY(0);
+}
+
+.card.out-up   { opacity: 0; transform: scale(.96) translateY(-18px); }
+.card.out-down { opacity: 0; transform: scale(.96) translateY(18px); }
+
+/* card bg layer */
+.card-bg {
+  position: absolute; inset: 0; z-index: 0;
+  transition: background var(--transition);
+}
+
+/* geometric SVG border */
+.card-border {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  border-radius: inherit;
+  border: 1px solid rgba(212,175,55,.18);
+  box-shadow:
+    inset 0 0 clamp(40px,5vw,100px) rgba(0,0,0,.5),
+    0 0 0 1px rgba(212,175,55,.06),
+    0 clamp(8px,1vw,20px) clamp(40px,5vw,80px) rgba(0,0,0,.7);
+}
+
+/* arabeque corners */
+.corner {
+  position: absolute; z-index: 3; pointer-events: none;
+  width: clamp(50px,6vw,120px); height: clamp(50px,6vw,120px);
+  opacity: .45;
+}
+.corner svg { width: 100%; height: 100%; }
+.corner-tl { top: clamp(12px,1.5vw,28px); right: clamp(12px,1.5vw,28px); }
+.corner-tr { top: clamp(12px,1.5vw,28px); left: clamp(12px,1.5vw,28px); transform: scaleX(-1); }
+.corner-bl { bottom: clamp(12px,1.5vw,28px); right: clamp(12px,1.5vw,28px); transform: scaleY(-1); }
+.corner-br { bottom: clamp(12px,1.5vw,28px); left: clamp(12px,1.5vw,28px); transform: scale(-1); }
+
+/* card sections */
+.card-top, .card-mid, .card-bot {
+  position: relative; z-index: 4;
+}
+
+.card-top {
+  padding: clamp(24px,3.5vh,70px) clamp(32px,4.5vw,100px) 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.dua-type {
+  display: flex; align-items: center; gap: clamp(8px,1vw,18px);
+}
+
+.type-gem {
+  width: clamp(10px,1.1vw,20px); height: clamp(10px,1.1vw,20px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--gold-lt), var(--gold-dk));
+  box-shadow: 0 0 clamp(8px,1vw,20px) rgba(212,175,55,.5);
+}
+
+.type-label {
+  font-size: clamp(11px,1.2vw,22px); font-weight: 700;
+  color: var(--gold); letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: .8;
+}
+
+.card-num-big {
+  font-family: 'Amiri', serif;
+  font-size: clamp(44px,7.5vw,148px); font-weight: 700; line-height: 1;
+  color: rgba(212,175,55,.08); letter-spacing: -2px;
+  user-select: none;
+}
+
+/* MIDDLE — the dua */
+.card-mid {
+  padding: 0 clamp(32px,4.5vw,100px);
+  display: flex; flex-direction: column; justify-content: center;
+}
+
+/* divider */
+.gold-divider {
+  display: flex; align-items: center; gap: clamp(10px,1.5vw,28px);
+  margin-bottom: clamp(16px,2.5vh,48px);
+  animation: fadeIn .6s ease .1s both;
+}
+.divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(212,175,55,.4), transparent); }
+.divider-gem  {
+  width: clamp(8px,.9vw,16px); height: clamp(8px,.9vw,16px);
+  background: var(--gold); border-radius: 50%;
+  box-shadow: 0 0 clamp(6px,.8vw,14px) rgba(212,175,55,.6);
+  flex-shrink: 0;
+}
+
+/* The main dua text */
+.dua-arabic {
+  font-family: 'Amiri', serif;
+  font-size: clamp(22px,3.6vw,76px);
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1.75;
+  text-align: center;
+  margin-bottom: clamp(14px,2vh,40px);
+  text-shadow: 0 0 clamp(30px,4vw,80px) rgba(212,175,55,.15);
+  animation: glowIn .8s ease .15s both;
+}
+
+@keyframes glowIn {
+  from { opacity: 0; filter: blur(8px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+
+.dua-source {
+  font-family: 'Amiri', serif;
+  font-size: clamp(13px,1.5vw,28px);
+  color: rgba(212,175,55,.5); text-align: center;
+  margin-bottom: clamp(20px,3vh,56px);
+  animation: fadeIn .6s ease .3s both;
+}
+
+/* meaning */
+.dua-meaning-wrap {
+  background: rgba(212,175,55,.05);
+  border: 1px solid rgba(212,175,55,.12);
+  border-radius: clamp(10px,1.2vw,24px);
+  padding: clamp(14px,2vh,40px) clamp(20px,2.5vw,52px);
+  animation: slideUp .6s ease .35s both;
+}
+
+.meaning-label {
+  font-size: clamp(9px,1vw,18px); font-weight: 700;
+  color: var(--gold); letter-spacing: 3px; opacity: .6;
+  margin-bottom: clamp(6px,1vh,14px);
+  text-transform: uppercase;
+}
+
+.dua-meaning {
+  font-size: clamp(15px,2vw,40px);
+  color: rgba(255,255,255,.75);
+  line-height: 1.85;
+  font-weight: 400;
+}
+
+/* BOTTOM */
+.card-bot {
+  padding: 0 clamp(32px,4.5vw,100px) clamp(22px,3vh,56px);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.benefit-chips {
+  display: flex; flex-wrap: wrap; gap: clamp(6px,.8vw,14px);
+}
+
+.chip {
+  font-size: clamp(10px,1.1vw,20px); font-weight: 600;
+  padding: clamp(4px,.5vw,10px) clamp(10px,1.2vw,24px);
+  border-radius: 999px;
+  border: 1px solid rgba(212,175,55,.2);
+  color: rgba(212,175,55,.65);
+  background: rgba(212,175,55,.07);
+  animation: slideUp .5s ease .5s both;
+  white-space: nowrap;
+}
+
+.repeat-badge {
+  font-family: 'Amiri', serif;
+  font-size: clamp(11px,1.3vw,24px);
+  color: rgba(212,175,55,.45);
+  background: rgba(212,175,55,.08);
+  border: 1px solid rgba(212,175,55,.15);
+  border-radius: clamp(6px,.8vw,14px);
+  padding: clamp(4px,.5vw,10px) clamp(10px,1.2vw,22px);
+  text-align: center;
+  line-height: 1.3;
+  animation: fadeIn .5s ease .55s both;
+  flex-shrink: 0;
+}
+
+@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ══════════════════════════════════════════
+   CARD THEMES
+══════════════════════════════════════════ */
+.th-emerald .card-bg {
+  background: radial-gradient(ellipse at 30% 20%, #1B4D3E 0%, #0C2419 45%, #060D09 100%);
+}
+.th-sapphire .card-bg {
+  background: radial-gradient(ellipse at 70% 30%, #0D2B4E 0%, #061525 45%, #030810 100%);
+}
+.th-ruby .card-bg {
+  background: radial-gradient(ellipse at 40% 70%, #7B1C2E 0%, #3D0D17 45%, #120308 100%);
+}
+.th-umber .card-bg {
+  background: radial-gradient(ellipse at 60% 20%, #4A2800 0%, #251400 45%, #0D0700 100%);
+}
+.th-plum .card-bg {
+  background: radial-gradient(ellipse at 30% 60%, #2D1040 0%, #160820 45%, #080510 100%);
+}
+.th-slate .card-bg {
+  background: radial-gradient(ellipse at 70% 40%, #0A1520 0%, #060D15 45%, #020508 100%);
+}
+.th-forest .card-bg {
+  background: radial-gradient(ellipse at 50% 30%, #0D2E20 0%, #071810 45%, #030A07 100%);
+}
+
+/* ══════════════════════════════════════════
+   BOTTOM UI BAR
+══════════════════════════════════════════ */
+.ui-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+  height: clamp(50px,8vh,90px);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(24px,4vw,80px);
+  background: linear-gradient(0deg, rgba(12,9,0,.95) 0%, rgba(12,9,0,0) 100%);
+}
+
+/* dots */
+.dots-row {
+  display: flex; gap: clamp(6px,.75vw,14px); align-items: center;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.dot {
+  width: clamp(7px,.8vw,13px); height: clamp(7px,.8vw,13px);
+  border-radius: 50%; background: rgba(212,175,55,.2);
+  cursor: pointer; transition: background .25s, transform .25s, box-shadow .25s;
+  border: 1px solid rgba(212,175,55,.15);
+}
+.dot.on {
+  background: var(--gold); transform: scale(1.5);
+  box-shadow: 0 0 clamp(6px,.8vw,14px) rgba(212,175,55,.5);
+}
+
+/* timer ring */
+.timer-group {
+  display: flex; align-items: center; gap: clamp(8px,1vw,18px);
+}
+
+.ring-svg { overflow: visible; display: block; }
+.ring-track { fill: none; stroke: rgba(212,175,55,.1); }
+.ring-fill  { fill: none; stroke: var(--gold); stroke-linecap: round; transition: stroke-dashoffset .12s linear; }
+.ring-num {
+  font-family: 'Amiri', serif;
+  font-size: clamp(9px,1vw,18px); font-weight: 700;
+  fill: rgba(212,175,55,.5);
+}
+
+/* nav arrows */
+.nav-btn {
+  width: clamp(38px,3.8vw,70px); height: clamp(38px,3.8vw,70px);
+  border-radius: 50%;
+  border: 1px solid rgba(212,175,55,.2);
+  background: rgba(212,175,55,.06);
+  color: rgba(212,175,55,.7); cursor: pointer;
+  font-size: clamp(14px,1.6vw,28px);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+  backdrop-filter: blur(8px);
+}
+.nav-btn:hover { background: rgba(212,175,55,.18); border-color: var(--gold); color: var(--gold-lt); transform: scale(1.08); }
+
+/* pause */
+.pause-btn {
+  width: clamp(38px,3.8vw,70px); height: clamp(38px,3.8vw,70px);
+  border-radius: 50%;
+  border: 1px solid rgba(212,175,55,.15);
+  background: rgba(212,175,55,.04);
+  color: rgba(212,175,55,.5); cursor: pointer;
+  font-size: clamp(12px,1.4vw,24px);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+  backdrop-filter: blur(8px);
+}
+.pause-btn:hover { background: rgba(212,175,55,.12); color: var(--gold); border-color: rgba(212,175,55,.3); }
+</style>
+</head>
+<body>
+
+<canvas id="cvs"></canvas>
+<div class="noise"></div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="school-brand">
+    <div class="brand-emblem">
+      <!-- 8-pointed star emblem -->
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 4 L34 22 L52 22 L38 33 L43 51 L30 41 L17 51 L22 33 L8 22 L26 22 Z" fill="none" stroke="#D4AF37" stroke-width="1.2" opacity=".6"/>
+        <path d="M30 10 L32.5 24 L46 18 L36 29 L50 34 L36 34 L40 48 L30 38 L20 48 L24 34 L10 34 L24 29 L14 18 L27.5 24 Z" fill="none" stroke="#D4AF37" stroke-width=".6" opacity=".3"/>
+        <circle cx="30" cy="30" r="4" fill="#D4AF37" opacity=".8"/>
+        <circle cx="30" cy="30" r="2" fill="#F5E37A"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <div class="brand-name">مدرسة ابن سينا الابتدائية</div>
+      <div class="brand-sub">أذكار الصباح والمساء</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="time-display" id="clockEl">--:--</div>
+    <div class="card-counter"><strong id="cn">1</strong> / 15</div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="prog-rail"><div class="prog-fill" id="pf" style="width:6.67%"></div></div>
+
+<!-- STAGE -->
+<div class="stage">
+  <div class="card-wrap" id="cw"></div>
+</div>
+
+<!-- BOTTOM UI -->
+<div class="ui-bar">
+  <div class="timer-group">
+    <svg class="ring-svg" id="rsvg" viewBox="0 0 54 54"
+         style="width:clamp(38px,4vw,70px);height:clamp(38px,4vw,70px);">
+      <circle class="ring-track" cx="27" cy="27" r="22" stroke-width="3"/>
+      <circle class="ring-fill" id="rc" cx="27" cy="27" r="22" stroke-width="3"
+        stroke-dasharray="138.23" stroke-dashoffset="0"
+        transform="rotate(-90 27 27)"/>
+      <text class="ring-num" id="rt" x="27" y="32" text-anchor="middle" font-family="Amiri,serif">9</text>
+    </svg>
+    <button class="pause-btn" id="pb">⏸</button>
+  </div>
+
+  <div class="dots-row" id="db"></div>
+
+  <div style="display:flex;gap:clamp(8px,1vw,16px);">
+    <button class="nav-btn" onclick="nav(1)">&#8592;</button>
+    <button class="nav-btn" onclick="nav(-1)">&#8594;</button>
+  </div>
+</div>
+
+<!-- ARABEQUE CORNER SVG (shared) -->
+<svg id="corner-def" style="display:none">
+  <defs>
+    <g id="aq">
+      <path d="M0 0 Q20 0 20 20" stroke="#D4AF37" stroke-width="1.5" fill="none" opacity=".6"/>
+      <path d="M8 0 Q20 0 20 12" stroke="#D4AF37" stroke-width=".8" fill="none" opacity=".3"/>
+      <path d="M0 8 Q0 20 12 20" stroke="#D4AF37" stroke-width=".8" fill="none" opacity=".3"/>
+      <circle cx="2" cy="2" r="1.5" fill="#D4AF37" opacity=".5"/>
+      <circle cx="18" cy="2" r="1" fill="#D4AF37" opacity=".3"/>
+      <circle cx="2" cy="18" r="1" fill="#D4AF37" opacity=".3"/>
+    </g>
+  </defs>
+</svg>
+
+<script>
+/* ── DATA ── */
+const DUAS = [
+  {
+    theme:'th-emerald', num:'١', tag:'صباح', repeat:'١×',
+    chips:['حماية','توكل','بركة'],
+    arabic:'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ',
+    source:'رواه مسلم',
+    meaning:'أصبحنا وأصبح كل ملك وسلطان لله وحده، ونحمده على نعمة الصباح والحياة، ونؤكد توحيده العظيم في بداية يومنا.'
+  },
+  {
+    theme:'th-sapphire', num:'٢', tag:'صباح ومساء', repeat:'٣×',
+    chips:['أمان','رضا','شكر'],
+    arabic:'رَضِيتُ بِاللَّهِ رَبًّا، وَبِالإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا وَرَسُولًا',
+    source:'رواه أبو داود والترمذي',
+    meaning:'أُعلن رضاي التام بأن الله هو ربي وخالقي، وأن الإسلام هو ديني الذي أحيا وأموت عليه، وأن محمداً ﷺ هو نبيي ورسولي.'
+  },
+  {
+    theme:'th-umber', num:'٣', tag:'الصباح', repeat:'١×',
+    chips:['امتنان','توكل'],
+    arabic:'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ',
+    source:'رواه الترمذي',
+    meaning:'يا الله، بقدرتك وحفظك أصبحنا، وبك نعيش ونموت، وإليك وحدك نرجع يوم البعث والنشور.'
+  },
+  {
+    theme:'th-plum', num:'٤', tag:'حفظ وأمان', repeat:'٣×',
+    chips:['بسم الله','حماية','صباح ومساء'],
+    arabic:'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
+    source:'رواه أبو داود والترمذي، صحيح',
+    meaning:'أبدأ باسم الله الذي لا يضرّ من قالها شيء في الأرض ولا في السماء، وهو يسمع كل كلامي ويعلم كل حالي.'
+  },
+  {
+    theme:'th-slate', num:'٥', tag:'مساء', repeat:'١×',
+    chips:['مساء','ملك الله','حمد'],
+    arabic:'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ',
+    source:'رواه مسلم',
+    meaning:'أمسينا وأمسى كل الملك لله، ونحمده على نعمة المساء، ونُقرّ بأنه لا حول ولا قوة لنا إلا بمعونته وتوفيقه.'
+  },
+  {
+    theme:'th-ruby', num:'٦', tag:'التوكل', repeat:'١×',
+    chips:['توكل','حسبي الله','ثقة بالله'],
+    arabic:'حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ',
+    source:'سورة التوبة: 129',
+    meaning:'يكفيني الله ويكفيني عن كل شيء، لا معبود بحق إلا هو، عليه وحده أتوكل وأثق، وهو رب العرش الكريم العظيم.'
+  },
+  {
+    theme:'th-emerald', num:'٧', tag:'الدعاء والثناء', repeat:'١٠٠×',
+    chips:['سبحان الله','تسبيح','صباح'],
+    arabic:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ الْعَظِيمِ',
+    source:'رواه البخاري ومسلم',
+    meaning:'أُنزّه الله عن كل نقص وأحمده، وأُنزّه الله العظيم جل جلاله — هاتان الكلمتان خفيفتان على اللسان، ثقيلتان في الميزان، حبيبتان إلى الرحمن.'
+  },
+  {
+    theme:'th-sapphire', num:'٨', tag:'الاستغفار', repeat:'١٠٠×',
+    chips:['مغفرة','استغفار','توبة'],
+    arabic:'أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ',
+    source:'رواه البخاري ومسلم',
+    meaning:'أطلب من الله أن يغفر ذنوبي وأتوب إليه من كل ما يسخطه. كان النبي ﷺ يقولها مئة مرة في اليوم مع أنه مغفور له، فكيف بنا نحن!'
+  },
+  {
+    theme:'th-forest', num:'٩', tag:'الصلاة على النبي', repeat:'١٠×',
+    chips:['صلاة وسلام','محبة النبي','قرآن'],
+    arabic:'اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِهِ وَصَحْبِهِ أَجْمَعِينَ',
+    source:'متواتر',
+    meaning:'اللهم أرسل صلاتك ورحمتك وسلامك وبركاتك على نبينا محمد ﷺ وعلى أهل بيته وصحابته الكرام. لكل صلاة عليه عشر صلوات من الله عليك.'
+  },
+  {
+    theme:'th-umber', num:'١٠', tag:'العافية', repeat:'٣×',
+    chips:['شفاء','عافية','دعاء'],
+    arabic:'اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي',
+    source:'رواه أبو داود، صحيح',
+    meaning:'يا الله أعطني العافية والصحة في جسدي كله، وفي سمعي الذي أسمع به، وفي بصري الذي أرى به — فالعافية نعمة لا يقدّرها إلا من فقدها.'
+  },
+  {
+    theme:'th-plum', num:'١١', tag:'دفع البلاء', repeat:'٧×',
+    chips:['حسبي الله','سبع مرات','أمان'],
+    arabic:'حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ، وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ',
+    source:'رواه أبو داود، صحيح',
+    meaning:'من قالها سبع مرات صباحاً ومساءً كفاه الله ما أهمّه من أمر الدنيا والآخرة. يكفيني الله الذي لا معبود سواه ولا رب غيره.'
+  },
+  {
+    theme:'th-slate', num:'١٢', tag:'العوذة', repeat:'٣×',
+    chips:['استعاذة','أعوذ بالله','حفظ'],
+    arabic:'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ',
+    source:'رواه مسلم',
+    meaning:'أستجير وأحتمي بكلمات الله الكاملة التامة التي لا نقص فيها، من شر كل ما خلق الله — من شر الإنس والجن والحيوان والمرض والحوادث.'
+  },
+  {
+    theme:'th-ruby', num:'١٣', tag:'دعاء النوم', repeat:'١×',
+    chips:['نوم','أمان','ليل'],
+    arabic:'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا، اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ',
+    source:'رواه البخاري',
+    meaning:'باسمك يا الله أنام وكأني أموت، وبك أستيقظ وكأني أحيا من جديد. اللهم قِنا وأبعد عنا عذابك يوم تبعث الخلق للحساب.'
+  },
+  {
+    theme:'th-emerald', num:'١٤', tag:'الشكر', repeat:'١×',
+    chips:['الحمد لله','شكر','نعم'],
+    arabic:'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ',
+    source:'رواه البخاري ومسلم',
+    meaning:'الحمد كله لله الذي أعادنا للحياة بعد نوم الليل الذي هو أخو الموت، وإليه وحده نُحشر ونعود يوم القيامة.'
+  },
+  {
+    theme:'th-sapphire', num:'١٥', tag:'الختام', repeat:'٣×',
+    chips:['ختام','دعاء','يوم جديد'],
+    arabic:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ',
+    source:'رواه البخاري — سيد الاستغفار',
+    meaning:'يا الله أنت ربي وخالقي ولا معبود سواك، أنا عبدك الضعيف، وأنا متمسك بعهدك وإيمانك بك بقدر استطاعتي. من قاله صباحاً ومات دخل الجنة.'
+  }
+];
+
+/* ── STATE ── */
+const CIRC = 2 * Math.PI * 22;
+const DELAY = 9000;
+let cur = 0, paused = false, transitioning = false;
+let startTs = null, elapsed = 0, rafId = null;
+
+/* ── BUILD CARDS ── */
+const cw = document.getElementById('cw');
+DUAS.forEach((d, i) => {
+  const el = document.createElement('div');
+  el.className = `card ${d.theme}`;
+  el.id = `cd${i}`;
+
+  const chips = d.chips.map(c => `<span class="chip">${c}</span>`).join('');
+  const cornerSVG = `
+    <svg viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 2 Q28 2 28 28" stroke="#D4AF37" stroke-width="1.8" fill="none" opacity=".55"/>
+      <path d="M10 2 Q28 2 28 20" stroke="#D4AF37" stroke-width=".9" fill="none" opacity=".28"/>
+      <path d="M2 10 Q2 28 20 28" stroke="#D4AF37" stroke-width=".9" fill="none" opacity=".28"/>
+      <circle cx="3" cy="3" r="2" fill="#D4AF37" opacity=".5"/>
+      <circle cx="3" cy="14" r="1.2" fill="#D4AF37" opacity=".25"/>
+      <circle cx="14" cy="3" r="1.2" fill="#D4AF37" opacity=".25"/>
+    </svg>`;
+
+  el.innerHTML = `
+    <div class="card-bg"></div>
+    <div class="card-border"></div>
+    <div class="corner corner-tl">${cornerSVG}</div>
+    <div class="corner corner-tr">${cornerSVG}</div>
+    <div class="corner corner-bl">${cornerSVG}</div>
+    <div class="corner corner-br">${cornerSVG}</div>
+
+    <div class="card-top">
+      <div class="dua-type">
+        <div class="type-gem"></div>
+        <div class="type-label">${d.tag}</div>
+      </div>
+      <div class="card-num-big">${d.num}</div>
+    </div>
+
+    <div class="card-mid">
+      <div class="gold-divider">
+        <div class="divider-line"></div>
+        <div class="divider-gem"></div>
+        <div class="divider-gem" style="width:clamp(5px,.55vw,10px);height:clamp(5px,.55vw,10px);opacity:.5;"></div>
+        <div class="divider-gem"></div>
+        <div class="divider-line"></div>
+      </div>
+      <div class="dua-arabic">${d.arabic}</div>
+      <div class="dua-source">— ${d.source}</div>
+      <div class="dua-meaning-wrap">
+        <div class="meaning-label">✦ المعنى</div>
+        <div class="dua-meaning">${d.meaning}</div>
+      </div>
+    </div>
+
+    <div class="card-bot">
+      <div class="benefit-chips">${chips}</div>
+      <div class="repeat-badge">يُكرَّر<br>${d.repeat}</div>
+    </div>`;
+
+  cw.appendChild(el);
+});
+
+/* ── DOTS ── */
+const db = document.getElementById('db');
+DUAS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' on' : '');
+  d.onclick = () => goTo(i);
+  db.appendChild(d);
+});
+
+/* ── SHOW ── */
+function show(idx, dir) {
+  if (transitioning) return;
+  transitioning = true;
+  const prev = document.querySelector('.card.active');
+  const next = document.getElementById(`cd${idx}`);
+  if (prev) {
+    prev.classList.remove('active');
+    prev.classList.add(dir >= 0 ? 'out-up' : 'out-down');
+    setTimeout(() => prev.classList.remove('out-up','out-down'), 750);
+  }
+  // reset animations
+  next.querySelectorAll('.gold-divider,.dua-arabic,.dua-source,.dua-meaning-wrap,.chip,.repeat-badge').forEach(e => {
+    e.style.animation = 'none'; e.offsetHeight; e.style.animation = '';
+  });
+  next.classList.add('active');
+  cur = idx;
+  document.getElementById('cn').textContent = idx + 1;
+  document.getElementById('pf').style.width = ((idx + 1) / DUAS.length * 100) + '%';
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === idx));
+  setTimeout(() => { transitioning = false; }, 750);
+}
+
+function goTo(idx, dir) {
+  show(idx, dir !== undefined ? dir : (idx >= cur ? 1 : -1));
+  resetTimer();
+}
+function nav(d) { goTo((cur + d + DUAS.length) % DUAS.length, d); }
+
+/* ── TIMER ── */
+const rc = document.getElementById('rc');
+const rt = document.getElementById('rt');
+rc.setAttribute('stroke-dasharray', CIRC);
+function resetTimer() { elapsed = 0; startTs = null; }
+
+function tick(ts) {
+  if (!startTs) startTs = ts;
+  if (!paused) elapsed = ts - startTs;
+  const ratio = Math.min(elapsed / DELAY, 1);
+  rc.setAttribute('stroke-dashoffset', CIRC * ratio);
+  rt.textContent = Math.ceil((DELAY - elapsed) / 1000);
+  if (elapsed >= DELAY && !transitioning) {
+    show((cur + 1) % DUAS.length, 1);
+    startTs = ts; elapsed = 0;
+  }
+  rafId = requestAnimationFrame(tick);
+}
+
+const pb = document.getElementById('pb');
+pb.onclick = () => {
+  paused = !paused; pb.textContent = paused ? '▶' : '⏸';
+  if (!paused) {
+    const saved = elapsed; cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(ts => { startTs = ts - saved; rafId = requestAnimationFrame(tick); });
+  }
+};
+
+/* ── CLOCK ── */
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clockEl').textContent = `${h}:${m}`;
+}
+updateClock(); setInterval(updateClock, 10000);
+
+/* ── KEYBOARD ── */
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key==='ArrowUp')  nav(1);
+  if (e.key==='ArrowLeft' ||e.key==='ArrowDown') nav(-1);
+  if (e.key===' ') { e.preventDefault(); pb.click(); }
+});
+
+/* ── CANVAS STARS ── */
+const canvas = document.getElementById('cvs');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+function makeStars() {
+  stars = Array.from({length:90}, () => ({
+    x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+    r: Math.random()*1.8+.2,
+    vx:(Math.random()-.5)*.12, vy:(Math.random()-.5)*.12,
+    a: Math.random()*.45+.06,
+    gold: Math.random() < .3,
+    twinkle: Math.random()*Math.PI*2,
+    twinkleSpeed: Math.random()*.02+.005
+  }));
+}
+
+function drawCanvas(ts) {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const g = ctx.createRadialGradient(canvas.width*.5,canvas.height*.4,0,canvas.width*.5,canvas.height*.5,canvas.width*.75);
+  g.addColorStop(0,'#0f0c01'); g.addColorStop(.6,'#080600'); g.addColorStop(1,'#030200');
+  ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  stars.forEach(s => {
+    s.x+=s.vx; s.y+=s.vy; s.twinkle+=s.twinkleSpeed;
+    if(s.x<0) s.x=canvas.width; if(s.x>canvas.width) s.x=0;
+    if(s.y<0) s.y=canvas.height; if(s.y>canvas.height) s.y=0;
+    const alpha = s.a * (.7 + .3*Math.sin(s.twinkle));
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle = s.gold ? `rgba(212,175,55,${alpha})` : `rgba(255,252,240,${alpha*.55})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawCanvas);
+}
+
+resize(); makeStars(); requestAnimationFrame(drawCanvas);
+window.addEventListener('resize', ()=>{ resize(); makeStars(); });
+
+/* ── START ── */
+show(0, 1);
+rafId = requestAnimationFrame(tick);
+</script>
+</body>
+</html>
