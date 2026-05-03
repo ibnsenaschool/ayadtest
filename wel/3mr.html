@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سيرة الفاروق عمر بن الخطاب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #fbc02d;
+            --bg-color: #f1f8e9;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header p {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        /* حاوية البطاقات */
+        .slider-container {
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            height: 400px;
+            perspective: 1000px;
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--card-bg);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+            box-sizing: border-box;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.8s ease-in-out;
+            border-bottom: 8px solid var(--secondary-color);
+        }
+
+        .card.active {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .card i {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        /* نقاط التنقل */
+        .dots {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .dot.active {
+            background: var(--primary-color);
+            transform: scale(1.3);
+        }
+
+        /* زخرفة خلفية */
+        .bg-ornament {
+            position: fixed;
+            font-size: 20rem;
+            color: rgba(46, 125, 50, 0.03);
+            z-index: -1;
+            user-select: none;
+        }
+
+        @media (max-width: 500px) {
+            .slider-container { height: 450px; }
+            header h1 { font-size: 1.8rem; }
+            .card p { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-ornament">☪</div>
+
+    <header>
+        <h1>سيرة الفاروق عمر</h1>
+        <p>تعرف على بطل من أبطال الإسلام 🌟</p>
+    </header>
+
+    <div class="slider-container" id="slider">
+        <div class="card active">
+            <h2>من هو؟ 👤</h2>
+            <p>هو <b>عمر بن الخطاب</b>، ثاني الخلفاء الراشدين، وأحد العشرة المبشرين بالجنة. لُقب بـ "الفاروق" لأنه كان يفرق بين الحق والباطل.</p>
+        </div>
+
+        <div class="card">
+            <h2>قوته وشجاعته 💪</h2>
+            <p>كان عمر شجاعاً جداً وقوياً، خافه الأعداء وأحبه المسلمون. عندما أراد الهجرة، أعلن ذلك أمام الجميع ولم يخف من أحد.</p>
+        </div>
+
+        <div class="card">
+            <h2>عدلُه المشهور ⚖️</h2>
+            <p>اشتهر عمر بالعدل بين الناس، حتى أنه كان ينام تحت ظل الشجرة بكل أمان لأنه حكم بالعدل فلم يخف من أحد.</p>
+        </div>
+
+        <div class="card">
+            <h2>إنجازاته العظيمة ✨</h2>
+            <p>هو أول من وضع <b>التقويم الهجري</b> الذي نستخدمه اليوم، وهو من أنشأ الدواوين (مثل الوزارات) لخدمة الناس.</p>
+        </div>
+
+        <div class="card" style="background-color: #fff9c4;">
+            <h2>درس من حياته (1) 💡</h2>
+            <p><b>التواضع:</b> رغم أنه كان حاكماً عظيماً، إلا أنه كان بسيطاً جداً، يلبس الثياب المرقعة ويساعد الفقراء بنفسه ويحمل الطعام على ظهره لهم.</p>
+        </div>
+
+        <div class="card" style="background-color: #fff9c4;">
+            <h2>درس من حياته (2) 🌟</h2>
+            <p><b>قول الحق:</b> تعلمنا من عمر أن نكون شجعان في قول الصدق دائماً، وألا نخشى في الله لومة لائم، فالحق دائماً ينتصر.</p>
+        </div>
+    </div>
+
+    <div class="dots" id="dotsContainer"></div>
+
+    <script>
+        const cards = document.querySelectorAll('.card');
+        const dotsContainer = document.getElementById('dotsContainer');
+        let currentIndex = 0;
+        const intervalTime = 7000; // وقت التغيير (7 ثواني)
+
+        // إنشاء النقاط بناءً على عدد البطاقات
+        cards.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlider() {
+            cards.forEach((card, index) => {
+                card.classList.remove('active');
+                dots[index].classList.remove('active');
+            });
+
+            cards[currentIndex].classList.add('active');
+            dots[currentIndex].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % cards.length;
+            updateSlider();
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            updateSlider();
+            resetTimer();
+        }
+
+        let slideInterval = setInterval(nextSlide, intervalTime);
+
+        function resetTimer() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, intervalTime);
+        }
+    </script>
+</body>
+</html>
