@@ -1,224 +1,487 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيرة الفاروق عمر بن الخطاب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2e7d32;
-            --secondary-color: #fbc02d;
-            --bg-color: #f1f8e9;
-            --text-color: #333;
-            --card-bg: #ffffff;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أبو بكر الصديق رضي الله عنه</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dark: #8a6a1f;
+    --emerald-dark: #0d3d2a;
+    --cream: #fdf6e3;
+    --parchment: #f5e6c8;
+    --ink: #1a1208;
+    --ink-soft: #3d2e12;
+  }
 
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: 'Tajawal', sans-serif;
+    background: var(--emerald-dark);
+  }
 
-        header h1 {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin: 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      radial-gradient(circle at 15% 15%, rgba(201,168,76,0.10) 0%, transparent 50%),
+      radial-gradient(circle at 85% 85%, rgba(45,155,110,0.12) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23c9a84c' fill-opacity='0.04'%3E%3Cpath d='M30 0l30 30-30 30L0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
 
-        header p {
-            color: #666;
-            font-size: 1.2rem;
-        }
+  #slideshow {
+    position: relative; z-index: 1;
+    width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+  }
 
-        /* حاوية البطاقات */
-        .slider-container {
-            position: relative;
-            width: 90%;
-            max-width: 600px;
-            height: 400px;
-            perspective: 1000px;
-        }
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 4vh 6vw;
+    opacity: 0;
+    transform: scale(0.94) translateY(28px);
+    transition: opacity 0.75s cubic-bezier(.4,0,.2,1), transform 0.75s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1; transform: scale(1) translateY(0);
+    pointer-events: auto;
+  }
+  .slide.leaving {
+    opacity: 0; transform: scale(1.04) translateY(-28px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
 
-        .card {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--card-bg);
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 30px;
-            box-sizing: border-box;
-            opacity: 0;
-            transform: scale(0.9);
-            transition: all 0.8s ease-in-out;
-            border-bottom: 8px solid var(--secondary-color);
-        }
+  /* ── Card ── */
+  .card {
+    width: 100%; max-width: 1300px;
+    background: linear-gradient(135deg, var(--cream) 0%, var(--parchment) 100%);
+    border-radius: 28px;
+    padding: clamp(28px,4.5vh,56px) clamp(28px,4.5vw,64px);
+    border: 1px solid rgba(201,168,76,0.35);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.6);
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(201,168,76,0.13), transparent 70%);
+    pointer-events: none;
+  }
+  .card.dark {
+    background: linear-gradient(135deg, #1a3a6b 0%, #0d2040 100%);
+    border-color: rgba(201,168,76,0.5);
+  }
+  .card.dark-green {
+    background: linear-gradient(135deg, #0d3d2a 0%, #071f15 100%);
+    border-color: rgba(201,168,76,0.5);
+  }
 
-        .card.active {
-            opacity: 1;
-            transform: scale(1);
-            z-index: 10;
-        }
+  /* ── Icon ── */
+  .card-icon {
+    width: clamp(56px,7vw,88px); height: clamp(56px,7vw,88px);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(1.7rem,3.5vw,3rem);
+    margin-bottom: clamp(12px,2vh,22px);
+    position: relative; z-index: 1;
+  }
+  .icon-gold    { background: linear-gradient(135deg,#c9a84c,#e8c97a); }
+  .icon-emerald { background: linear-gradient(135deg,#1a6b4a,#2d9b6e); }
+  .icon-ruby    { background: linear-gradient(135deg,#7b2d2d,#b34040); }
+  .icon-sapphire{ background: linear-gradient(135deg,#1a3a6b,#2d5b9b); }
+  .icon-amber   { background: linear-gradient(135deg,#7b5a1a,#b38830); }
+  .icon-violet  { background: linear-gradient(135deg,#4a1a6b,#7b2db3); }
+  .icon-teal    { background: linear-gradient(135deg,#1a5f6b,#2d8f9b); }
+  .icon-brown   { background: linear-gradient(135deg,#5a3010,#8b4a20); }
 
-        .card i {
-            font-size: 50px;
-            margin-bottom: 20px;
-        }
+  /* ── Tags ── */
+  .card-tag {
+    display: inline-block;
+    font-size: clamp(0.75rem,1.2vw,1rem);
+    font-weight: 700; padding: 4px 16px;
+    border-radius: 20px; margin-bottom: clamp(10px,1.5vh,18px);
+    letter-spacing: 0.5px; position: relative; z-index: 1;
+  }
+  .tag-gold    { background:rgba(201,168,76,0.2);  color:#8a6a1f; }
+  .tag-emerald { background:rgba(26,107,74,0.15);  color:#1a6b4a; }
+  .tag-ruby    { background:rgba(123,45,45,0.12);  color:#7b2d2d; }
+  .tag-sapphire{ background:rgba(26,58,107,0.12);  color:#1a3a6b; }
+  .tag-amber   { background:rgba(123,90,26,0.12);  color:#7b5a1a; }
+  .tag-violet  { background:rgba(74,26,107,0.12);  color:#4a1a6b; }
+  .tag-teal    { background:rgba(26,95,107,0.12);  color:#1a5f6b; }
+  .tag-brown   { background:rgba(90,48,16,0.12);   color:#5a3010; }
+  .tag-light   { background:rgba(201,168,76,0.2);  color:var(--gold-light); }
 
-        .card h2 {
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
+  /* ── Text ── */
+  .card-title {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.7rem,3.8vw,3.2rem);
+    color: var(--ink); margin-bottom: clamp(10px,1.5vh,18px);
+    line-height: 1.3; position: relative; z-index: 1;
+  }
+  .card.dark .card-title, .card.dark-green .card-title { color: var(--gold-light); }
 
-        .card p {
-            font-size: 1.3rem;
-            line-height: 1.6;
-            color: var(--text-color);
-        }
+  .card-text {
+    font-size: clamp(1rem,1.8vw,1.35rem);
+    color: var(--ink-soft); line-height: 2;
+    position: relative; z-index: 1;
+  }
+  .card.dark .card-text, .card.dark-green .card-text { color:rgba(253,246,227,0.88); }
 
-        /* نقاط التنقل */
-        .dots {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-        }
+  /* ── List ── */
+  .highlight-list { list-style:none; margin-top:10px; position:relative; z-index:1; }
+  .highlight-list li {
+    padding: clamp(8px,1.2vh,14px) 0; padding-right:26px;
+    position:relative;
+    font-size: clamp(1rem,1.7vw,1.3rem);
+    color: var(--ink-soft);
+    border-bottom: 1px dashed rgba(201,168,76,0.25);
+  }
+  .highlight-list li:last-child { border-bottom:none; }
+  .highlight-list li::before {
+    content:'✦'; position:absolute; right:0; top:clamp(10px,1.5vh,16px);
+    color:var(--gold); font-size:0.75rem;
+  }
+  .card.dark-green .highlight-list li { color:rgba(253,246,227,0.85); }
+  .card.dark-green .highlight-list li::before { color:var(--gold-light); }
 
-        .dot {
-            width: 12px;
-            height: 12px;
-            background: #ccc;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+  /* ── Chips ── */
+  .info-chips { display:flex; flex-wrap:wrap; gap:12px; margin-top:18px; position:relative; z-index:1; }
+  .chip {
+    background:rgba(201,168,76,0.2); border:1px solid rgba(201,168,76,0.4);
+    color:var(--gold-light); padding:6px 18px; border-radius:20px;
+    font-size:clamp(0.85rem,1.3vw,1.05rem); font-weight:500;
+  }
 
-        .dot.active {
-            background: var(--primary-color);
-            transform: scale(1.3);
-        }
+  /* ── Hero row ── */
+  .hero-row { display:flex; align-items:center; gap:clamp(24px,4vw,60px); }
+  .hero-content { flex:1; }
+  .hero-medallion {
+    width:clamp(90px,11vw,150px); height:clamp(90px,11vw,150px);
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold-dark) 100%);
+    display:flex; align-items:center; justify-content:center;
+    font-size:clamp(2.2rem,5.5vw,4.5rem); flex-shrink:0;
+    animation:pulse 3s ease-in-out infinite;
+  }
 
-        /* زخرفة خلفية */
-        .bg-ornament {
-            position: fixed;
-            font-size: 20rem;
-            color: rgba(46, 125, 50, 0.03);
-            z-index: -1;
-            user-select: none;
-        }
+  /* ── Slide header ── */
+  .slide-header {
+    text-align:center; margin-bottom:clamp(12px,2.5vh,26px);
+    position:relative; z-index:1;
+  }
+  .slide-header .bismillah {
+    font-family:'Amiri',serif;
+    font-size:clamp(0.9rem,1.5vw,1.3rem);
+    color:var(--gold-light); opacity:0.8; letter-spacing:1px;
+  }
+  .slide-header .main-title {
+    font-family:'Amiri',serif;
+    font-size:clamp(1.8rem,4.5vw,3.8rem);
+    color:var(--gold); text-shadow:0 2px 20px rgba(201,168,76,0.4); line-height:1.2;
+  }
+  .slide-header .divider {
+    width:160px; height:2px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    margin:10px auto 0;
+  }
 
-        @media (max-width: 500px) {
-            .slider-container { height: 450px; }
-            header h1 { font-size: 1.8rem; }
-            .card p { font-size: 1.1rem; }
-        }
-    </style>
+  /* ── Progress bar ── */
+  #progress-bar-wrap {
+    position:fixed; bottom:0; left:0; right:0;
+    height:5px; background:rgba(255,255,255,0.1); z-index:100;
+  }
+  #progress-bar {
+    height:100%;
+    background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-light));
+    width:0%;
+  }
+
+  /* ── Dots ── */
+  #counter {
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+    display:flex; gap:10px; z-index:100;
+  }
+  .dot {
+    width:10px; height:10px; border-radius:50%;
+    background:rgba(255,255,255,0.25);
+    transition:background 0.4s, transform 0.4s;
+    cursor:pointer;
+  }
+  .dot.active { background:var(--gold); transform:scale(1.4); }
+
+  /* ── Nav ── */
+  .nav-btn {
+    position:fixed; top:50%; transform:translateY(-50%);
+    background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3);
+    color:var(--gold-light); width:52px; height:52px; border-radius:50%;
+    font-size:1.5rem; cursor:pointer; z-index:100;
+    transition:background 0.3s,transform 0.2s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .nav-btn:hover { background:rgba(201,168,76,0.35); transform:translateY(-50%) scale(1.1); }
+  #btn-prev { right:20px; }
+  #btn-next { left:20px; }
+
+  @keyframes pulse {
+    0%,100% { box-shadow:0 0 30px rgba(201,168,76,0.5),0 0 60px rgba(201,168,76,0.2); }
+    50%      { box-shadow:0 0 55px rgba(201,168,76,0.8),0 0 110px rgba(201,168,76,0.35); }
+  }
+</style>
 </head>
 <body>
 
-    <div class="bg-ornament">☪</div>
+<div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+<button class="nav-btn" id="btn-prev">&#8249;</button>
+<button class="nav-btn" id="btn-next">&#8250;</button>
+<div id="counter"></div>
 
-    <header>
-        <h1>سيرة الفاروق عمر</h1>
-        <p>تعرف على بطل من أبطال الإسلام 🌟</p>
-    </header>
+<div id="slideshow">
 
-    <div class="slider-container" id="slider">
-        <div class="card active">
-            <h2>من هو؟ 👤</h2>
-            <p>هو <b>عمر بن الخطاب</b>، ثاني الخلفاء الراشدين، وأحد العشرة المبشرين بالجنة. لُقب بـ "الفاروق" لأنه كان يفرق بين الحق والباطل.</p>
-        </div>
-
-        <div class="card">
-            <h2>قوته وشجاعته 💪</h2>
-            <p>كان عمر شجاعاً جداً وقوياً، خافه الأعداء وأحبه المسلمون. عندما أراد الهجرة، أعلن ذلك أمام الجميع ولم يخف من أحد.</p>
-        </div>
-
-        <div class="card">
-            <h2>عدلُه المشهور ⚖️</h2>
-            <p>اشتهر عمر بالعدل بين الناس، حتى أنه كان ينام تحت ظل الشجرة بكل أمان لأنه حكم بالعدل فلم يخف من أحد.</p>
-        </div>
-
-        <div class="card">
-            <h2>إنجازاته العظيمة ✨</h2>
-            <p>هو أول من وضع <b>التقويم الهجري</b> الذي نستخدمه اليوم، وهو من أنشأ الدواوين (مثل الوزارات) لخدمة الناس.</p>
-        </div>
-
-        <div class="card" style="background-color: #fff9c4;">
-            <h2>درس من حياته (1) 💡</h2>
-            <p><b>التواضع:</b> رغم أنه كان حاكماً عظيماً، إلا أنه كان بسيطاً جداً، يلبس الثياب المرقعة ويساعد الفقراء بنفسه ويحمل الطعام على ظهره لهم.</p>
-        </div>
-
-        <div class="card" style="background-color: #fff9c4;">
-            <h2>درس من حياته (2) 🌟</h2>
-            <p><b>قول الحق:</b> تعلمنا من عمر أن نكون شجعان في قول الصدق دائماً، وألا نخشى في الله لومة لائم، فالحق دائماً ينتصر.</p>
-        </div>
+  <!-- 0: Hero -->
+  <div class="slide active">
+    <div class="slide-header">
+      <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+      <div class="main-title">أبو بكر الصدِّيق</div>
+      <div class="divider"></div>
     </div>
+    <div class="card dark">
+      <div class="hero-row">
+        <div class="hero-content">
+          <span class="card-tag tag-light">التعريف</span>
+          <h2 class="card-title">من هو أبو بكر الصدِّيق؟</h2>
+          <p class="card-text">
+            هو عبد الله بن أبي قحافة، وُلد في مكة المكرمة سنة 573م.<br>
+            كان أقرب أصحاب النبي محمد ﷺ وأوفاهم، وأول من آمن به من الرجال البالغين.<br>
+            عُرف بحكمته وكرمه وشجاعته، واختاره المسلمون أول خليفة بعد وفاة النبي ﷺ.
+          </p>
+          <div class="info-chips">
+            <span class="chip">📅 573م — 634م</span>
+            <span class="chip">📍 مكة المكرمة</span>
+            <span class="chip">⏳ خلافة: سنتان و3 أشهر</span>
+            <span class="chip">👑 الخليفة الأول</span>
+          </div>
+        </div>
+        <div class="hero-medallion">🕌</div>
+      </div>
+    </div>
+  </div>
 
-    <div class="dots" id="dotsContainer"></div>
+  <!-- 1 -->
+  <div class="slide">
+    <div class="card">
+      <div class="card-icon icon-gold">🌟</div>
+      <span class="card-tag tag-gold">لقبه الشريف</span>
+      <h3 class="card-title">لماذا سُمِّي الصدِّيق؟</h3>
+      <p class="card-text">
+        لمّا أُسريَ بالنبي ﷺ إلى المسجد الأقصى وأخبر قريشاً بذلك، كذَّبه الناس وجاؤوا إلى أبي بكر قائلين: "انظر ما يقول صاحبك!"<br><br>
+        فأجابهم فوراً دون تردد: <strong>"إن كان قال ذلك فقد صدق!"</strong><br><br>
+        فسمّاه النبيُّ ﷺ <strong>"الصدِّيق"</strong> — أي الذي يُصدِّق بسرعة وبلا تردد.
+      </p>
+    </div>
+  </div>
 
-    <script>
-        const cards = document.querySelectorAll('.card');
-        const dotsContainer = document.getElementById('dotsContainer');
-        let currentIndex = 0;
-        const intervalTime = 7000; // وقت التغيير (7 ثواني)
+  <!-- 2 -->
+  <div class="slide">
+    <div class="card">
+      <div class="card-icon icon-emerald">💰</div>
+      <span class="card-tag tag-emerald">الكرم والتضحية</span>
+      <h3 class="card-title">كرمه وإنفاقه في سبيل الله</h3>
+      <ul class="highlight-list">
+        <li>أنفق كل ماله في سبيل الله عند الهجرة</li>
+        <li>فدى عدداً من العبيد المستضعفين وأعتقهم، منهم بلال بن رباح</li>
+        <li>جهَّز جيش العُسرة من ماله الخاص</li>
+        <li>سأله النبي ﷺ: "ما أبقيتَ لأهلك؟" فقال: <em>"أبقيتُ لهم الله ورسوله"</em></li>
+      </ul>
+    </div>
+  </div>
 
-        // إنشاء النقاط بناءً على عدد البطاقات
-        cards.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            if (index === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => goToSlide(index));
-            dotsContainer.appendChild(dot);
-        });
+  <!-- 3 -->
+  <div class="slide">
+    <div class="card">
+      <div class="card-icon icon-ruby">🕊️</div>
+      <span class="card-tag tag-ruby">الهجرة المباركة</span>
+      <h3 class="card-title">رفيق النبي ﷺ في الهجرة</h3>
+      <p class="card-text">
+        اختاره النبي ﷺ وحده رفيقاً في رحلة الهجرة من مكة إلى المدينة.<br>
+        اختبأا في <strong>غار ثور</strong> ثلاثة أيام، وأحاط بهم المشركون، فأشفق أبو بكر قائلاً:<br><br>
+        <em>"لو نظر أحدهم إلى قدميه لرآنا!"</em><br><br>
+        فطمأنه النبي ﷺ: <strong>﴿لا تَحزَن إنَّ اللهَ مَعنا﴾</strong>
+      </p>
+    </div>
+  </div>
 
-        const dots = document.querySelectorAll('.dot');
+  <!-- 4 -->
+  <div class="slide">
+    <div class="card">
+      <div class="card-icon icon-sapphire">⚔️</div>
+      <span class="card-tag tag-sapphire">إنجازات الخلافة</span>
+      <h3 class="card-title">أبرز إنجازاته في الخلافة</h3>
+      <ul class="highlight-list">
+        <li>جمع القرآن الكريم في مصحف واحد لحفظه من الضياع</li>
+        <li>حروب الردة: أعاد توحيد الجزيرة العربية</li>
+        <li>فتح العراق والشام ابتداءً بإرسال الجيوش</li>
+        <li>وضع نظام بيت المال لتوزيع الثروات بالعدل</li>
+        <li>أرسى مبدأ الشورى والعدل في الحكم</li>
+      </ul>
+    </div>
+  </div>
 
-        function updateSlider() {
-            cards.forEach((card, index) => {
-                card.classList.remove('active');
-                dots[index].classList.remove('active');
-            });
+  <!-- 5 -->
+  <div class="slide">
+    <div class="card">
+      <div class="card-icon icon-amber">📖</div>
+      <span class="card-tag tag-amber">أعظم إنجاز</span>
+      <h3 class="card-title">جمع القرآن الكريم</h3>
+      <p class="card-text">
+        بعد معركة اليمامة، استُشهد كثير من حفَظة القرآن، فخشي عمر بن الخطاب ضياعه.<br>
+        أشار على أبي بكر بجمعه فتردَّد في البداية، ثم قبل وأمر <strong>زيد بن ثابت</strong> بجمع القرآن من الصحف والعظام وصدور الرجال.<br><br>
+        <strong>هذا المصحف أصبح الأساس للنسخ التي أرسلها عثمان رضي الله عنه لاحقاً.</strong>
+      </p>
+    </div>
+  </div>
 
-            cards[currentIndex].classList.add('active');
-            dots[currentIndex].classList.add('active');
-        }
+  <!-- 6 -->
+  <div class="slide">
+    <div class="card">
+      <div class="card-icon icon-violet">🌿</div>
+      <span class="card-tag tag-violet">الشخصية والأخلاق</span>
+      <h3 class="card-title">صفاته وأخلاقه</h3>
+      <ul class="highlight-list">
+        <li>رقيق القلب، كثير البكاء خشيةً من الله</li>
+        <li>صادق اللسان، لم يُعرف عنه الكذب قط</li>
+        <li>حليم وصبور حتى في أشد المواقف</li>
+        <li>كان يحلب الغنم لجيران الحي بنفسه</li>
+        <li>عُرف بالتواضع رغم مكانته العظيمة</li>
+      </ul>
+    </div>
+  </div>
 
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % cards.length;
-            updateSlider();
-        }
+  <!-- 7 -->
+  <div class="slide">
+    <div class="card">
+      <div class="card-icon icon-teal">🏆</div>
+      <span class="card-tag tag-teal">المكانة الرفيعة</span>
+      <h3 class="card-title">مكانته عند النبي ﷺ</h3>
+      <p class="card-text">
+        قال النبي ﷺ:<br><br>
+        <em>"لو كنتُ متَّخذاً خليلاً غيرَ ربِّي لاتَّخذتُ أبا بكرٍ خليلاً"</em><br><br>
+        وقال أيضاً:<br>
+        <em>"ما لأحدٍ عندنا يدٌ إلا وقد كافأناه ما خلا أبا بكر، فإنَّ له عندنا يداً يكافئه الله بها يوم القيامة"</em>
+      </p>
+    </div>
+  </div>
 
-        function goToSlide(index) {
-            currentIndex = index;
-            updateSlider();
-            resetTimer();
-        }
+  <!-- 8 -->
+  <div class="slide">
+    <div class="card dark-green">
+      <div class="card-icon icon-gold">💬</div>
+      <span class="card-tag tag-light">حكمة وإلهام</span>
+      <h3 class="card-title">أقواله الخالدة</h3>
+      <ul class="highlight-list">
+        <li><em>"الصبر نصف الإيمان واليقين الإيمان كله"</em></li>
+        <li><em>"من تواضع لله رفعه الله"</em></li>
+        <li><em>"أيها الناس، من كان يعبد محمداً فإن محمداً قد مات، ومن كان يعبد الله فإن الله حيٌّ لا يموت"</em></li>
+        <li><em>"القوي عندي ضعيف حتى آخذ الحق منه، والضعيف عندي قوي حتى أرد عليه حقه"</em></li>
+      </ul>
+    </div>
+  </div>
 
-        let slideInterval = setInterval(nextSlide, intervalTime);
+  <!-- 9 -->
+  <div class="slide">
+    <div class="card">
+      <div class="card-icon icon-brown">🌙</div>
+      <span class="card-tag tag-brown">نهاية حياة مشرقة</span>
+      <h3 class="card-title">وفاته رضي الله عنه</h3>
+      <p class="card-text">
+        تُوفِّي أبو بكر الصديق في <strong>جمادى الآخرة سنة 13هـ</strong> عن عمر 63 عاماً —<br>
+        وهو نفس عمر النبي ﷺ عند وفاته.<br><br>
+        أوصى بدفنه بجانب النبي ﷺ في حجرة عائشة رضي الله عنها.<br><br>
+        حكم المسلمين <strong>سنتين وثلاثة أشهر وعشرة أيام</strong> تركت أثراً عظيماً في تاريخ الإسلام.
+      </p>
+    </div>
+  </div>
 
-        function resetTimer() {
-            clearInterval(slideInterval);
-            slideInterval = setInterval(nextSlide, intervalTime);
-        }
-    </script>
+</div>
+
+<script>
+  const DURATION = 7000;
+  const slides = document.querySelectorAll('.slide');
+  const bar    = document.getElementById('progress-bar');
+  const dotsEl = document.getElementById('counter');
+  let current  = 0;
+  let autoTimer = null;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i, true);
+    dotsEl.appendChild(d);
+  });
+
+  function updateDots() {
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  function animateBar() {
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    // Force reflow
+    bar.getBoundingClientRect();
+    bar.style.transition = `width ${DURATION}ms linear`;
+    bar.style.width = '100%';
+  }
+
+  function goTo(index, resetAuto) {
+    if (index === current) return;
+
+    // Exit current
+    slides[current].classList.remove('active');
+    slides[current].classList.add('leaving');
+    const leaving = current;
+    setTimeout(() => slides[leaving].classList.remove('leaving'), 650);
+
+    current = ((index % slides.length) + slides.length) % slides.length;
+
+    // Enter new
+    slides[current].classList.add('active');
+    updateDots();
+    animateBar();
+
+    if (resetAuto) startAuto();
+  }
+
+  function next() { goTo(current + 1, false); }
+
+  function startAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(next, DURATION);
+  }
+
+  document.getElementById('btn-next').onclick = () => goTo(current + 1, true);
+  document.getElementById('btn-prev').onclick = () => goTo(current - 1, true);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  goTo(current + 1, true);
+    if (e.key === 'ArrowRight') goTo(current - 1, true);
+  });
+
+  // Init
+  animateBar();
+  startAuto();
+</script>
 </body>
 </html>
