@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مبارك التخرج — مدرسة ابن سينا الابتدائية</title>
+<style>
+  :root{
+    --gold: #d6ad3f;
+    --gold-light: #f3dd9a;
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; width:100%; height:100%;
+    background: radial-gradient(ellipse at 50% 40%, #1d160c, #0a0805 75%);
+    display:flex; align-items:center; justify-content:center;
+    font-family: 'Tajawal', Arial, sans-serif;
+    padding: 18px;
+    overflow:hidden; /* no scrollbars — built for unattended big-screen display */
+  }
+
+  /* card scales to fit the viewport in either orientation, keeping the
+     exact 1535:1024 proportions of the original template */
+  .card{
+    position:relative;
+    width: min(96vw, calc(96vh * 1535 / 1024));
+    aspect-ratio: 1535 / 1024;
+    border-radius: 10px;
+    overflow:hidden;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,.7);
+  }
+
+  /* rotating student photo — sits BELOW the template frame image,
+     positioned to exactly fill the circular cut-out in the template */
+  .photo{
+    position:absolute;
+    left: 7.95%;
+    top: 18.46%;
+    width: 35.96%;
+    height: 53.91%;
+    border-radius: 50%;
+    overflow:hidden;
+    background:#000;
+    z-index:1;
+  }
+  .photo img{
+    position:absolute; inset:0;
+    width:100%; height:100%; object-fit:cover;
+    opacity:0;
+    transition: opacity 1.1s var(--ease);
+  }
+  .photo img.is-active{ opacity:1; }
+
+  /* the real template, with a transparent circular hole punched where
+     the photo above shows through — everything else is pixel-exact */
+  .frame{
+    position:absolute; inset:0; z-index:2;
+    width:100%; height:100%;
+    pointer-events:none;
+  }
+
+  /* slim, semi-transparent control bar that sits in the plain dark
+     band at the bottom of the template, fades when idle */
+  .controls{
+    position:absolute; z-index:3;
+    left:50%; bottom:1.6%;
+    transform:translateX(-50%);
+    display:flex; align-items:center; gap: clamp(8px, 1vw, 16px);
+    background: rgba(0,0,0,.4);
+    border:1px solid rgba(214,173,63,.35);
+    padding: clamp(4px,.6vw,10px) clamp(10px,1.4vw,22px);
+    border-radius:30px;
+    transition: opacity .6s var(--ease);
+  }
+  .controls.idle{ opacity:.12; }
+  .ctrl-btn{
+    width: clamp(22px,2.2vw,40px); height: clamp(22px,2.2vw,40px); flex:0 0 auto;
+    border:0; background:transparent; color: var(--gold-light);
+    cursor:pointer; font-size: clamp(.85rem,1vw,1.4rem);
+    display:grid; place-items:center; border-radius:50%;
+  }
+  .ctrl-btn:hover{ background: rgba(214,173,63,.25); }
+  .ctrl-btn:focus-visible{ outline:1px solid var(--gold-light); }
+  .dots{ display:flex; gap: clamp(4px,.5vw,8px); }
+  .dot{
+    width: clamp(6px,.6vw,11px); height: clamp(6px,.6vw,11px); border-radius:50%; border:0; padding:0; cursor:pointer;
+    background: rgba(243,221,154,.35);
+  }
+  .dot.active{ background: var(--gold-light); }
+
+  .status-msg{
+    position:absolute; z-index:3; inset:auto 6% 4% 6%; text-align:center;
+    color: var(--gold-light); font-size: clamp(.8rem,1vw,1.05rem);
+    background: rgba(0,0,0,.55); border-radius:10px; padding:10px 16px;
+    display:none;
+  }
+  .status-msg.show{ display:block; }
+</style>
+</head>
+<body>
+
+  <div class="card" id="card">
+    <div class="photo" id="photo">
+      <img id="imgA" alt="صورة الطالب">
+      <img id="imgB" alt="صورة الطالب">
+    </div>
+
+    <!-- ضع ملف template_frame.png في نفس مجلد هذا الملف -->
+    <img class="frame" src="template_frame.png" alt="قالب مبارك التخرج - مدرسة ابن سينا الابتدائية">
+
+    <div class="controls" id="controls">
+      <button class="ctrl-btn" id="prevBtn" aria-label="الطالب السابق">›</button>
+      <div class="dots" id="dots"></div>
+      <button class="ctrl-btn" id="playBtn" aria-label="إيقاف التبديل التلقائي">⏸</button>
+      <div class="dots" id="dotsSpacer" style="display:none"></div>
+      <button class="ctrl-btn" id="nextBtn" aria-label="الطالب التالي">‹</button>
+    </div>
+
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+<script>
+/* ====================================================================
+   تُقرأ الصور تلقائيًا من ملف images.json الموجود في نفس مجلد هذا الملف
+   (نفس الصيغة التي رفعتها). ضع صور الطلاب الفعلية في هذا المجلد أيضًا
+   بنفس الأسماء الموجودة في images.json.
+
+   ملاحظة: ملفات الفيديو (.mp4) الموجودة في القائمة يتم تجاهلها هنا
+   تلقائيًا لأن هذه الحلقة دائرية مخصّصة للصور فقط.
+   ==================================================================== */
+const IMAGES_JSON_PATH = 'images.json';
+const IMAGE_EXT = /\.(jpe?g|png|webp|gif)$/i;
+
+const INTERVAL_MS = 5000;
+
+const imgA = document.getElementById('imgA');
+const imgB = document.getElementById('imgB');
+const dotsWrap = document.getElementById('dots');
+const playBtn = document.getElementById('playBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const controls = document.getElementById('controls');
+const statusMsg = document.getElementById('statusMsg');
+
+let photos = [];
+let current = 0;
+let showingA = true;
+let timerId = null;
+let playing = true;
+let idleTimer = null;
+
+function showStatus(text){
+  statusMsg.textContent = text;
+  statusMsg.classList.add('show');
+}
+function hideStatus(){ statusMsg.classList.remove('show'); }
+
+function preload(src){ const im = new Image(); im.src = src; }
+
+function buildDots(){
+  dotsWrap.innerHTML = '';
+  photos.forEach((_, i) => {
+    const b = document.createElement('button');
+    b.className = 'dot' + (i === 0 ? ' active' : '');
+    b.setAttribute('aria-label', 'عرض الصورة ' + (i + 1));
+    b.addEventListener('click', () => goTo(i, true));
+    dotsWrap.appendChild(b);
+  });
+}
+
+function render(index){
+  const src = photos[index];
+  const nextImg = showingA ? imgB : imgA;
+  const curImg  = showingA ? imgA  : imgB;
+
+  nextImg.src = src;
+  nextImg.classList.add('is-active');
+  curImg.classList.remove('is-active');
+  showingA = !showingA;
+
+  [...dotsWrap.children].forEach((d, i) => d.classList.toggle('active', i === index));
+  preload(photos[(index + 1) % photos.length]);
+}
+
+function goTo(index, manual){
+  if (!photos.length) return;
+  current = ((index % photos.length) + photos.length) % photos.length;
+  render(current);
+  if (manual) restart();
+}
+
+function tick(){ goTo(current + 1, false); }
+
+function start(){
+  if (!photos.length) return;
+  if (timerId) clearInterval(timerId);
+  timerId = setInterval(tick, INTERVAL_MS);
+}
+function restart(){ start(); }
+function stop(){ if (timerId) clearInterval(timerId); timerId = null; }
+
+playBtn.addEventListener('click', () => {
+  playing = !playing;
+  playBtn.textContent = playing ? '⏸' : '▶';
+  if (playing) start(); else stop();
+});
+prevBtn.addEventListener('click', () => goTo(current - 1, true));
+nextBtn.addEventListener('click', () => goTo(current + 1, true));
+
+document.getElementById('card').addEventListener('mouseenter', () => { if (playing) stop(); });
+document.getElementById('card').addEventListener('mouseleave', () => { if (playing) start(); });
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stop();
+  else if (playing) start();
+});
+
+function wake(){
+  controls.classList.remove('idle');
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => controls.classList.add('idle'), 4000);
+}
+['mousemove','touchstart','click'].forEach(ev => document.addEventListener(ev, wake));
+wake();
+
+async function loadPhotos(){
+  try{
+    const res = await fetch(IMAGES_JSON_PATH, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const list = Array.isArray(data.images) ? data.images : [];
+    photos = list
+      .filter(name => IMAGE_EXT.test(name))
+      .map(name => encodeURI(name));
+
+    if (!photos.length){
+      showStatus('لم يتم العثور على صور في images.json — تأكد من وجود ملفات الصور بجانب هذه الصفحة.');
+      return;
+    }
+
+    hideStatus();
+    buildDots();
+    imgA.classList.add('is-active');
+    render(0);
+    preload(photos[0]);
+    start();
+  } catch (err){
+    showStatus('تعذّر تحميل images.json. إذا فتحت الملف مباشرة من جهازك، شغّله عبر سيرفر محلي (مثل Live Server أو: python3 -m http.server) لأن المتصفحات تمنع قراءة الملفات المحلية مباشرة.');
+    console.error(err);
+  }
+}
+
+loadPhotos();
+</script>
+</body>
+</html>
